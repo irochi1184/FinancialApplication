@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */; };
+		7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD492B8CC92800CCBA97 /* ContentView.swift */; };
+		7357CD4C2B8CC92800CCBA97 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD4B2B8CC92800CCBA97 /* Item.swift */; };
+		7357CD4E2B8CC92900CCBA97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */; };
+		7357CD512B8CC92900CCBA97 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7357CD502B8CC92900CCBA97 /* Preview Assets.xcassets */; };
+		7357CD5B2B8CC92900CCBA97 /* Financial_iPhoneAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD5A2B8CC92900CCBA97 /* Financial_iPhoneAppTests.swift */; };
+		7357CD652B8CC92900CCBA97 /* Financial_iPhoneAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD642B8CC92900CCBA97 /* Financial_iPhoneAppUITests.swift */; };
+		7357CD672B8CC92900CCBA97 /* Financial_iPhoneAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD662B8CC92900CCBA97 /* Financial_iPhoneAppUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7357CD572B8CC92900CCBA97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7357CD3C2B8CC92800CCBA97 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7357CD432B8CC92800CCBA97;
+			remoteInfo = Financial_iPhoneApp;
+		};
+		7357CD612B8CC92900CCBA97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7357CD3C2B8CC92800CCBA97 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7357CD432B8CC92800CCBA97;
+			remoteInfo = Financial_iPhoneApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7357CD442B8CC92800CCBA97 /* Financial_iPhoneApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Financial_iPhoneApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppApp.swift; sourceTree = "<group>"; };
+		7357CD492B8CC92800CCBA97 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7357CD4B2B8CC92800CCBA97 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7357CD502B8CC92900CCBA97 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		7357CD562B8CC92900CCBA97 /* Financial_iPhoneAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Financial_iPhoneAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7357CD5A2B8CC92900CCBA97 /* Financial_iPhoneAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppTests.swift; sourceTree = "<group>"; };
+		7357CD602B8CC92900CCBA97 /* Financial_iPhoneAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Financial_iPhoneAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7357CD642B8CC92900CCBA97 /* Financial_iPhoneAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppUITests.swift; sourceTree = "<group>"; };
+		7357CD662B8CC92900CCBA97 /* Financial_iPhoneAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7357CD412B8CC92800CCBA97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD532B8CC92900CCBA97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD5D2B8CC92900CCBA97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7357CD3B2B8CC92800CCBA97 = {
+			isa = PBXGroup;
+			children = (
+				7357CD462B8CC92800CCBA97 /* Financial_iPhoneApp */,
+				7357CD592B8CC92900CCBA97 /* Financial_iPhoneAppTests */,
+				7357CD632B8CC92900CCBA97 /* Financial_iPhoneAppUITests */,
+				7357CD452B8CC92800CCBA97 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7357CD452B8CC92800CCBA97 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7357CD442B8CC92800CCBA97 /* Financial_iPhoneApp.app */,
+				7357CD562B8CC92900CCBA97 /* Financial_iPhoneAppTests.xctest */,
+				7357CD602B8CC92900CCBA97 /* Financial_iPhoneAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7357CD462B8CC92800CCBA97 /* Financial_iPhoneApp */ = {
+			isa = PBXGroup;
+			children = (
+				7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */,
+				7357CD492B8CC92800CCBA97 /* ContentView.swift */,
+				7357CD4B2B8CC92800CCBA97 /* Item.swift */,
+				7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */,
+				7357CD4F2B8CC92900CCBA97 /* Preview Content */,
+			);
+			path = Financial_iPhoneApp;
+			sourceTree = "<group>";
+		};
+		7357CD4F2B8CC92900CCBA97 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				7357CD502B8CC92900CCBA97 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		7357CD592B8CC92900CCBA97 /* Financial_iPhoneAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				7357CD5A2B8CC92900CCBA97 /* Financial_iPhoneAppTests.swift */,
+			);
+			path = Financial_iPhoneAppTests;
+			sourceTree = "<group>";
+		};
+		7357CD632B8CC92900CCBA97 /* Financial_iPhoneAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7357CD642B8CC92900CCBA97 /* Financial_iPhoneAppUITests.swift */,
+				7357CD662B8CC92900CCBA97 /* Financial_iPhoneAppUITestsLaunchTests.swift */,
+			);
+			path = Financial_iPhoneAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7357CD432B8CC92800CCBA97 /* Financial_iPhoneApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7357CD6A2B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneApp" */;
+			buildPhases = (
+				7357CD402B8CC92800CCBA97 /* Sources */,
+				7357CD412B8CC92800CCBA97 /* Frameworks */,
+				7357CD422B8CC92800CCBA97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Financial_iPhoneApp;
+			productName = Financial_iPhoneApp;
+			productReference = 7357CD442B8CC92800CCBA97 /* Financial_iPhoneApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7357CD552B8CC92900CCBA97 /* Financial_iPhoneAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7357CD6D2B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneAppTests" */;
+			buildPhases = (
+				7357CD522B8CC92900CCBA97 /* Sources */,
+				7357CD532B8CC92900CCBA97 /* Frameworks */,
+				7357CD542B8CC92900CCBA97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7357CD582B8CC92900CCBA97 /* PBXTargetDependency */,
+			);
+			name = Financial_iPhoneAppTests;
+			productName = Financial_iPhoneAppTests;
+			productReference = 7357CD562B8CC92900CCBA97 /* Financial_iPhoneAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7357CD5F2B8CC92900CCBA97 /* Financial_iPhoneAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7357CD702B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneAppUITests" */;
+			buildPhases = (
+				7357CD5C2B8CC92900CCBA97 /* Sources */,
+				7357CD5D2B8CC92900CCBA97 /* Frameworks */,
+				7357CD5E2B8CC92900CCBA97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7357CD622B8CC92900CCBA97 /* PBXTargetDependency */,
+			);
+			name = Financial_iPhoneAppUITests;
+			productName = Financial_iPhoneAppUITests;
+			productReference = 7357CD602B8CC92900CCBA97 /* Financial_iPhoneAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7357CD3C2B8CC92800CCBA97 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					7357CD432B8CC92800CCBA97 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					7357CD552B8CC92900CCBA97 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 7357CD432B8CC92800CCBA97;
+					};
+					7357CD5F2B8CC92900CCBA97 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 7357CD432B8CC92800CCBA97;
+					};
+				};
+			};
+			buildConfigurationList = 7357CD3F2B8CC92800CCBA97 /* Build configuration list for PBXProject "Financial_iPhoneApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7357CD3B2B8CC92800CCBA97;
+			productRefGroup = 7357CD452B8CC92800CCBA97 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7357CD432B8CC92800CCBA97 /* Financial_iPhoneApp */,
+				7357CD552B8CC92900CCBA97 /* Financial_iPhoneAppTests */,
+				7357CD5F2B8CC92900CCBA97 /* Financial_iPhoneAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7357CD422B8CC92800CCBA97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7357CD512B8CC92900CCBA97 /* Preview Assets.xcassets in Resources */,
+				7357CD4E2B8CC92900CCBA97 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD542B8CC92900CCBA97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD5E2B8CC92900CCBA97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7357CD402B8CC92800CCBA97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
+				7357CD4C2B8CC92800CCBA97 /* Item.swift in Sources */,
+				7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD522B8CC92900CCBA97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7357CD5B2B8CC92900CCBA97 /* Financial_iPhoneAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7357CD5C2B8CC92900CCBA97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7357CD652B8CC92900CCBA97 /* Financial_iPhoneAppUITests.swift in Sources */,
+				7357CD672B8CC92900CCBA97 /* Financial_iPhoneAppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7357CD582B8CC92900CCBA97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7357CD432B8CC92800CCBA97 /* Financial_iPhoneApp */;
+			targetProxy = 7357CD572B8CC92900CCBA97 /* PBXContainerItemProxy */;
+		};
+		7357CD622B8CC92900CCBA97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7357CD432B8CC92800CCBA97 /* Financial_iPhoneApp */;
+			targetProxy = 7357CD612B8CC92900CCBA97 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7357CD682B8CC92900CCBA97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7357CD692B8CC92900CCBA97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7357CD6B2B8CC92900CCBA97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Financial_iPhoneApp/Preview Content\"";
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7357CD6C2B8CC92900CCBA97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Financial_iPhoneApp/Preview Content\"";
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7357CD6E2B8CC92900CCBA97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Financial_iPhoneApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Financial_iPhoneApp";
+			};
+			name = Debug;
+		};
+		7357CD6F2B8CC92900CCBA97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Financial_iPhoneApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Financial_iPhoneApp";
+			};
+			name = Release;
+		};
+		7357CD712B8CC92900CCBA97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Financial_iPhoneApp;
+			};
+			name = Debug;
+		};
+		7357CD722B8CC92900CCBA97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XX3ULK22EF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ariyuki.Financial-iPhoneAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Financial_iPhoneApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7357CD3F2B8CC92800CCBA97 /* Build configuration list for PBXProject "Financial_iPhoneApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7357CD682B8CC92900CCBA97 /* Debug */,
+				7357CD692B8CC92900CCBA97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7357CD6A2B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7357CD6B2B8CC92900CCBA97 /* Debug */,
+				7357CD6C2B8CC92900CCBA97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7357CD6D2B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7357CD6E2B8CC92900CCBA97 /* Debug */,
+				7357CD6F2B8CC92900CCBA97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7357CD702B8CC92900CCBA97 /* Build configuration list for PBXNativeTarget "Financial_iPhoneAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7357CD712B8CC92900CCBA97 /* Debug */,
+				7357CD722B8CC92900CCBA97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7357CD3C2B8CC92800CCBA97 /* Project object */;
+}
