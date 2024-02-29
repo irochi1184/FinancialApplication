@@ -8,10 +8,39 @@
 import SwiftUI
 
 struct SettingView: View {
+    
+    // プロパティ(UserDefaultsに保持)
+    @AppStorage("showPreview") private var showPreview = true
+    @AppStorage("fontSize") private var fontSize = 12.0
+    @AppStorage("userId") private var userId = ""
+    // 別にフォントサイズが変わるわけではない
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        // フォーム
+        Form {
+            // トグルスイッチ
+            Toggle("Show Previews", isOn: $showPreview)
+            
+            // スライドバー
+            HStack{
+                Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+                Slider(value: $fontSize, in: 9...96) {
+                    Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+                }
+            }
+            
+            // カウントステッパー
+            Stepper(value: $fontSize, in : 9...96) {
+                Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+            }
+            
+            // テキスト入力エリア
+            TextField("ユーザID", text: $userId)
+        }
+        
     }
 }
+
 
 #Preview {
     SettingView()

@@ -9,54 +9,58 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor(Color(0xfaf0e6, alpha:1.0))
+        // TabViewの背景色(薄茶色)
+    }
+    
     var body: some View {
-        Text("ホーム画面").bold().foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        
+        TabView{
+            HomeView() //タブ1番目
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("ホーム")
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+            CalenderView() //タブ2番目
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("カレンダー")
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+            GraphView() //タブ3番目
+                .tabItem {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                    Text("レポート")
                 }
-            }
-        } detail: {
-            Text("Select an item")
+            SearchView() //タブ4番目
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("検索")
+                }
+            SettingView() //タブ5番目
+                .tabItem {
+                    Image(systemName: "gearshape")
+                    Text("設定")
+                }
         }
+        .accentColor(.blue) //ここでタブのアクセント色の指定
+        
     }
+}
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+extension Color { //Colorオブジェクトの拡張(Hex値を使用するため)
+    init(_ hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xFF) / 255,
+            green: Double((hex >> 8) & 0xFF) / 255,
+            blue: Double(hex & 0xFF) / 255,
+            opacity: alpha
+        )
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
