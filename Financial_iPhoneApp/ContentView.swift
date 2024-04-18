@@ -36,7 +36,7 @@ struct ContentView: View { //アプリ起動時の共有画面
                         Image(systemName: "house")
                         Text("ホーム")
                     }
-                CalenderView() //タブ2番目
+                CalendarView() //タブ2番目
                     .tabItem {
                         Image(systemName: "calendar")
                         Text("カレンダー")
