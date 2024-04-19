@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CalenderView: View {
+struct CalendarView: View {
     var body: some View {
         ZStack {
             Color.blue    // 背景色
@@ -17,5 +17,5 @@ struct CalenderView: View {
 }
 
 #Preview {
-    CalenderView()
+    CalendarView()
 }
