@@ -146,6 +146,7 @@ struct CalendarView: View {
                         Text("\(expense.category)： \(expense.amount)円")
                     }
                 }
+                
             }
             .sheet(isPresented: $isDatePickerVisible) {
                 // 年月のピッカーを表示するためのシート
