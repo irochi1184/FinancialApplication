@@ -32,12 +32,14 @@ struct SearchView: View {
                 }
             }
             
+            Spacer().frame(height: 40)
             // 検索結果をリスト形式で表示
             List(searchResult, id: \.self) { result in
-                Text(result)
-                    .padding()
+                Text(result) +
+                Text("　　¥1,000-")
+//                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.top)
+            .listStyle(.plain)
         }
     }
     
@@ -52,7 +54,9 @@ struct SearchView: View {
     private func generateDummySearchResult(for searchText: String) -> [String] {
         // ダミーの検索結果を生成して返す
         // ここでは検索テキストと同じ文字列に"Result"を追加したものを5つ生成しています
-        return (1...5).map { searchText + " Result \($0)" }
+        return (1...5).map { 
+//            searchText +
+            " 2024年04月0\($0)日" }
     }
 }
 
