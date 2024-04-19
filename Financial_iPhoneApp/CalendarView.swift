@@ -131,23 +131,22 @@ struct CalendarView: View {
                     }
                 }
                 .padding(.horizontal)
-            }
-            .padding(.bottom, 20) // 下部に余白を追加
-            
-            Divider() // カレンダーと下部の区切り線
-            
-            // 選択された日付を表示するテキスト
-            Text("\(selectedDateString) \(getDayOfWeek(selectedDay))")
-                .font(.headline)
-                .padding()
-            
-            // 費用項目のリストを表示
-            if isListVisible {
-                List(expenses) { expense in
-                    Text("\(expense.category)： \(expense.amount)円")
+                .padding(.bottom, 20) // 下部に余白を追加
+                
+                Divider() // カレンダーと下部の区切り線
+                
+                // 選択された日付を表示するテキスト
+                Text("\(selectedDateString) \(getDayOfWeek(selectedDay))")
+                    .font(.headline)
+                    .padding()
+                
+                // 費用項目のリストを表示
+                if isListVisible {
+                    List(expenses) { expense in
+                        Text("\(expense.category)： \(expense.amount)円")
+                    }
                 }
             }
-        }.padding(.bottom, 0) // 下部に余白を追加
             .sheet(isPresented: $isDatePickerVisible) {
                 // 年月のピッカーを表示するためのシート
                 VStack {
@@ -187,6 +186,8 @@ struct CalendarView: View {
                     }
                 }.presentationDetents([.height(280)]) // シートの高さ
             }
+            Spacer()
+        }
     }
     
     // 日付から曜日を取得する関数
