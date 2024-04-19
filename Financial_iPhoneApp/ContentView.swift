@@ -57,7 +57,7 @@ struct ContentView: View { //アプリ起動時の共有画面
                         Text("設定")
                     }
             }
-            .accentColor(.green) //ここでタブのアクセント色の指定
+            /*.accentColor(.green)*/ //ここでタブのアクセント色の指定
             
             //タイトル
             .navigationTitle("\nホーム")
