@@ -19,7 +19,9 @@ struct CalendarView: View {
     let expenses = [
         ExpenseItem(category: "ランチ", amount: 900),
         ExpenseItem(category: "消耗品", amount: 500),
-        ExpenseItem(category: "コンビニ", amount: 320)
+        ExpenseItem(category: "コンビニ", amount: 320),
+        ExpenseItem(category: "図書代", amount: 600),
+        ExpenseItem(category: "雑費", amount: 480)
     ]
     
     let calendar = Calendar.current
@@ -35,6 +37,16 @@ struct CalendarView: View {
         formatter.dateFormat = "yyyy年 MM月"
     }
     
+    @State private var isDatePickerVisible = false
+    
+    // 選択された年と月
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
+    
+    // 表示する年の範囲
+    private let minYear: Int = 2000
+    private let maxYear: Int = 2024
+    
     var body: some View {
         VStack {
             VStack {
@@ -49,9 +61,14 @@ struct CalendarView: View {
                     Spacer()
                     
                     // 選択された月の表示
-                    Text(formatter.string(from: selectedDate))
-                        .font(.title)
-                        .padding()
+                    Button(action: {
+                        // 月の表示部分がタップされたらDatePickerを表示する
+                        self.isDatePickerVisible.toggle()
+                    }) {
+                        Text(formatter.string(from: selectedDate))
+                            .font(.title)
+                            .padding()
+                    }
                     
                     Spacer()
                     
@@ -130,7 +147,47 @@ struct CalendarView: View {
                     Text("\(expense.category)： \(expense.amount)円")
                 }
             }
-        }}
+        }.padding(.bottom, 0) // 下部に余白を追加
+            .sheet(isPresented: $isDatePickerVisible) {
+                // 年月のピッカーを表示するためのシート
+                VStack {
+                    // DatePickerを閉じるボタン
+                    Button(action: {
+                        self.isDatePickerVisible = false
+                        // 選択された年月からDateを生成
+                        self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                    }) {
+                        Text("閉じる")
+                            .foregroundColor(.blue)
+                            .padding()
+                    }
+                    
+                    HStack {
+                        // 年のピッカー
+                        Picker(selection: $selectedYear, label: Text("")) {
+                            ForEach(minYear...maxYear, id: \.self) { year in
+                                Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                        
+                        // 月のピッカー
+                        Picker("Month", selection: $selectedMonth) {
+                            ForEach(1...12, id: \.self) { month in
+                                Text("\(month)月")
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(maxWidth: .infinity)
+                        
+                    }.toolbar {
+                        
+                    }
+                }.presentationDetents([.height(280)]) // シートの高さ
+            }
+    }
     
     // 日付から曜日を取得する関数
     func getDayOfWeek(_ date: Date?) -> String {
