@@ -11,6 +11,7 @@ import SwiftData
 struct ContentView: View { //アプリ起動時の共有画面
     
     @State private var selectedTab: Tab = .home // 初期値をホームに設定
+    @State private var selectedIndex = 0
     
     init() {
         UITabBar.appearance().backgroundColor = UIColor(Color(0xfaf0e6, alpha:1.0))
@@ -36,12 +37,16 @@ struct ContentView: View { //アプリ起動時の共有画面
         // プラスボタン実装
         NavigationStack {
             TabView(selection: $selectedTab) {
-                HomeView() //タブ1番目
-                    .tabItem { //見た目
-                        Image(systemName: "house")
-                        Text("ホーム")
-                    }
-                    .tag(Tab.home) // タグを設定
+                TabView(selection: $selectedTab) { //タブ1番目
+                    HomeView()
+                    CalendarView()
+                }
+                .tag(Tab.home) // タグを設定
+                .tabViewStyle(PageTabViewStyle())
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("ホーム")
+                }
                 
                 CalendarView() //タブ2番目
                     .tabItem {
@@ -71,7 +76,7 @@ struct ContentView: View { //アプリ起動時の共有画面
                     }
                     .tag(Tab.settings) // タグを設定
             }
-//            .accentColor(.green) //ここでタブのアクセント色の指定
+            //            .accentColor(.green) //ここでタブのアクセント色の指定
             
             //タイトル
             .navigationTitle(title(for: selectedTab))

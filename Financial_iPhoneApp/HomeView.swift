@@ -42,6 +42,32 @@ struct HomeView: View {
     private let minYear: Int = 2000
     private let maxYear: Int = 2024
     
+    struct FloatingButton: View {
+        var body: some View {
+            VStack {  // --- 1
+                Spacer()
+                HStack { // --- 2
+                    Spacer()
+                    Button(action: {
+                        // ここにボタンを押した時の処理
+                        print("Tapped!!") // --- 3
+                    }, label: {
+                        //                    Image(systemName: "pencil")
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .font(.system(size: 24)) // --- 4
+                    })
+                    .frame(width: 60, height: 60)
+                    .background(Color.blue)
+                    .cornerRadius(30.0)
+                    .shadow(color: .gray, radius: 3, x: 3, y: 3)
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0)) // --- 5
+                    
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             // 月の切り替えボタン
@@ -84,35 +110,75 @@ struct HomeView: View {
                         angle: .value("count", favoriteFruit.count),innerRadius: .inset(30)
                     )
                     .foregroundStyle(favoriteFruit.color)
-                    
-                }
+                }.frame(height: 300)
                 
                 // 円グラフの中心に表示するテキスト
                 Text("● ").foregroundColor(.gray).font(.caption) +
                 Text("月の限度額：100,000円").font(.subheadline).foregroundColor(.black) +
                 Text("\n● ").foregroundColor(.blue).font(.caption) +
                 Text("　使用金額：75,000円").font(.subheadline).foregroundColor(.black)
-                    //.offset(y: -20) // テキストを上に20ポイント移動
+                //.offset(y: -20) // テキストを上に20ポイント移動
             }
             .frame(width: 300, height: 300)
             
             Spacer().frame(height: 30)
             
-            Text("\(formatter.string(from: selectedDate))  使用内容").font(.body)
+            Text("使用内容").font(.headline).frame(maxWidth: 350, alignment: .leading)/*.offset(y: -20)*/
             Divider()
-            // リスト表示
-            List {
-                Text("あいうえお")
-                Text("かきくけこ")
-                Text("さしすせそ")
-                Text("たちつてと")
-                Text("なにぬねの")
-                Text("はひふへほ")
-                Text("まみむめも")
-                Text("やゆよ")
-                Text("わをん")
-            }
-            .listStyle(.plain)
+            
+            ZStack {
+                
+                // リスト表示
+                List {
+                    HStack {
+                        Text("\(formatter.string(from: selectedDate))")
+                        Spacer()
+                        Text("セブンイレブン")
+                        Spacer()
+                        Text("¥1,000-")
+                    }
+                    HStack {
+                        Text("04月21日")
+                        Spacer()
+                        Text("セブンイレブンいい気分")
+                        Spacer()
+                        Text("¥100,000-")
+                    }
+                    HStack {
+                        Text("04月21日")
+                        Spacer()
+                        Text("セブンイレブン")
+                        Spacer()
+                        Text("¥1,000-")
+                    }
+                    HStack {
+                        Text("04月21日")
+                        Spacer()
+                        Text("セブンイレブン")
+                        Spacer()
+                        Text("¥1,000-")
+                    }
+                    HStack {
+                        Text("04月21日")
+                        Spacer()
+                        Text("セブンイレブン")
+                        Spacer()
+                        Text("¥1,000-")
+                    }
+                    HStack {
+                        Text("04月21日")
+                        Spacer()
+                        Text("セブンイレブン")
+                        Spacer()
+                        Text("¥1,000-")
+                    }
+                }
+                .listStyle(.plain)
+                FloatingButton()
+                
+            
+            }/*.offset(y: -20)*/
+            .frame(maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
             
         }
         .padding(.bottom, 20) // 下部に余白を追加
