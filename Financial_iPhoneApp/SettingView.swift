@@ -16,31 +16,55 @@ struct SettingView: View {
     // 別にフォントサイズが変わるわけではない
     
     var body: some View {
-        // フォーム
-        Form {
-            // トグルスイッチ
-            Toggle("Show Previews", isOn: $showPreview)
-            
-            // スライドバー
-            HStack{
-                Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
-                Slider(value: $fontSize, in: 9...96) {
-                    Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+        
+        NavigationView{
+            List{
+                Section(header: Text("遷移")){
+                    NavigationLink {
+                        TestA()
+                    } label: {
+                        Text("設定A")
+                    }
+                    NavigationLink {
+                        TestB()
+                    } label: {
+                        Text("設定B")
+                    }
+                }
+                Section(header: Text("いろいろ")){
+                    Text("りんご")
+                    Toggle("Show Previews", isOn: $showPreview)
+                    // スライドバー
+                    HStack{
+                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+                        Slider(value: $fontSize, in: 9...96) {
+                            Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+                        }
+                    }
+                    // カウントステッパー
+                    Stepper(value: $fontSize, in : 9...96) {
+                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+                    }
+                    
+                    // テキスト入力エリア
+                    TextField("ユーザID", text: $userId)
                 }
             }
-            
-            // カウントステッパー
-            Stepper(value: $fontSize, in : 9...96) {
-                Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
-            }
-            
-            // テキスト入力エリア
-            TextField("ユーザID", text: $userId)
         }
-        
     }
 }
 
+struct TestA: View{
+    var body: some View {
+        Text("きた")
+    }
+}
+
+struct TestB: View{
+    var body: some View {
+        Text("これ")
+    }
+}
 
 #Preview {
     SettingView()
