@@ -128,6 +128,7 @@ struct HomeView: View {
                                 }
                                 .id(tab.id)
                                 .padding()
+                                .frame(width: 190)
                             }
                         }
                     }
