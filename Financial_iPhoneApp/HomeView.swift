@@ -83,236 +83,207 @@ struct HomeView: View {
     @Namespace private var tabNamespace
     
     var body: some View {
-        
-        HStack {
-            Button(action: {
-                self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
-            }) {
-                Image(systemName: "chevron.left")
+        VStack{
+            
+            HStack {
+                Button(action: {
+                    self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
+                }) {
+                    Image(systemName: "chevron.left")
+                }
+                
+                Spacer()
+                
+                // 選択された月の表示
+                Button(action: {
+                    // 月の表示部分がタップされたらDatePickerを表示する
+                    self.isDatePickerVisible.toggle()
+                }) {
+                    Text(formatter.string(from: selectedDate))
+                        .font(.title)
+                        .padding()
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
+                }) {
+                    Image(systemName: "chevron.right")
+                }
             }
+            .padding(.horizontal)
             
-            Spacer()
-            
-            // 選択された月の表示
-            Button(action: {
-                // 月の表示部分がタップされたらDatePickerを表示する
-                self.isDatePickerVisible.toggle()
-            }) {
-                Text(formatter.string(from: selectedDate))
-                    .font(.title)
-                    .padding()
-            }
-            
-            Spacer()
-            
-            Button(action: {
-                self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
-            }) {
-                Image(systemName: "chevron.right")
-            }
-        }
-        .padding(.horizontal)
-        
-        VStack(spacing: 0) {
-            // Tab
-            ScrollViewReader { scrollProxy in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(tabs) { tab in
-                            Button {
-                                selectedTabId = tab.id
-                            } label: {
-                                Text(tab.title)
-                                    .bold()
+            VStack(spacing: 0) {
+                // Tab
+                ScrollViewReader { scrollProxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(tabs) { tab in
+                                Button {
+                                    selectedTabId = tab.id
+                                } label: {
+                                    Text(tab.title)
+                                        .bold()
+                                }
+                                .id(tab.id)
+                                .padding()
                             }
-                            .id(tab.id)
-                            .padding()
                         }
                     }
                 }
-            }
-            
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 0) {
-                    ForEach(tabs) { tab in
-                        //ScrollView {
-                        if tab.title == "ホーム2" {
-                            ZStack {
-                                VStack {
+                
+                ScrollView(.horizontal) {
+                    LazyHStack(spacing: 0) {
+                        ForEach(tabs) { tab in
+                            //ScrollView {
+                            if tab.title == "ホーム1" {
+                                ZStack {
                                     VStack {
-//                                        // 月の切り替えボタン
-//                                        HStack {
-//                                            Button(action: {
-//                                                self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
-//                                            }) {
-//                                                Image(systemName: "chevron.left")
-//                                            }
-//                                            
-//                                            Spacer()
-//                                            
-//                                            // 選択された月の表示
-//                                            Button(action: {
-//                                                // 月の表示部分がタップされたらDatePickerを表示する
-//                                                self.isDatePickerVisible.toggle()
-//                                            }) {
-//                                                Text(formatter.string(from: selectedDate))
-//                                                    .font(.title)
-//                                                    .padding()
-//                                            }
-//                                            
-//                                            Spacer()
-//                                            
-//                                            Button(action: {
-//                                                self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
-//                                            }) {
-//                                                Image(systemName: "chevron.right")
-//                                            }
-//                                        }
-//                                        .padding(.horizontal)
-                                        
-                                        Divider()
-                                        // スペースを追加
-                                        Spacer().frame(height: 20)
-                                        
-                                        ZStack {
-                                            Chart(favoriteFruits, id: \.name) { favoriteFruit in
-                                                SectorMark(
-                                                    angle: .value("count", favoriteFruit.count),innerRadius: .inset(30)
-                                                )
-                                                .foregroundStyle(favoriteFruit.color)
-                                            }.frame(height: 300)
-                                            
-                                            // 円グラフの中心に表示するテキスト
-                                            Text("● ").foregroundColor(.gray).font(.caption) +
-                                            Text("月の限度額：100,000円").font(.subheadline).foregroundColor(.black) +
-                                            Text("\n● ").foregroundColor(.blue).font(.caption) +
-                                            Text("　使用金額：75,000円").font(.subheadline).foregroundColor(.black)
-                                            //.offset(y: -20) // テキストを上に20ポイント移動
-                                        }
-                                        .frame(width: 300, height: 300)
-                                        
-                                        Spacer().frame(height: 30)
-                                        
-                                        Text("使用内容").font(.headline).frame(maxWidth: 350, alignment: .leading)/*.offset(y: -20)*/
-                                        Divider()
-                                        
-                                        ZStack {
-                                            
-                                            // リスト表示
-                                            List {
-                                                HStack {
-                                                    Text("\(formatter.string(from: selectedDate))")
-                                                    Spacer()
-                                                    Text("セブンイレブン")
-                                                    Spacer()
-                                                    Text("¥1,000-")
-                                                }
-                                                HStack {
-                                                    Text("04月21日")
-                                                    Spacer()
-                                                    Text("セブンイレブンいい気分")
-                                                    Spacer()
-                                                    Text("¥100,000-")
-                                                }
-                                                HStack {
-                                                    Text("04月21日")
-                                                    Spacer()
-                                                    Text("セブンイレブン")
-                                                    Spacer()
-                                                    Text("¥1,000-")
-                                                }
-                                                HStack {
-                                                    Text("04月21日")
-                                                    Spacer()
-                                                    Text("セブンイレブン")
-                                                    Spacer()
-                                                    Text("¥1,000-")
-                                                }
-                                                HStack {
-                                                    Text("04月21日")
-                                                    Spacer()
-                                                    Text("セブンイレブン")
-                                                    Spacer()
-                                                    Text("¥1,000-")
-                                                }
-                                                HStack {
-                                                    Text("04月21日")
-                                                    Spacer()
-                                                    Text("セブンイレブン")
-                                                    Spacer()
-                                                    Text("¥1,000-")
-                                                }
-                                            }
-                                            .listStyle(.plain)
-                                            FloatingButton()
-                                            
-                                            
-                                        }/*.offset(y: -20)*/
-                                        .frame(maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                                        
-                                    }
-                                    .padding(.bottom, 20) // 下部に余白を追加
-                                    .sheet(isPresented: $isDatePickerVisible) {
-                                        // 年月のピッカーを表示するためのシート
                                         VStack {
-                                            // DatePickerを閉じるボタン
-                                            Button(action: {
-                                                self.isDatePickerVisible = false
-                                                // 選択された年月からDateを生成
-                                                self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                                            }) {
-                                                Text("閉じる")
-                                                    .foregroundColor(.blue)
-                                                    .padding()
-                                            }
+                                            Divider()
+                                            // スペースを追加
+                                            Spacer().frame(height: 20)
                                             
-                                            HStack {
-                                                // 年のピッカー
-                                                Picker(selection: $selectedYear, label: Text("")) {
-                                                    ForEach(minYear...maxYear, id: \.self) { year in
-                                                        Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                                                    }
-                                                }
-                                                .pickerStyle(WheelPickerStyle())
-                                                .labelsHidden()
-                                                .frame(maxWidth: .infinity)
+                                            ZStack {
+                                                Chart(favoriteFruits, id: \.name) { favoriteFruit in
+                                                    SectorMark(
+                                                        angle: .value("count", favoriteFruit.count),innerRadius: .inset(30)
+                                                    )
+                                                    .foregroundStyle(favoriteFruit.color)
+                                                }.frame(height: 300)
                                                 
-                                                // 月のピッカー
-                                                Picker("Month", selection: $selectedMonth) {
-                                                    ForEach(1...12, id: \.self) { month in
-                                                        Text("\(month)月")
-                                                    }
-                                                }
-                                                .pickerStyle(WheelPickerStyle())
-                                                .frame(maxWidth: .infinity)
-                                                
-                                            }.toolbar {
-                                                
+                                                // 円グラフの中心に表示するテキスト
+                                                Text("● ").foregroundColor(.gray).font(.caption) +
+                                                Text("月の限度額：100,000円").font(.subheadline).foregroundColor(.black) +
+                                                Text("\n● ").foregroundColor(.blue).font(.caption) +
+                                                Text("　使用金額：75,000円").font(.subheadline).foregroundColor(.black)
+                                                //.offset(y: -20) // テキストを上に20ポイント移動
                                             }
-                                        }.presentationDetents([.height(280)]) // シートの高さ
+                                            .frame(width: 300, height: 300)
+                                            
+                                            Spacer().frame(height: 30)
+                                            
+                                            Text("使用内容").font(.headline).frame(maxWidth: 350, alignment: .leading)/*.offset(y: -20)*/
+                                            Divider()
+                                            
+                                            ZStack {
+                                                
+                                                // リスト表示
+                                                List {
+                                                    HStack {
+                                                        Text("\(formatter.string(from: selectedDate))")
+                                                        Spacer()
+                                                        Text("セブンイレブン")
+                                                        Spacer()
+                                                        Text("¥1,000-")
+                                                    }
+                                                    HStack {
+                                                        Text("04月21日")
+                                                        Spacer()
+                                                        Text("セブンイレブンいい気分")
+                                                        Spacer()
+                                                        Text("¥100,000-")
+                                                    }
+                                                    HStack {
+                                                        Text("04月21日")
+                                                        Spacer()
+                                                        Text("セブンイレブン")
+                                                        Spacer()
+                                                        Text("¥1,000-")
+                                                    }
+                                                    HStack {
+                                                        Text("04月21日")
+                                                        Spacer()
+                                                        Text("セブンイレブン")
+                                                        Spacer()
+                                                        Text("¥1,000-")
+                                                    }
+                                                    HStack {
+                                                        Text("04月21日")
+                                                        Spacer()
+                                                        Text("セブンイレブン")
+                                                        Spacer()
+                                                        Text("¥1,000-")
+                                                    }
+                                                    HStack {
+                                                        Text("04月21日")
+                                                        Spacer()
+                                                        Text("セブンイレブン")
+                                                        Spacer()
+                                                        Text("¥1,000-")
+                                                    }
+                                                }
+                                                .listStyle(.plain)
+                                                FloatingButton()
+                                                
+                                                
+                                            }/*.offset(y: -20)*/
+                                            .frame(maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                                            
+                                        }
+                                        .padding(.bottom, 20) // 下部に余白を追加
+                                        .sheet(isPresented: $isDatePickerVisible) {
+                                            // 年月のピッカーを表示するためのシート
+                                            VStack {
+                                                // DatePickerを閉じるボタン
+                                                Button(action: {
+                                                    self.isDatePickerVisible = false
+                                                    // 選択された年月からDateを生成
+                                                    self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                                                }) {
+                                                    Text("閉じる")
+                                                        .foregroundColor(.blue)
+                                                        .padding()
+                                                }
+                                                
+                                                HStack {
+                                                    // 年のピッカー
+                                                    Picker(selection: $selectedYear, label: Text("")) {
+                                                        ForEach(minYear...maxYear, id: \.self) { year in
+                                                            Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
+                                                        }
+                                                    }
+                                                    .pickerStyle(WheelPickerStyle())
+                                                    .labelsHidden()
+                                                    .frame(maxWidth: .infinity)
+                                                    
+                                                    // 月のピッカー
+                                                    Picker("Month", selection: $selectedMonth) {
+                                                        ForEach(1...12, id: \.self) { month in
+                                                            Text("\(month)月")
+                                                        }
+                                                    }
+                                                    .pickerStyle(WheelPickerStyle())
+                                                    .frame(maxWidth: .infinity)
+                                                    
+                                                }.toolbar {
+                                                    
+                                                }
+                                            }.presentationDetents([.height(280)]) // シートの高さ
+                                        }
                                     }
                                 }
+                                //横幅めいいっぱい?
+                                .containerRelativeFrame(.horizontal)
+                                //}
+                            }else{
+                                Home2()
                             }
-                            //横幅めいいっぱい?
-                            .containerRelativeFrame(.horizontal)
-                            //}
-                        }else{
-                            Home2()
+                            
                         }
-                        
                     }
+                    //スワイプ途中で止めない
+                    .scrollTargetLayout()
                 }
                 //スワイプ途中で止めない
-                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
+                //
+                .scrollPosition(id: $selectedTabId)
             }
-            //スワイプ途中で止めない
-            .scrollTargetBehavior(.viewAligned)
-            //
-            .scrollPosition(id: $selectedTabId)
+            //ボタンを押した時のアニメーション
+            .animation(.easeInOut, value: selectedTabId)
         }
-        //ボタンを押した時のアニメーション
-        .animation(.easeInOut, value: selectedTabId)
-        
     }
 }
 
@@ -379,36 +350,6 @@ struct Home2: View{
         ZStack {
             VStack {
                 VStack {
-                    // 月の切り替えボタン
-//                    HStack {
-//                        Button(action: {
-//                            self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
-//                        }) {
-//                            Image(systemName: "chevron.left")
-//                        }
-//                        
-//                        Spacer()
-//                        
-//                        // 選択された月の表示
-//                        Button(action: {
-//                            // 月の表示部分がタップされたらDatePickerを表示する
-//                            self.isDatePickerVisible.toggle()
-//                        }) {
-//                            Text(formatter.string(from: selectedDate))
-//                                .font(.title)
-//                                .padding()
-//                        }
-//                        
-//                        Spacer()
-//                        
-//                        Button(action: {
-//                            self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
-//                        }) {
-//                            Image(systemName: "chevron.right")
-//                        }
-//                    }
-//                    .padding(.horizontal)
-                    
                     Divider()
                     // スペースを追加
                     Spacer().frame(height: 20)

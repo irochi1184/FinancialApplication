@@ -25,7 +25,7 @@ struct GraphView: View {
     @State private var selectedDay: Date?
     
     init() {
-        formatter.dateFormat = "yyyy年 MM月"
+        formatter.dateFormat = "yyyy年"
     }
     
     @State private var isDatePickerVisible = false
@@ -58,97 +58,99 @@ struct GraphView: View {
     @State  var isOn2:Bool = true
     
     var body: some View {
-        VStack {
-            // 月の切り替えボタン
-            HStack {
-                Button(action: {
-                    self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
-                }) {
-                    Image(systemName: "chevron.left")
-                }
-                
-                Spacer()
-                
-                // 選択された月の表示
-                Button(action: {
-                    // 月の表示部分がタップされたらDatePickerを表示する
-                    self.isDatePickerVisible.toggle()
-                }) {
-                    Text(formatter.string(from: selectedDate))
-                        .font(.title)
-                        .padding()
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
-                }) {
-                    Image(systemName: "chevron.right")
-                }
-            }
-            .padding(.horizontal)
-            
-        }
-        .padding(.bottom, 20) // 下部に余白を追加
-        .sheet(isPresented: $isDatePickerVisible) {
-            // 年月のピッカーを表示するためのシート
+        VStack{
             VStack {
-                // DatePickerを閉じるボタン
-                Button(action: {
-                    self.isDatePickerVisible = false
-                    // 選択された年月からDateを生成
-                    self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                }) {
-                    Text("閉じる")
-                        .foregroundColor(.blue)
-                        .padding()
-                }
-                
+                // 月の切り替えボタン
                 HStack {
-                    // 年のピッカー
-                    Picker(selection: $selectedYear, label: Text("")) {
-                        ForEach(minYear...maxYear, id: \.self) { year in
-                            Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                        }
+                    Button(action: {
+                        self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
+                    }) {
+                        Image(systemName: "chevron.left")
                     }
-                    .pickerStyle(WheelPickerStyle())
-                    .labelsHidden()
-                    .frame(maxWidth: .infinity)
                     
-                    // 月のピッカー
-                    Picker("Month", selection: $selectedMonth) {
-                        ForEach(1...12, id: \.self) { month in
-                            Text("\(month)月")
-                        }
+                    Spacer()
+                    
+                    // 選択された月の表示
+                    Button(action: {
+                        // 月の表示部分がタップされたらDatePickerを表示する
+                        self.isDatePickerVisible.toggle()
+                    }) {
+                        Text(formatter.string(from: selectedDate))
+                            .font(.title)
+                            .padding()
                     }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(maxWidth: .infinity)
                     
+                    Spacer()
+                    
+                    Button(action: {
+                        self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
+                    }) {
+                        Image(systemName: "chevron.right")
+                    }
                 }
-            }.presentationDetents([.height(280)]) // シートの高さ
-        }
-        VStack {
-            Chart(lineData_test){ dataRow in
-                LineMark(
-                    x: .value("month", dataRow.month),
-                    y: .value("amount", dataRow.amount)
-                )
-                .foregroundStyle(by: .value("Category", dataRow.category))
+                .padding(.horizontal)
+                
             }
-            .frame(height: 300)
-            .chartYAxis{
-                AxisMarks(position: .leading)
+            .padding(.bottom, 20) // 下部に余白を追加
+            .sheet(isPresented: $isDatePickerVisible) {
+                // 年月のピッカーを表示するためのシート
+                VStack {
+                    // DatePickerを閉じるボタン
+                    Button(action: {
+                        self.isDatePickerVisible = false
+                        // 選択された年月からDateを生成
+                        self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                    }) {
+                        Text("閉じる")
+                            .foregroundColor(.blue)
+                            .padding()
+                    }
+                    
+                    HStack {
+                        // 年のピッカー
+                        Picker(selection: $selectedYear, label: Text("")) {
+                            ForEach(minYear...maxYear, id: \.self) { year in
+                                Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                        
+                        // 月のピッカー
+                        Picker("Month", selection: $selectedMonth) {
+                            ForEach(1...12, id: \.self) { month in
+                                Text("\(month)月")
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                        .frame(maxWidth: .infinity)
+                        
+                    }
+                }.presentationDetents([.height(280)]) // シートの高さ
             }
-            List{
-                Toggle(isOn: $isOn){
-                    Text("全体")
+            VStack {
+                Chart(lineData_test){ dataRow in
+                    LineMark(
+                        x: .value("month", dataRow.month),
+                        y: .value("amount", dataRow.amount)
+                    )
+                    .foregroundStyle(by: .value("Category", dataRow.category))
                 }
-                Toggle(isOn: $isOn1) {
-                    Text("カテゴリ1")
+                .frame(height: 300)
+                .chartYAxis{
+                    AxisMarks(position: .leading)
                 }
-                Toggle(isOn: $isOn2) {
-                    Text("カテゴリ2")
+                List{
+                    Toggle(isOn: $isOn){
+                        Text("全体")
+                    }
+                    Toggle(isOn: $isOn1) {
+                        Text("カテゴリ1")
+                    }
+                    Toggle(isOn: $isOn2) {
+                        Text("カテゴリ2")
+                    }
                 }
             }
         }
