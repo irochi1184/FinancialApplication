@@ -37,10 +37,7 @@ struct ContentView: View { //アプリ起動時の共有画面
         // プラスボタン実装
         NavigationStack {
             TabView(selection: $selectedTab) {
-                TabView(selection: $selectedTab) { //タブ1番目
-                    HomeView()
-                    CalendarView()
-                }
+                HomeView()
                 .tag(Tab.home) // タグを設定
                 .tabViewStyle(PageTabViewStyle())
                 .tabItem {
