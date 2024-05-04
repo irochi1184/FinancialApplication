@@ -30,9 +30,8 @@ struct GraphView: View {
     
     @State private var isDatePickerVisible = false
     
-    // 選択された年と月
+    // 選択された年
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
-    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
     
     // 表示する年の範囲
     private let minYear: Int = 2000
@@ -70,9 +69,9 @@ struct GraphView: View {
                     
                     Spacer()
                     
-                    // 選択された月の表示
+                    // 選択された年の表示
                     Button(action: {
-                        // 月の表示部分がタップされたらDatePickerを表示する
+                        // 年の表示部分がタップされたらDatePickerを表示する
                         self.isDatePickerVisible.toggle()
                     }) {
                         Text(formatter.string(from: selectedDate))
@@ -98,8 +97,7 @@ struct GraphView: View {
                     // DatePickerを閉じるボタン
                     Button(action: {
                         self.isDatePickerVisible = false
-                        // 選択された年月からDateを生成
-                        self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+
                     }) {
                         Text("閉じる")
                             .foregroundColor(.blue)
@@ -115,15 +113,6 @@ struct GraphView: View {
                         }
                         .pickerStyle(WheelPickerStyle())
                         .labelsHidden()
-                        .frame(maxWidth: .infinity)
-                        
-                        // 月のピッカー
-                        Picker("Month", selection: $selectedMonth) {
-                            ForEach(1...12, id: \.self) { month in
-                                Text("\(month)月")
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
                         .frame(maxWidth: .infinity)
                         
                     }
