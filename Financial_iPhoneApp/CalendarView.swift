@@ -136,7 +136,9 @@ struct CalendarView: View {
                 Divider() // カレンダーと下部の区切り線
                 
                 // 選択された日付を表示するテキスト
-                Text("\(selectedDateString) \(getDayOfWeek(selectedDay))")
+//                Text("\(selectedDateString) \(getDayOfWeek(selectedDay))")
+                Text("04月20日(土)")
+                    .frame(maxWidth: 350, alignment: .leading)
                     .font(.headline)
                     .padding()
                 
@@ -181,8 +183,6 @@ struct CalendarView: View {
                         }
                         .pickerStyle(WheelPickerStyle())
                         .frame(maxWidth: .infinity)
-                        
-                    }.toolbar {
                         
                     }
                 }.presentationDetents([.height(280)]) // シートの高さ
