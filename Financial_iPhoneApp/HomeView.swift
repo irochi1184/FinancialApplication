@@ -362,16 +362,20 @@ struct Home2: View{
                             .foregroundStyle(favoriteFruit.color)
                         }.frame(height: 300)
                         
-                        // 円グラフの中心に表示するテキスト
-                        Text("● ").foregroundColor(.blue).font(.caption) +
-                        Text("食費：60000円").font(.subheadline).foregroundColor(.black) +
-                        Text("\n● ").foregroundColor(.gray).font(.caption) +
-                        Text("固定費：60000円").font(.subheadline).foregroundColor(.black)
-                        Text("\n● ").foregroundColor(.red).font(.caption) +
-                        Text("娯楽：60000円").font(.subheadline).foregroundColor(.black)
-                        Text("\n● ").foregroundColor(.orange).font(.caption) +
-                        Text("日用雑貨：60000円").font(.subheadline).foregroundColor(.black)
-                        //.offset(y: -20) // テキストを上に20ポイント移動
+                        VStack {
+                            
+                            // 円グラフの中心に表示するテキスト
+                            Text("●").foregroundColor(.blue).font(.caption) +
+                            Text("食費：60000円").font(.subheadline).foregroundColor(.black)
+                            Text("●").foregroundColor(.gray).font(.caption) +
+                            Text("固定費：60000円").font(.subheadline).foregroundColor(.black)
+                            Text("●").foregroundColor(.red).font(.caption) +
+                            Text("娯楽：60000円").font(.subheadline).foregroundColor(.black)
+                            Text("●").foregroundColor(.orange).font(.caption) +
+                            Text("日用雑貨：60000円").font(.subheadline).foregroundColor(.black)
+                            
+                        }
+//                        .offset(y: -50) // テキストを上に20ポイント移動
                     }
                     .frame(width: 300, height: 300)
                     
