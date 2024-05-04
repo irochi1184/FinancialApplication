@@ -73,27 +73,7 @@ struct ContentView: View { //アプリ起動時の共有画面
                     }
                     .tag(Tab.settings) // タグを設定
             }
-            //            .accentColor(.green) //ここでタブのアクセント色の指定
-            
-            //タイトル
-            .navigationTitle(title(for: selectedTab))
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-    
-    // タブに応じたタイトルを返す関数
-    private func title(for tab: Tab) -> String {
-        switch tab {
-        case .home:
-            return "ホーム"
-        case .calendar:
-            return "カレンダー"
-        case .report:
-            return "レポート"
-        case .search:
-            return "検索"
-        case .settings:
-            return "設定"
+            //.accentColor(.green) //ここでタブのアクセント色の指定
         }
     }
 }
