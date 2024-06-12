@@ -54,6 +54,9 @@ struct HomeView: View {
     private let maxYear: Int = 2024
     
     struct FloatingButton: View {
+        //画面遷移の時に使用するbool値
+        @State private var isPresented: Bool = false
+        
         var body: some View {
             VStack {  // --- 1
                 Spacer()
@@ -61,13 +64,15 @@ struct HomeView: View {
                     Spacer()
                     Button(action: {
                         // ここにボタンを押した時の処理
-                        print("Tapped!!") // --- 3
+                        isPresented = true //trueにしないと画面遷移されない
                     }, label: {
-                        //                    Image(systemName: "pencil")
                         Image(systemName: "plus")
                             .foregroundColor(.white)
                             .font(.system(size: 24)) // --- 4
                     })
+                    .fullScreenCover(isPresented: $isPresented) { //ボタンタップ時のフルスクリーンの画面遷移
+                        PlusView()
+                    }
                     .frame(width: 60, height: 60)
                     .background(Color.blue)
                     .cornerRadius(30.0)
