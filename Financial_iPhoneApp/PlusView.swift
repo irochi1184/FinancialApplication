@@ -6,16 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 import UIKit
 
 struct PlusView: View {
+    
+    // CRUD処理下準備
+    @Environment(\.modelContext) private var context
+    @Query private var datas: [TransactionData]
+    
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isDatePickerVisible = false
-    @State private var selectedDate = Date()
-    @State private var amount = ""
-    @State private var description = ""
-    @State private var category = ""
+    
+    @State private var isExpense = true           // 項目（true = 支出、false = 収入）
+    @State private var transactionName = String() // 取引名
+    @State private var selectedDate = Date()      // 日付
+    @State private var amount = String()          // 金額
+    @State private var category = String()        // カテゴリー
     @State private var selectedImage: UIImage?
     
     // 選択された年と月
@@ -31,61 +39,158 @@ struct PlusView: View {
     let formatter = DateFormatter()
     
     init() {
+        // 背景色
+        UISegmentedControl.appearance().backgroundColor = UIColor(Color.gray.opacity(0.1))
+        // 選択項目の背景色
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.green)
+        // 選択項目の文字色
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        
         formatter.dateFormat = "yyyy年 MM月 dd日"
     }
     
     var body: some View {
         NavigationView {
             VStack {
-                Button(action: {
-                    // 月の表示部分がタップされたらDatePickerを表示する
-                    self.isDatePickerVisible.toggle()
-                }) {
-                    Text(formatter.string(from: selectedDate))
-                        .foregroundStyle(.blue)
-                    Image(systemName: "calendar")
-                }
-                
-                TextField("金額", text: $amount)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.numberPad)
-                    .padding()
-                
-                TextField("内容", text: $description)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                TextField("カテゴリー", text: $category)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
                 HStack {
+                    Button("戻る") {
+                        self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
+                    }.padding(.leading, 20)
                     Spacer()
-                    Button(action: {
-                        // 「写真を撮る」ボタンのアクション
-                        self.openCamera()
-                    }) {
+                    Text("追加")
+                        .padding(.trailing, 50)
+                        .font(.title3)
+                    Spacer()
+                }
+                Spacer()
+                
+                // --------------- 写真で読み込む --------------- //
+                Button(action: {
+                    // 「写真を撮る」ボタンのアクション
+                    self.openCamera()
+                }) {
+                    HStack {
                         Image(systemName: "camera")
                         Text("写真で読み込む")
                     }
-                    Spacer()
-                    Button(action: {
-                        // 「追加」ボタンのアクション
-                        // ここでデータを保存するなどの処理を行う
-                        self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
-                    }) {
-                        Text("追加")
-                    }
-                    Spacer()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(.green)
+                    .padding(8)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .overlay(RoundedRectangle(cornerRadius: 8) // 枠線の角丸
+                        .stroke(.green, lineWidth: 0.5)) // 枠線の色と太さ
                 }
                 .padding()
+                .padding(.bottom, 10)
+                
+                // --------------- 項目選択 --------------- //
+                Text("項目")
+                    .bold()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                Section {
+                    Picker(selection: $isExpense, label: Text("項目")) {
+                        Text("支出").tag(true)
+                        Text("收入").tag(false)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+                .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                .padding(.bottom, 10)
+                
+                // --------------- 取引名 --------------- //
+                Text("取引名")
+                    .bold()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                TextField("入力", text: $transactionName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                    .padding(.bottom, 10)
+                
+                // --------------- 日付 --------------- //
+                Text("日付")
+                    .bold()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                HStack {
+                    Button(action: {
+                        // 日付の表示部分がタップされたらDatePickerを表示する
+                        self.isDatePickerVisible.toggle()
+                    }) {
+                        Text(formatter.string(from: selectedDate))
+                            .foregroundStyle(.blue)
+                        Spacer()
+                        Image(systemName: "calendar")
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(7)
+                }
+                .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
+                    .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
+                .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                .padding(.bottom, 10)
+                
+                // --------------- 金額 --------------- //
+                Text("金額")
+                    .bold()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                TextField("金額 (円)", text: $amount)
+                    .keyboardType(.numberPad)
+                    .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                    .padding(.bottom, 10)
+                
+                // --------------- カテゴリー選択 --------------- //
+                Text("選択")
+                    .bold()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                HStack {
+                    NavigationLink(destination: CategorySelectionView(selectedCategory: $category)) {
+                        Text(category.isEmpty ? "選択" : category)
+                            .foregroundColor(.gray.opacity(0.6))
+                        Spacer()
+                        Text(">")
+                    }
+                    .padding(7)
+                }
+                .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
+                    .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
+                .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                .padding(.bottom, 30)
+                
+                Button(action: {
+                    // 「追加」ボタンのアクション
+                    // ここでデータを保存するなどの処理を行う
+                    add(ex: isExpense, tn: transactionName, sd: selectedDate, am: amount, ca: category)
+                    isExpense = false
+                    transactionName = String()
+                    selectedDate = Date()
+                    amount = String()
+                    category = String()
+                    self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
+                }) {
+                    Text("追加")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.green)
+                        .cornerRadius(8)
+                }
+                .padding(10)
+                
+                Spacer()
+                
             }
-            .navigationTitle("追加")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading:
-                                    Button("戻る") {
-                self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
-            })
+            .navigationBarHidden(true)
         }
         .sheet(isPresented: $isDatePickerVisible) {
             // 年月のピッカーを表示するためのシート
@@ -133,6 +238,30 @@ struct PlusView: View {
         }
     }
     
+    struct CategorySelectionView: View {
+        @Binding var selectedCategory: String
+        let categories = ["カテゴリ1", "カテゴリ2", "カテゴリ3"] // Example categories
+        
+        var body: some View {
+            List {
+                ForEach(categories, id: \.self) { category in
+                    Button(action: {
+                        selectedCategory = category
+                    }) {
+                        HStack {
+                            Text(category)
+                            if selectedCategory == category {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func numberOfDays(in month: Int) -> Int {
         let dateComponents = DateComponents(year: selectedYear, month: month)
         if let date = calendar.date(from: dateComponents),
@@ -142,6 +271,7 @@ struct PlusView: View {
         return 31 // デフォルトでは31日を返す
     }
     
+    // カメラ起動
     func openCamera() {
         let picker = UIImagePickerController()
         let coordinator = Coordinator(parent: self) // Coordinatorクラスのインスタンスを生成
@@ -155,6 +285,16 @@ struct PlusView: View {
             }
         }
     }
+    
+    // データの追加
+    private func add(ex: Bool, tn: String, sd: Date, am: String, ca: String) {
+        print(ex, tn, sd, am, ca) // true とりひき 2024-05-12 15:00:00 +0000 300 カテゴリ1
+        let data = TransactionData(isExpense: ex, transactionName: tn, selectedDate: sd, amount: am, category: ca)
+
+        context.insert(data)
+        print("insert成功した！！！！")
+    }
+
 }
 
 extension PlusView {
@@ -180,5 +320,6 @@ extension PlusView {
 }
 
 #Preview {
-    PlusView()
+    ContentView()
+        .modelContainer(for: TransactionData.self) // データ保存用
 }

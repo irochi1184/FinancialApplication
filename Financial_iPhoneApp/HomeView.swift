@@ -312,31 +312,31 @@ struct Home2: View{
     private let minYear: Int = 2000
     private let maxYear: Int = 2024
     
-    struct FloatingButton: View {
-        var body: some View {
-            VStack {  // --- 1
-                Spacer()
-                HStack { // --- 2
-                    Spacer()
-                    Button(action: {
-                        // ここにボタンを押した時の処理
-                        print("Tapped!!") // --- 3
-                    }, label: {
-                        //                    Image(systemName: "pencil")
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .font(.system(size: 24)) // --- 4
-                    })
-                    .frame(width: 60, height: 60)
-                    .background(Color.blue)
-                    .cornerRadius(30.0)
-                    .shadow(color: .gray, radius: 3, x: 3, y: 3)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0)) // --- 5
-                    
-                }
-            }
-        }
-    }
+//    struct FloatingButton: View {
+//        var body: some View {
+//            VStack {  // --- 1
+//                Spacer()
+//                HStack { // --- 2
+//                    Spacer()
+//                    Button(action: {
+//                        // ここにボタンを押した時の処理
+//                        print("Tapped!!") // --- 3
+//                    }, label: {
+//                        //                    Image(systemName: "pencil")
+//                        Image(systemName: "plus")
+//                            .foregroundColor(.white)
+//                            .font(.system(size: 24)) // --- 4
+//                    })
+//                    .frame(width: 60, height: 60)
+//                    .background(Color.blue)
+//                    .cornerRadius(30.0)
+//                    .shadow(color: .gray, radius: 3, x: 3, y: 3)
+//                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0)) // --- 5
+//                    
+//                }
+//            }
+//        }
+//    }
     
     @State private var selectedTabId: UUID? = tabs[0].id
     @Namespace private var tabNamespace

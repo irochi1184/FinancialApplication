@@ -10,6 +10,29 @@ import SwiftData
 
 struct ContentView: View { //アプリ起動時の共有画面
     
+    // CRUD処理下準備
+    @Environment(\.modelContext) private var context
+    @Query private var datas: [TransactionData]
+    
+    // データの追加
+    private func add(isExpense: Bool, transactionName: String, selectedDate: Date, amount: String, category: String) {
+        let data = TransactionData(isExpense: isExpense, transactionName: transactionName, selectedDate: selectedDate, amount: amount, category: category)
+        context.insert(data)
+    }
+    
+    //    // データの削除
+    //    private func delete(todo: Data) {
+    //        context.delete(todo)
+    //    }
+    //
+    //    // データのアップデート
+    //    private func update() {
+    //        let updatingTodoIndex = datas.firstIndex { !$0.isDone }
+    //        guard let updatingTodoIndex else { return }
+    //        datas[updatingTodoIndex].isDone = true
+    //        try? context.save()
+    //    }
+    
     @State private var selectedTab: Tab = .home // 初期値をホームに設定
     @State private var selectedIndex = 0
     
@@ -38,12 +61,12 @@ struct ContentView: View { //アプリ起動時の共有画面
         NavigationStack {
             TabView(selection: $selectedTab) {
                 HomeView()
-                .tag(Tab.home) // タグを設定
-                .tabViewStyle(PageTabViewStyle())
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("ホーム")
-                }
+                    .tag(Tab.home) // タグを設定
+                    .tabViewStyle(PageTabViewStyle())
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("ホーム")
+                    }
                 
                 CalendarView() //タブ2番目
                     .tabItem {
@@ -92,4 +115,5 @@ extension Color { //Colorオブジェクトの拡張(Hex値を使用するため
 
 #Preview {
     ContentView()
+        .modelContainer(for: TransactionData.self) // データ保存用
 }

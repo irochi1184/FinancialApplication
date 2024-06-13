@@ -6,10 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SearchView: View {
+    
+    // CRUD処理下準備
+    @Environment(\.modelContext) private var context
+    @Query private var datas: [TransactionData]
+    
+    // データの削除
+    private func delete(data: TransactionData) {
+        context.delete(data)
+    }
+    
     @State private var searchText = "" // 検索テキストを保持する変数
     @State private var searchResult: [String] = [] // 検索結果を保持する配列
+    
+    let formatter = DateFormatter()
+    
+    init() {
+        formatter.dateFormat = "yyyy年 MM月 dd日"
+    }
     
     var body: some View {
         VStack {
@@ -34,10 +51,35 @@ struct SearchView: View {
             
             Spacer().frame(height: 40)
             // 検索結果をリスト形式で表示
-            List(searchResult, id: \.self) { result in
-                Text(result) +
-                Text("　　¥1,000-")
-//                    .frame(maxWidth: .infinity, alignment: .trailing)
+            List {
+                ForEach(datas) { data in
+                    VStack {
+                        HStack {
+                            Text(formatter.string(from: data.selectedDate))
+                            Spacer()
+                        }
+                        HStack {
+                            Text("\(data.transactionName)")
+                                .padding(.trailing, 8)
+                            Spacer()
+                            if data.isExpense {
+                                Text("- ¥\(data.amount)-")
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 8)
+                            }
+                            else {
+                                Text("+ ¥\(data.amount)-")
+                                    .foregroundColor(.green)
+                                    .padding(.trailing, 8)
+                            }
+                        }
+                    }
+                }
+                .onDelete(perform: { indexSet in
+                    for index in indexSet {
+                        delete(data: datas[index])
+                    }
+                })
             }
             .listStyle(.plain)
         }
@@ -60,6 +102,11 @@ struct SearchView: View {
     }
 }
 
+//#Preview {
+//    SearchView()
+//}
+
 #Preview {
-    SearchView()
+    ContentView()
+        .modelContainer(for: TransactionData.self) // データ保存用
 }
