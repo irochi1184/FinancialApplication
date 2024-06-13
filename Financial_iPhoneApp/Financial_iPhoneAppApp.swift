@@ -13,6 +13,7 @@ struct Financial_iPhoneAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: TransactionData.self) // データ保存用
         }
     }
 }

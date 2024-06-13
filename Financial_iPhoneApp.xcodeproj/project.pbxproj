@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		731728FA2BD30F18000D7CF9 /* PlusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731728F92BD30F18000D7CF9 /* PlusView.swift */; };
+		734BA2552C1ACD23009F62F0 /* TransactionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734BA2542C1ACD23009F62F0 /* TransactionData.swift */; };
 		7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */; };
 		7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD492B8CC92800CCBA97 /* ContentView.swift */; };
 		7357CD4E2B8CC92900CCBA97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 		737080372B90A57C003F85D5 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080362B90A57C003F85D5 /* GraphView.swift */; };
 		737080392B90A5B5003F85D5 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080382B90A5B5003F85D5 /* SearchView.swift */; };
 		7370803B2B90A5D1003F85D5 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7370803A2B90A5D1003F85D5 /* SettingView.swift */; };
+		738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738359752C1B771200049BC1 /* AddHistoryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		731728F92BD30F18000D7CF9 /* PlusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlusView.swift; sourceTree = "<group>"; };
+		734BA2542C1ACD23009F62F0 /* TransactionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionData.swift; sourceTree = "<group>"; };
 		7357CD442B8CC92800CCBA97 /* Financial_iPhoneApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Financial_iPhoneApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppApp.swift; sourceTree = "<group>"; };
 		7357CD492B8CC92800CCBA97 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,6 +59,7 @@
 		737080362B90A57C003F85D5 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		737080382B90A5B5003F85D5 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		7370803A2B90A5D1003F85D5 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		738359752C1B771200049BC1 /* AddHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHistoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +120,8 @@
 				731728F92BD30F18000D7CF9 /* PlusView.swift */,
 				7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */,
 				7357CD4F2B8CC92900CCBA97 /* Preview Content */,
+				734BA2542C1ACD23009F62F0 /* TransactionData.swift */,
+				738359752C1B771200049BC1 /* AddHistoryView.swift */,
 			);
 			path = Financial_iPhoneApp;
 			sourceTree = "<group>";
@@ -276,12 +282,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				731728FA2BD30F18000D7CF9 /* PlusView.swift in Sources */,
+				738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */,
 				737080372B90A57C003F85D5 /* GraphView.swift in Sources */,
 				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
 				737080332B90A4DA003F85D5 /* HomeView.swift in Sources */,
 				7370803B2B90A5D1003F85D5 /* SettingView.swift in Sources */,
 				737080352B90A534003F85D5 /* CalendarView.swift in Sources */,
 				737080392B90A5B5003F85D5 /* SearchView.swift in Sources */,
+				734BA2552C1ACD23009F62F0 /* TransactionData.swift in Sources */,
 				7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

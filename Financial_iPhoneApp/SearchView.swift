@@ -6,13 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SearchView: View {
+    
+    // CRUD処理下準備
+    @Environment(\.modelContext) private var context
+    @Query private var datas: [TransactionData]
+    
+    // データの削除
+    private func delete(data: TransactionData) {
+        context.delete(data)
+    }
+    
     @State private var searchText = "" // 検索テキストを保持する変数
     @State private var searchResult: [String] = [] // 検索結果を保持する配列
     
+    let formatter = DateFormatter()
+    
+    init() {
+        formatter.dateFormat = "yyyy年 MM月 dd日"
+    }
+    
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                NavigationStack {
+                    NavigationLink("追加履歴", destination: AddHistoryView())
+                        .font(.title3)
+                        .padding(.trailing, 20)
+                }
+            }
             // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
             Spacer().frame(height: 30)
             // 検索テキストボックスと検索ボタンを横並びに配置
@@ -37,7 +62,6 @@ struct SearchView: View {
             List(searchResult, id: \.self) { result in
                 Text(result) +
                 Text("　　¥1,000-")
-//                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .listStyle(.plain)
         }
@@ -60,6 +84,11 @@ struct SearchView: View {
     }
 }
 
+//#Preview {
+//    SearchView()
+//}
+
 #Preview {
-    SearchView()
+    ContentView()
+        .modelContainer(for: TransactionData.self) // データ保存用
 }
