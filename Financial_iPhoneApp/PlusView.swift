@@ -158,7 +158,7 @@ struct PlusView: View {
                         Text(category.isEmpty ? "選択" : category)
                             .foregroundColor(.gray.opacity(0.6))
                         Spacer()
-                        Text(">")
+                        Image(systemName: "chevron.right")
                     }
                     .padding(7)
                 }

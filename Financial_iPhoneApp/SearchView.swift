@@ -30,6 +30,14 @@ struct SearchView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                NavigationStack {
+                    NavigationLink("追加履歴", destination: AddHistoryView())
+                        .font(.title3)
+                        .padding(.trailing, 20)
+                }
+            }
             // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
             Spacer().frame(height: 30)
             // 検索テキストボックスと検索ボタンを横並びに配置
@@ -51,35 +59,9 @@ struct SearchView: View {
             
             Spacer().frame(height: 40)
             // 検索結果をリスト形式で表示
-            List {
-                ForEach(datas) { data in
-                    VStack {
-                        HStack {
-                            Text(formatter.string(from: data.selectedDate))
-                            Spacer()
-                        }
-                        HStack {
-                            Text("\(data.transactionName)")
-                                .padding(.trailing, 8)
-                            Spacer()
-                            if data.isExpense {
-                                Text("- ¥\(data.amount)-")
-                                    .foregroundColor(.black)
-                                    .padding(.trailing, 8)
-                            }
-                            else {
-                                Text("+ ¥\(data.amount)-")
-                                    .foregroundColor(.green)
-                                    .padding(.trailing, 8)
-                            }
-                        }
-                    }
-                }
-                .onDelete(perform: { indexSet in
-                    for index in indexSet {
-                        delete(data: datas[index])
-                    }
-                })
+            List(searchResult, id: \.self) { result in
+                Text(result) +
+                Text("　　¥1,000-")
             }
             .listStyle(.plain)
         }
