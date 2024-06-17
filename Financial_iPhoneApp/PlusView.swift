@@ -10,7 +10,7 @@ import SwiftData
 import UIKit
 
 struct PlusView: View {
-    
+
     // CRUD処理下準備
     @Environment(\.modelContext) private var context
     @Query private var datas: [TransactionData]
@@ -240,7 +240,7 @@ struct PlusView: View {
     
     struct CategorySelectionView: View {
         @Binding var selectedCategory: String
-        let categories = ["カテゴリ1", "カテゴリ2", "カテゴリ3"] // Example categories
+        let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
         
         var body: some View {
             List {
@@ -258,6 +258,8 @@ struct PlusView: View {
                         }
                     }
                 }
+                Spacer()
+                Text("新規追加")
             }
         }
     }
