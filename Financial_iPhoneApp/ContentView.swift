@@ -10,29 +10,6 @@ import SwiftData
 
 struct ContentView: View { //アプリ起動時の共有画面
     
-    // CRUD処理下準備
-    @Environment(\.modelContext) private var context
-    @Query private var datas: [TransactionData]
-    
-    // データの追加
-    private func add(isExpense: Bool, transactionName: String, selectedDate: Date, amount: String, category: String) {
-        let data = TransactionData(isExpense: isExpense, transactionName: transactionName, selectedDate: selectedDate, amount: amount, category: category)
-        context.insert(data)
-    }
-    
-    //    // データの削除
-    //    private func delete(todo: Data) {
-    //        context.delete(todo)
-    //    }
-    //
-    //    // データのアップデート
-    //    private func update() {
-    //        let updatingTodoIndex = datas.firstIndex { !$0.isDone }
-    //        guard let updatingTodoIndex else { return }
-    //        datas[updatingTodoIndex].isDone = true
-    //        try? context.save()
-    //    }
-    
     @State private var selectedTab: Tab = .home // 初期値をホームに設定
     @State private var selectedIndex = 0
     

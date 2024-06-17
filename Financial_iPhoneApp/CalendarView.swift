@@ -6,26 +6,15 @@
 //
 
 import SwiftUI
-
-// 費用項目の構造体（表用）
-struct ExpenseItem: Identifiable {
-    let id = UUID() // ユニークなID
-    let category: String // カテゴリ
-    let amount: Int // 金額
-}
+import SwiftData
 
 struct CalendarView: View {
-    // サンプルの費用項目リスト（表）
-    let expenses = [
-        ExpenseItem(category: "ランチ", amount: 900),
-        ExpenseItem(category: "消耗品", amount: 500),
-        ExpenseItem(category: "コンビニ", amount: 320),
-        ExpenseItem(category: "図書代", amount: 600),
-        ExpenseItem(category: "雑費", amount: 480)
-    ]
+    
+    @Query private var datas: [TransactionData]
     
     let calendar = Calendar.current
     let formatter = DateFormatter()
+    let formatter2 = DateFormatter()
     let weekDays = ["日", "月", "火", "水", "木", "金", "土"]
     
     @State private var selectedDate: Date = Date()
@@ -35,6 +24,8 @@ struct CalendarView: View {
     
     init() {
         formatter.dateFormat = "yyyy年 MM月"
+        formatter2.locale = Locale(identifier: "ja_JP")
+        formatter2.dateFormat = "yyyy年M月dd日(EE)"
     }
     
     @State private var isDatePickerVisible = false
@@ -101,15 +92,16 @@ struct CalendarView: View {
                         ForEach(week, id: \.self) { date in
                             Button(action: {
                                 if let date = date {
-                                    let formatter = DateFormatter()
-                                    formatter.dateFormat = "yyyy年MM月dd日"
-                                    self.selectedDateString = formatter.string(from: date)
+                                    self.selectedDateString = formatter2.string(from: date)
                                     self.selectedDay = date
                                     self.isListVisible = true // 日付が選択されたらリストを表示
                                 } else {
                                     self.selectedDateString = ""
                                     self.selectedDay = nil
                                     self.isListVisible = false // 日付が選択解除されたらリストを非表示
+                                }
+                                if let selectedDay = self.selectedDay {
+                                    selectedDate = selectedDay
                                 }
                             }) {
                                 if date != nil {
@@ -131,23 +123,35 @@ struct CalendarView: View {
                     }
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 20) // 下部に余白を追加
+//                .padding(.bottom, 20) // 下部に余白を追加
                 
                 Divider() // カレンダーと下部の区切り線
                 
                 // 選択された日付を表示するテキスト
-//                Text("\(selectedDateString) \(getDayOfWeek(selectedDay))")
-                Text("04月20日(土)")
-                    .frame(maxWidth: 350, alignment: .leading)
-                    .font(.headline)
-                    .padding()
+                if selectedDateString.elementsEqual("") {
+                    Text("\(formatter2.string(from: selectedDate))")
+                        .frame(maxWidth: 350, alignment: .leading)
+                        .font(.headline)
+                        .padding()
+                } else {
+                    Text("\(selectedDateString)")
+                        .frame(maxWidth: 350, alignment: .leading)
+                        .font(.headline)
+                        .padding()
+                }
                 
                 // 費用項目のリストを表示
-                if isListVisible {
-                    List(expenses) { expense in
-                        Text("\(expense.category)： \(expense.amount)円")
+                List(dateFiltered, id: \.self) { item in // フィルタリングされたリストを表示
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(item.transactionName)
+                            Spacer()
+                            Text("\(item.amount)円")
+                        }
                     }
                 }
+                .listStyle(.plain)
+//                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                 
             }
             .sheet(isPresented: $isDatePickerVisible) {
@@ -188,6 +192,18 @@ struct CalendarView: View {
                 }.presentationDetents([.height(280)]) // シートの高さ
             }
             Spacer()
+        }
+    }
+    
+    // カレンダーの日付選択時のフィルタリング
+    private var dateFiltered: [TransactionData] {
+        guard let selectedDay = selectedDay else { return [] }
+        let selectedDayComponents = Calendar.current.dateComponents([.year, .month, .day], from: selectedDay)
+        return datas.filter {
+            let dataDayComponents = Calendar.current.dateComponents([.year, .month, .day], from: $0.selectedDate)
+            return dataDayComponents == selectedDayComponents
+        }.sorted { // フィルター結果を昇順で表示
+            $0.selectedDate < $1.selectedDate
         }
     }
     
@@ -264,5 +280,6 @@ struct CalendarView: View {
 }
 
 #Preview {
-    CalendarView()
+    ContentView()
+        .modelContainer(for: TransactionData.self) // データ保存用
 }
