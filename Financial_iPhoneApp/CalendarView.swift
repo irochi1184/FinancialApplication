@@ -21,6 +21,8 @@ struct CalendarView: View {
     @State private var selectedDateString: String = ""
     @State private var selectedDay: Date?
     @State private var isListVisible = false // リストの表示状態
+    @State private var isEditViewPresented = false // 編集画面の表示状態
+    @State private var selectedTransaction: TransactionData? // 選択された取引データ
     
     init() {
         formatter.dateFormat = "yyyy年 MM月"
@@ -148,10 +150,21 @@ struct CalendarView: View {
                             Spacer()
                             Text("\(item.amount)円")
                         }
+                        .onTapGesture {
+                            selectedTransaction = item
+                            isEditViewPresented.toggle()
+                        }
                     }
                 }
                 .listStyle(.plain)
-//                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                .sheet(isPresented: $isEditViewPresented) {
+                    if let transaction = selectedTransaction {
+                        DataEditView(transaction: Binding(
+                            get: { transaction },
+                            set: { selectedTransaction = $0 }
+                        ))
+                    }
+                }
                 
             }
             .sheet(isPresented: $isDatePickerVisible) {
