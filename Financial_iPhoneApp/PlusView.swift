@@ -85,20 +85,20 @@ struct PlusView: View {
                 .padding(.bottom, 10)
                 
                 // --------------- 項目選択 --------------- //
-                Text("項目")
-                    .bold()
-                    .foregroundColor(.gray)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 15)
-                Section {
-                    Picker(selection: $isExpense, label: Text("項目")) {
-                        Text("支出").tag(true)
-                        Text("收入").tag(false)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                .padding(.bottom, 10)
+//                Text("項目")
+//                    .bold()
+//                    .foregroundColor(.gray)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//                    .padding(.leading, 15)
+//                Section {
+//                    Picker(selection: $isExpense, label: Text("項目")) {
+//                        Text("支出").tag(true)
+//                        Text("收入").tag(false)
+//                    }
+//                    .pickerStyle(SegmentedPickerStyle())
+//                }
+//                .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+//                .padding(.bottom, 10)
                 
                 // --------------- 取引名 --------------- //
                 Text("取引名")
@@ -136,7 +136,7 @@ struct PlusView: View {
                 .padding(.bottom, 10)
                 
                 // --------------- 金額 --------------- //
-                Text("金額")
+                Text("金額 (円)")
                     .bold()
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -148,14 +148,14 @@ struct PlusView: View {
                     .padding(.bottom, 10)
                 
                 // --------------- カテゴリー選択 --------------- //
-                Text("選択")
+                Text("カテゴリー選択")
                     .bold()
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 15)
                 HStack {
                     NavigationLink(destination: CategorySelectionView(selectedCategory: $category)) {
-                        Text(category.isEmpty ? "選択" : category)
+                        Text(category.isEmpty ? "カテゴリー選択" : category)
                             .foregroundColor(.gray.opacity(0.6))
                         Spacer()
                         Image(systemName: "chevron.right")

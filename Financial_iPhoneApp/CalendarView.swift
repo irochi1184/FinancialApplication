@@ -11,6 +11,7 @@ import SwiftData
 struct CalendarView: View {
     
     @Query private var datas: [TransactionData]
+    @Environment(\.modelContext) private var context
     
     let calendar = Calendar.current
     let formatter = DateFormatter()
@@ -125,7 +126,7 @@ struct CalendarView: View {
                     }
                 }
                 .padding(.horizontal)
-//                .padding(.bottom, 20) // 下部に余白を追加
+                //                .padding(.bottom, 20) // 下部に余白を追加
                 
                 Divider() // カレンダーと下部の区切り線
                 
@@ -150,20 +151,18 @@ struct CalendarView: View {
                             Spacer()
                             Text("\(item.amount)円")
                         }
+                        .contentShape(Rectangle()) // HStack全体をタップ可能にする
                         .onTapGesture {
                             selectedTransaction = item
-                            isEditViewPresented.toggle()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                isEditViewPresented.toggle()
+                            }
                         }
                     }
                 }
                 .listStyle(.plain)
-                .sheet(isPresented: $isEditViewPresented) {
-                    if let transaction = selectedTransaction {
-                        DataEditView(transaction: Binding(
-                            get: { transaction },
-                            set: { selectedTransaction = $0 }
-                        ))
-                    }
+                .sheet(item: $selectedTransaction) { transaction in
+                    DataEditView(transaction: $selectedTransaction)
                 }
                 
             }

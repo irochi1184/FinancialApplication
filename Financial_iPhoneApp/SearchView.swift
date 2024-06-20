@@ -111,10 +111,6 @@ struct SearchView: View {
     }
 }
 
-//#Preview {
-//    SearchView()
-//}
-
 #Preview {
     ContentView()
         .modelContainer(for: TransactionData.self) // データ保存用
