@@ -149,11 +149,12 @@ struct PlusView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                     .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                     .padding(.bottom, 10)
-                    .onChange(of: amount) { newValue in
-                        amount = newValue.filter { "0123456789".contains($0) }
-                        if amount.starts(with: "0") {
-                            amount = String(amount.dropFirst())
+                    .onChange(of: amount) { oldValue, newValue in
+                        var filteredValue = newValue.filter { "0123456789".contains($0) }
+                        if filteredValue.starts(with: "0") {
+                            filteredValue = String(filteredValue.dropFirst())
                         }
+                        amount = filteredValue
                     }
                 
                 // --------------- カテゴリー選択 --------------- //
