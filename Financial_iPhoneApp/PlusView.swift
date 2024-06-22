@@ -26,6 +26,9 @@ struct PlusView: View {
     @State private var category = String()        // カテゴリー
     @State private var selectedImage: UIImage?
     
+    // エラーメッセージ表示用
+    @State private var errorMessage: String?
+    
     // 選択された年と月
     @State private var selectedDay: Int = Calendar.current.component(.day, from: Date())
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
@@ -52,6 +55,8 @@ struct PlusView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
+                Spacer().frame(height: 20)
                 HStack {
                     Button("戻る") {
                         self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
@@ -146,6 +151,13 @@ struct PlusView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                     .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                     .padding(.bottom, 10)
+                    .onChange(of: amount) { oldValue, newValue in
+                        var filteredValue = newValue.filter { "0123456789".contains($0) }
+                        if filteredValue.starts(with: "0") {
+                            filteredValue = String(filteredValue.dropFirst())
+                        }
+                        amount = filteredValue
+                    }
                 
                 // --------------- カテゴリー選択 --------------- //
                 Text("カテゴリー選択")
@@ -155,7 +167,7 @@ struct PlusView: View {
                     .padding(.leading, 15)
                 HStack {
                     NavigationLink(destination: CategorySelectionView(selectedCategory: $category)) {
-                        Text(category.isEmpty ? "カテゴリー選択" : category)
+                        Text(category.isEmpty ? "選択" : category)
                             .foregroundColor(.gray.opacity(0.6))
                         Spacer()
                         Image(systemName: "chevron.right")
@@ -167,16 +179,45 @@ struct PlusView: View {
                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                 .padding(.bottom, 30)
                 
+                // エラーメッセージ表示
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+                
                 Button(action: {
-                    // 「追加」ボタンのアクション
-                    // ここでデータを保存するなどの処理を行う
-                    add(ex: isExpense, tn: transactionName, sd: selectedDate, am: amount, ca: category)
-                    isExpense = false
-                    transactionName = String()
-                    selectedDate = Date()
-                    amount = String()
-                    category = String()
-                    self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
+                    // エラーメッセージをクリア
+                    errorMessage = nil
+                    
+                    // 入力チェック
+                    var errorMessages = [String]()
+                    
+                    if transactionName.isEmpty {
+                        errorMessages.append("取引名が未入力です。")
+                    }
+                    if amount.isEmpty {
+                        errorMessages.append("金額が未入力です。")
+                    }
+                    if category.isEmpty {
+                        errorMessages.append("カテゴリーが未選択です。")
+                    }
+                    
+                    if !errorMessages.isEmpty {
+                        // エラーメッセージを結合して表示
+                        errorMessage = errorMessages.joined(separator: "\n")
+                    } else {
+                        // エラーメッセージをクリア
+                        errorMessage = nil
+                        // データを保存するなどの処理を行う
+                        add(ex: isExpense, tn: transactionName, sd: selectedDate, am: amount, ca: category)
+                        isExpense = false
+                        transactionName = String()
+                        selectedDate = Date()
+                        amount = String()
+                        category = String()
+                        self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
+                    }
                 }) {
                     Text("追加")
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -240,6 +281,7 @@ struct PlusView: View {
     
     struct CategorySelectionView: View {
         @Binding var selectedCategory: String
+        @Environment(\.dismiss) var dismiss
         let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
         
         var body: some View {
@@ -247,6 +289,7 @@ struct PlusView: View {
                 ForEach(categories, id: \.self) { category in
                     Button(action: {
                         selectedCategory = category
+                        dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
                     }) {
                         HStack {
                             Text(category)
