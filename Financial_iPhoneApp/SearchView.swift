@@ -14,6 +14,9 @@ struct SearchView: View {
     @Environment(\.modelContext) private var context
     @Query private var datas: [TransactionData]
     
+    @State private var isEditViewPresented = false // 編集画面の表示状態
+    @State private var selectedTransaction: TransactionData? // 選択された取引データ
+    
     // データの削除
     private func delete(data: TransactionData) {
         context.delete(data)
@@ -91,11 +94,22 @@ struct SearchView: View {
                                 Text("\(item.amount)円")
                             }
                         }
-                    }.onDelete(perform: { indexSet in
+                        .contentShape(Rectangle()) // HStack全体をタップ可能にする
+                        .onTapGesture {
+                            selectedTransaction = item
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                isEditViewPresented.toggle()
+                            }
+                        }
+                    }
+                    .onDelete(perform: { indexSet in
                         for index in indexSet {
                             delete(data: datas[index])
                         }
                     })
+                    .sheet(item: $selectedTransaction) { transaction in
+                        DataEditView(transaction: $selectedTransaction)
+                    }
                 }
                 .listStyle(.plain)
             }
@@ -110,10 +124,6 @@ struct SearchView: View {
         }
     }
 }
-
-//#Preview {
-//    SearchView()
-//}
 
 #Preview {
     ContentView()
