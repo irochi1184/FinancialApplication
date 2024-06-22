@@ -120,11 +120,11 @@
 				737080382B90A5B5003F85D5 /* SearchView.swift */,
 				7370803A2B90A5D1003F85D5 /* SettingView.swift */,
 				731728F92BD30F18000D7CF9 /* PlusView.swift */,
-				7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */,
-				7357CD4F2B8CC92900CCBA97 /* Preview Content */,
 				734BA2542C1ACD23009F62F0 /* TransactionData.swift */,
 				738359752C1B771200049BC1 /* AddHistoryView.swift */,
 				73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */,
+				7357CD502B8CC92900CCBA97 /* Preview Assets.xcassets */,
+				7357CD4F2B8CC92900CCBA97 /* Preview Content */,
 			);
 			path = Financial_iPhoneApp;
 			sourceTree = "<group>";
@@ -132,7 +132,7 @@
 		7357CD4F2B8CC92900CCBA97 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				7357CD502B8CC92900CCBA97 /* Preview Assets.xcassets */,
+				7357CD4D2B8CC92900CCBA97 /* Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";

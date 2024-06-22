@@ -55,6 +55,8 @@ struct PlusView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
+                Spacer().frame(height: 20)
                 HStack {
                     Button("戻る") {
                         self.presentationMode.wrappedValue.dismiss() // PlusViewを閉じる
@@ -279,6 +281,7 @@ struct PlusView: View {
     
     struct CategorySelectionView: View {
         @Binding var selectedCategory: String
+        @Environment(\.dismiss) var dismiss
         let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
         
         var body: some View {
@@ -286,6 +289,7 @@ struct PlusView: View {
                 ForEach(categories, id: \.self) { category in
                     Button(action: {
                         selectedCategory = category
+                        dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
                     }) {
                         HStack {
                             Text(category)

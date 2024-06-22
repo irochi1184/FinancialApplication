@@ -15,6 +15,9 @@ struct DataEditView: View {
     
     @State private var isDatePickerVisible = false
     
+    // エラーメッセージ表示用
+    @State private var errorMessage: String?
+    
     // 選択された年と月
     @State private var selectedDay: Int = Calendar.current.component(.day, from: Date())
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
@@ -126,9 +129,39 @@ struct DataEditView: View {
                     .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                     .padding(.bottom, 30)
                     
+                    // エラーメッセージ表示
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+                    
                     Button(action: {
-                        // 「保存」ボタンのアクション
-                        saveTransaction()
+                        // エラーメッセージをクリア
+                        errorMessage = nil
+                        
+                        // 入力チェック
+                        var errorMessages = [String]()
+                        
+                        if transaction.transactionName.isEmpty {
+                            errorMessages.append("取引名が未入力です。")
+                        }
+                        if transaction.amount.isEmpty {
+                            errorMessages.append("金額が未入力です。")
+                        }
+                        if transaction.category.isEmpty {
+                            errorMessages.append("カテゴリーが未選択です。")
+                        }
+                        
+                        if !errorMessages.isEmpty {
+                            // エラーメッセージを結合して表示
+                            errorMessage = errorMessages.joined(separator: "\n")
+                        } else {
+                            // エラーメッセージをクリア
+                            errorMessage = nil
+                            // 「保存」ボタンのアクション
+                            saveTransaction()
+                        }
                     }) {
                         Text("保存")
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -193,6 +226,7 @@ struct DataEditView: View {
     
     struct CategorySelectionView: View {
         @Binding var selectedCategory: String
+        @Environment(\.dismiss) var dismiss
         let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
         
         var body: some View {
@@ -200,6 +234,7 @@ struct DataEditView: View {
                 ForEach(categories, id: \.self) { category in
                     Button(action: {
                         selectedCategory = category
+                        dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
                     }) {
                         HStack {
                             Text(category)
