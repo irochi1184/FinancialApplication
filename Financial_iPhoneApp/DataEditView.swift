@@ -14,6 +14,7 @@ struct DataEditView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isDatePickerVisible = false
+    @State var menuExpanded: Bool = false      // 詳細を隠す
     
     // エラーメッセージ表示用
     @State private var errorMessage: String?
@@ -34,6 +35,13 @@ struct DataEditView: View {
         self._transaction = transaction
         formatter.dateFormat = "yyyy年 MM月 dd日"
     }
+    
+    // フォーム用の一時的な変数
+    @State private var tempTransactionName: String = ""
+    @State private var tempSelectedDate: Date = Date()
+    @State private var tempAmount: String = ""
+    @State private var tempCategory: String = ""
+    @State private var tempMemo: String = ""
     
     var body: some View {
         if let transaction = transaction {
@@ -59,13 +67,10 @@ struct DataEditView: View {
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 15)
-                    TextField("入力", text: Binding(
-                        get: { transaction.transactionName },
-                        set: { transaction.transactionName = $0 }
-                    ))
-                    .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
-                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                    .padding(.bottom, 10)
+                    TextField("入力", text: $tempTransactionName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                        .padding(.bottom, 10)
                     
                     // --------------- 日付 --------------- //
                     Text("日付")
@@ -78,7 +83,7 @@ struct DataEditView: View {
                             // 日付の表示部分がタップされたらDatePickerを表示する
                             self.isDatePickerVisible.toggle()
                         }) {
-                            Text(formatter.string(from: transaction.selectedDate))
+                            Text(formatter.string(from: tempSelectedDate))
                                 .foregroundStyle(.blue)
                             Spacer()
                             Image(systemName: "calendar")
@@ -97,14 +102,11 @@ struct DataEditView: View {
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 15)
-                    TextField("金額 (円)", text: Binding(
-                        get: { transaction.amount },
-                        set: { transaction.amount = $0 }
-                    ))
-                    .keyboardType(.numberPad)
-                    .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
-                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                    .padding(.bottom, 10)
+                    TextField("金額 (円)", text: $tempAmount)
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                        .padding(.bottom, 10)
                     
                     // --------------- カテゴリー選択 --------------- //
                     Text("カテゴリー選択")
@@ -113,11 +115,8 @@ struct DataEditView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 15)
                     HStack {
-                        NavigationLink(destination: CategorySelectionView(selectedCategory: Binding(
-                            get: { transaction.category },
-                            set: { transaction.category = $0 }
-                        ))) {
-                            Text(transaction.category.isEmpty ? "カテゴリー選択" : transaction.category)
+                        NavigationLink(destination: CategorySelectionView(selectedCategory: $tempCategory)) {
+                            Text(tempCategory.isEmpty ? "カテゴリー選択" : tempCategory)
                                 .foregroundColor(.gray.opacity(0.6))
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -128,6 +127,33 @@ struct DataEditView: View {
                         .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
                     .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                     .padding(.bottom, 30)
+                    
+                    // --------------- 詳細（メモ） --------------- //
+                    HStack {
+                        Text("詳細")
+                            .bold()
+                            .foregroundColor(.gray)
+                            .padding(.leading, 15)
+                        Image(systemName: menuExpanded ? "chevron.down" : "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 12))
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            menuExpanded.toggle()
+                        }
+                    }
+                    
+                    if menuExpanded {
+                        VStack {
+                            TextField("入力", text: $tempMemo, axis: .vertical)
+                                .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                                .padding(.bottom, 15)
+                        }
+                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                    }
                     
                     // エラーメッセージ表示
                     if let errorMessage = errorMessage {
@@ -143,13 +169,13 @@ struct DataEditView: View {
                         // 入力チェック
                         var errorMessages = [String]()
                         
-                        if transaction.transactionName.isEmpty {
+                        if tempTransactionName.isEmpty {
                             errorMessages.append("取引名が未入力です。")
                         }
-                        if transaction.amount.isEmpty {
+                        if tempAmount.isEmpty {
                             errorMessages.append("金額が未入力です。")
                         }
-                        if transaction.category.isEmpty {
+                        if tempCategory.isEmpty {
                             errorMessages.append("カテゴリーが未選択です。")
                         }
                         
@@ -170,12 +196,21 @@ struct DataEditView: View {
                             .background(Color.green)
                             .cornerRadius(8)
                     }
+                    .padding(.top, 10)
                     .padding(10)
                     
                     Spacer()
                     
                 }
                 .navigationBarHidden(true)
+                .onAppear {
+                    // 初期値を設定
+                    tempTransactionName = transaction.transactionName
+                    tempSelectedDate = transaction.selectedDate
+                    tempAmount = transaction.amount
+                    tempCategory = transaction.category
+                    tempMemo = transaction.memo
+                }
             }
             .sheet(isPresented: $isDatePickerVisible) {
                 // 年月のピッカーを表示するためのシート
@@ -184,7 +219,7 @@ struct DataEditView: View {
                     Button(action: {
                         self.isDatePickerVisible = false
                         // 選択された年月からDateを生成
-                        transaction.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)) ?? Date()
+                        tempSelectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)) ?? Date()
                     }) {
                         Text("閉じる")
                             .foregroundColor(.blue)
@@ -262,11 +297,19 @@ struct DataEditView: View {
     }
     
     private func saveTransaction() {
-        do {
-            try context.save()
-            presentationMode.wrappedValue.dismiss() // 画面を閉じて前画面に戻る
-        } catch {
-            print("Error saving transaction: \(error.localizedDescription)")
+        if let transaction = transaction {
+            transaction.transactionName = tempTransactionName
+            transaction.selectedDate = tempSelectedDate
+            transaction.amount = tempAmount
+            transaction.category = tempCategory
+            transaction.memo = tempMemo
+            
+            do {
+                try context.save()
+                presentationMode.wrappedValue.dismiss() // 画面を閉じて前画面に戻る
+            } catch {
+                print("Error saving transaction: \(error.localizedDescription)")
+            }
         }
     }
 }

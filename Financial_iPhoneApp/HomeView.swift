@@ -72,6 +72,7 @@ struct HomeView: View {
                 HStack {
                     Button(action: {
                         self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
+                        updateAmounts() // 年月移動でグラフ再描画
                     }) {
                         Image(systemName: "chevron.left")
                     }
@@ -92,6 +93,7 @@ struct HomeView: View {
                     
                     Button(action: {
                         self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
+                        updateAmounts() // 年月移動でグラフ再描画
                     }) {
                         Image(systemName: "chevron.right")
                     }
@@ -177,8 +179,9 @@ struct HomeView: View {
                                                         self.isDatePickerVisible = false
                                                         // 選択された年月からDateを生成
                                                         self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                                                        updateAmounts() // 年月移動でグラフ再描画
                                                     }) {
-                                                        Text("閉じる")
+                                                        Text("確定")
                                                             .foregroundColor(.blue)
                                                             .padding()
                                                     }
