@@ -22,7 +22,20 @@ struct SearchView: View {
         context.delete(data)
     }
     
+    // データの全件削除
+    private func deleteAll() {
+        for data in datas {
+            context.delete(data)
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save context after deleting all items: \(error.localizedDescription)")
+        }
+    }
+    
     @State private var searchText = "" // 検索テキストを保持する変数
+    @State private var showDeleteAllAlert = false // 全件削除確認アラートの表示状態
     
     let formatter = DateFormatter()
     
@@ -33,6 +46,21 @@ struct SearchView: View {
     var body: some View {
         VStack {
             HStack {
+                Button("全件削除") {
+                    showDeleteAllAlert = true
+                }
+                .font(.title3)
+                .foregroundStyle(.red)
+                .padding(.leading, 20)
+                .alert(isPresented: $showDeleteAllAlert) {
+                    Alert(
+                        title: Text("全てのデータを削除します。\nよろしいですか？"),
+                        primaryButton: .destructive(Text("OK")) {
+                            deleteAll()
+                        },
+                        secondaryButton: .cancel(Text("キャンセル"))
+                    )
+                }
                 Spacer()
                 NavigationStack {
                     NavigationLink("追加履歴", destination: AddHistoryView())
@@ -64,7 +92,7 @@ struct SearchView: View {
                         TextField("Search", text: $searchText)
                         
                         // 検索文字が空ではない場合は、クリアボタンを表示
-                        if !searchText.isEmpty {
+                        if (!searchText.isEmpty) {
                             Button {
                                 searchText.removeAll()
                             } label: {
@@ -109,6 +137,15 @@ struct SearchView: View {
                     })
                     .sheet(item: $selectedTransaction) { transaction in
                         DataEditView(transaction: $selectedTransaction)
+                            .onDisappear {
+                                if context.hasChanges {
+                                    do {
+                                        try context.save()
+                                    } catch {
+                                        print("Failed to save context: \(error.localizedDescription)")
+                                    }
+                                }
+                            }
                     }
                 }
                 .listStyle(.plain)
