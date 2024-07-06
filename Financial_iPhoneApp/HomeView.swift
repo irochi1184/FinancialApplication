@@ -68,9 +68,10 @@ struct HomeView: View {
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack (spacing : 0){
                 HeaderView(formatter: formatter, selectedDate: $selectedDate, calendar: calendar, isDatePickerVisible: $isDatePickerVisible, onChangeMonth: changeMonth) // ヘッダー
                 tabPickerView    // ピッカービューの表示
+                Divider() // 区切り線
                 tabAndGraphView  // タブとグラフ部分の表示
             }
             FloatingButton()     // フローティングボタンの表示
@@ -115,7 +116,6 @@ struct HomeView: View {
     // 利用詳細のビュー
     private var home1View: some View {
         VStack {
-            Divider() // 区切り線
             Spacer().frame(height: 20)
             ZStack {
                 Chart(amounts, id: \.name) { amount in // 円グラフの表示
