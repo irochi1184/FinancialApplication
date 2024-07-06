@@ -15,16 +15,23 @@ struct Tab: Identifiable {
     let color: Color
 }
 
-private let tabs: [Tab] = [
-    .init(title: "ホーム1", color: .cyan),
-    .init(title: "ホーム2", color: .green)
-]
-
 struct Amounts {
     let name: String
     let count: Int
     var color: Color
 }
+
+private let tabs: [Tab] = [
+    .init(title: "ホーム1", color: .cyan),
+    .init(title: "ホーム2", color: .green)
+]
+
+private var category: [Amounts] = [
+    .init(name: "食費", count: 1, color: .blue),
+    .init(name: "固定費", count: 1, color: .gray),
+    .init(name: "娯楽", count: 1, color: .red),
+    .init(name: "日用雑貨", count: 1, color: .orange)
+]
 
 struct HomeView: View {
     
@@ -43,14 +50,9 @@ struct HomeView: View {
     
     @State private var amounts: [Amounts] = []
     
-//    @State private var amounts: [Amounts] = [
-//        .init(name: "月の限度額", count: monthlyLimitAmount-(monthlyLimitAmount-totalUsageAmount), color: .blue),
-//        .init(name: "使用金額", count: monthlyLimitAmount-totalUsageAmount, color: .gray)
-//    ]
-    
     init() {
         formatter.dateFormat = "yyyy年 MM月"
-        formatter2.dateFormat = "dd日"
+        formatter2.dateFormat = "MM月dd日"
     }
     
     @State private var isDatePickerVisible = false
@@ -124,12 +126,10 @@ struct HomeView: View {
                         ScrollView(.horizontal) {
                             LazyHStack(spacing: 0) {
                                 ForEach(tabs) { tab in
-                                    //ScrollView {
                                     if tab.title == "ホーム1" {
                                         ZStack {
                                             VStack {
                                                 Divider()
-                                                // スペースを追加
                                                 Spacer().frame(height: 20)
                                                 
                                                 ZStack {
@@ -145,17 +145,16 @@ struct HomeView: View {
                                                     Text("月の限度額：\(monthlyLimitAmount)円").font(.subheadline).foregroundColor(.black) +
                                                     Text("\n● ").foregroundColor(.blue).font(.caption) +
                                                     Text("　使用金額：\(calculateTotalUsageAmount())円").font(.subheadline).foregroundColor(.black)
-                                                    //.offset(y: -20) // テキストを上に20ポイント移動
                                                 }
                                                 .frame(width: 300, height: 300)
                                                 
                                                 Spacer().frame(height: 25)
                                                 
-                                                Text("使用内容").font(.headline).frame(maxWidth: 350, alignment: .leading)/*.offset(y: -20)*/
+                                                Text("使用内容").font(.headline).frame(maxWidth: 350, alignment: .leading)
                                                 Divider()
+                                                
                                                 // リスト表示
-//                                                Spacer().frame(height: 0)
-                                                List(dateFiltered, id: \.self) { item in // フィルタリングされたリストを表示
+                                                List(dateFiltered, id: \.self) { item in
                                                     VStack(alignment: .leading) {
                                                         HStack {
                                                             Text(formatter2.string(from: item.selectedDate))
@@ -170,65 +169,94 @@ struct HomeView: View {
                                                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                                                 
                                             }
-                                            .padding(.bottom, 20) // 下部に余白を追加
+                                            .padding(.bottom, 20)
                                             .sheet(isPresented: $isDatePickerVisible) {
-                                                // 年月のピッカーを表示するためのシート
-                                                VStack {
-                                                    // DatePickerを閉じるボタン
-                                                    Button(action: {
-                                                        self.isDatePickerVisible = false
-                                                        // 選択された年月からDateを生成
+                                                DatePickerView(
+                                                    isDatePickerVisible: $isDatePickerVisible,
+                                                    selectedYear: $selectedYear,
+                                                    selectedMonth: $selectedMonth,
+                                                    minYear: minYear,
+                                                    maxYear: maxYear,
+                                                    onDateSelected: {
                                                         self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                                                        updateAmounts() // 年月移動でグラフ再描画
-                                                    }) {
-                                                        Text("確定")
-                                                            .foregroundColor(.blue)
-                                                            .padding()
+                                                        updateAmounts()
                                                     }
-                                                
-                                                    HStack {
-                                                        // 年のピッカー
-                                                        Picker(selection: $selectedYear, label: Text("")) {
-                                                            ForEach(minYear...maxYear, id: \.self) { year in
-                                                                Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                                                            }
-                                                        }
-                                                        .pickerStyle(WheelPickerStyle())
-                                                        .labelsHidden()
-                                                        .frame(maxWidth: .infinity)
-                                                        
-                                                        // 月のピッカー
-                                                        Picker("Month", selection: $selectedMonth) {
-                                                            ForEach(1...12, id: \.self) { month in
-                                                                Text("\(month)月")
-                                                            }
-                                                        }
-                                                        .pickerStyle(WheelPickerStyle())
-                                                        .frame(maxWidth: .infinity)
-                                                    }
-                                                }.presentationDetents([.height(280)]) // シートの高さ
-                                                
+                                                )
                                             }
                                             
                                         }
-                                        //横幅めいいっぱい?
                                         .containerRelativeFrame(.horizontal)
-                                        //}
-                                    }else{
-                                        Home2()
+                                    } else {
+                                        ZStack {
+                                            VStack {
+                                                VStack {
+                                                    Divider()
+                                                    Spacer().frame(height: 20)
+                                                    
+                                                    ZStack {
+                                                        Chart(category, id: \.name) { amount in
+                                                            SectorMark(
+                                                                angle: .value("count", amount.count),innerRadius: .inset(30)
+                                                            )
+                                                            .foregroundStyle(amount.color)
+                                                        }.frame(height: 300)
+                                                        
+                                                        VStack {
+                                                            Text("●").foregroundColor(.blue).font(.caption) +
+                                                            Text("食費：60000円").font(.subheadline).foregroundColor(.black)
+                                                            Text("●").foregroundColor(.gray).font(.caption) +
+                                                            Text("固定費：60000円").font(.subheadline).foregroundColor(.black)
+                                                            Text("●").foregroundColor(.red).font(.caption) +
+                                                            Text("娯楽：60000円").font(.subheadline).foregroundColor(.black)
+                                                            Text("●").foregroundColor(.orange).font(.caption) +
+                                                            Text("日用雑貨：60000円").font(.subheadline).foregroundColor(.black)
+                                                        }
+                                                    }
+                                                    .frame(width: 300, height: 300)
+                                                    
+                                                    Spacer().frame(height: 30)
+                                                    
+                                                    Text("カテゴリ内容").font(.headline).frame(maxWidth: 350, alignment: .leading)
+                                                    Divider()
+                                                    
+                                                    // リスト表示
+                                                    List(TotalCategoryData.keys.sorted(), id: \.self) { category in
+                                                        HStack {
+                                                            Text(category)
+                                                            Spacer()
+                                                            Text("\(TotalCategoryData[category] ?? 0)円")
+                                                        }
+                                                    }
+                                                    .listStyle(.plain)
+                                                    .scrollDisabled(true)
+                                                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                                }
+                                                .padding(.bottom, 20)
+                                                .sheet(isPresented: $isDatePickerVisible) {
+                                                    DatePickerView(
+                                                        isDatePickerVisible: $isDatePickerVisible,
+                                                        selectedYear: $selectedYear,
+                                                        selectedMonth: $selectedMonth,
+                                                        minYear: minYear,
+                                                        maxYear: maxYear,
+                                                        onDateSelected: {
+                                                            self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                                                            updateAmounts()
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        .containerRelativeFrame(.horizontal)
                                     }
                                 }
                             }
-                            //スワイプ途中で止めない
                             .scrollTargetLayout()
                         }
                     }
-                    //スワイプ途中で止めない
                     .scrollTargetBehavior(.viewAligned)
-                    //
                     .scrollPosition(id: $selectedTabId)
                 }
-                //ボタンを押した時のアニメーション
                 .animation(.easeInOut, value: selectedTabId)
             }
             FloatingButton()
@@ -238,43 +266,121 @@ struct HomeView: View {
         }
     }
     
+    struct DatePickerView: View {
+        @Binding var isDatePickerVisible: Bool
+        @Binding var selectedYear: Int
+        @Binding var selectedMonth: Int
+        let minYear: Int
+        let maxYear: Int
+        let onDateSelected: () -> Void
+        
+        var body: some View {
+            VStack {
+                Button(action: {
+                    isDatePickerVisible = false
+                    onDateSelected()
+                }) {
+                    Text("確定")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+                HStack {
+                    Picker(selection: $selectedYear, label: Text("")) {
+                        ForEach(minYear...maxYear, id: \.self) { year in
+                            Text("\(String(year))年").tag(year)
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity)
+                    
+                    Picker("Month", selection: $selectedMonth) {
+                        ForEach(1...12, id: \.self) { month in
+                            Text("\(month)月")
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(maxWidth: .infinity)
+                }
+            }
+            .presentationDetents([.height(280)])
+        }
+    }
+    
     struct FloatingButton: View {
-        //画面遷移の時に使用するbool値
         @State private var isPresented: Bool = false
         
         var body: some View {
-            VStack {  // --- 1
+            VStack {
                 Spacer()
-                HStack { // --- 2
+                HStack {
                     Spacer()
                     Button(action: {
-                        // ここにボタンを押した時の処理
-                        isPresented = true //trueにしないと画面遷移されない
+                        isPresented = true
                     }, label: {
                         Image(systemName: "plus")
                             .foregroundColor(.white)
-                            .font(.system(size: 24)) // --- 4
+                            .font(.system(size: 24))
                     })
-                    .fullScreenCover(isPresented: $isPresented) { //ボタンタップ時のフルスクリーンの画面遷移
+                    .fullScreenCover(isPresented: $isPresented) {
                         PlusView()
                     }
                     .frame(width: 60, height: 60)
                     .background(Color.blue)
                     .cornerRadius(30.0)
                     .shadow(color: .gray, radius: 3, x: 3, y: 3)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0)) // --- 5
-                    
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
                 }
             }
         }
     }
     
     private func calculateTotalUsageAmount() -> Int {
+        dateFiltered.reduce(0) { $0 + ($1.amount as NSString).integerValue }
+    }
+    
+    private var dateFiltered: [TransactionData] {
         let selectedMonthComponents = Calendar.current.dateComponents([.year, .month], from: selectedDate)
         return datas.filter {
             let dataMonthComponents = Calendar.current.dateComponents([.year, .month], from: $0.selectedDate)
             return dataMonthComponents == selectedMonthComponents
-        }.reduce(0) { $0 + ($1.amount as NSString).integerValue }
+        }.sorted {
+            $0.selectedDate > $1.selectedDate
+        }
+    }
+    
+    private var TotalCategoryData: [String: Int] {
+        // カテゴリーごとの合計金額を格納する辞書を初期化
+        var categoryTotals: [String: Int] = [:]
+        
+        // フィルタリングされた取引データをループで処理
+        for transaction in categoryFiltered {
+            // 取引データのカテゴリー名を取得
+            let category = transaction.category
+            // 取引データの金額を整数に変換
+            let amount = (transaction.amount as NSString).integerValue
+            
+            // 辞書に既にそのカテゴリーが存在するか確認
+            if let total = categoryTotals[category] {
+                // 既にカテゴリーが存在する場合、そのカテゴリーの合計金額に取引データの金額を加算
+                categoryTotals[category] = total + amount
+            } else {
+                // カテゴリーが存在しない場合、新しい辞書を作成
+                categoryTotals[category] = amount
+            }
+        }
+        
+        // カテゴリーごとの合計金額を返す
+        return categoryTotals
+    }
+
+    
+    private var categoryFiltered: [TransactionData] {
+        let selectedMonthComponents = Calendar.current.dateComponents([.year, .month], from: selectedDate)
+        return datas.filter {
+            let dataMonthComponents = Calendar.current.dateComponents([.year, .month], from: $0.selectedDate)
+            return dataMonthComponents == selectedMonthComponents
+        }
     }
     
     private func updateAmounts() {
@@ -295,167 +401,10 @@ struct HomeView: View {
                 .init(name: "使用金額", count: monthlyLimitAmount - totalUsageAmount, color: .red.opacity(0.8))
             ]
         }
-        
-    }
-    
-    private var dateFiltered: [TransactionData] {
-        let selectedMonthComponents = Calendar.current.dateComponents([.year, .month], from: selectedDate)
-        return datas.filter {
-            let dataMonthComponents = Calendar.current.dateComponents([.year, .month], from: $0.selectedDate)
-            return dataMonthComponents == selectedMonthComponents
-        }.sorted { // フィルター結果を昇順で表示
-            $0.selectedDate > $1.selectedDate
-        }
-    }
-}
-
-struct Home2: View{
-    
-    let calendar = Calendar.current
-    let formatter = DateFormatter()
-    
-    @State private var selectedDate: Date = Date()
-    @State private var selectedDateString: String = ""
-    @State private var selectedDay: Date?
-    
-    init() {
-        formatter.dateFormat = "yyyy年 MM月"
-    }
-    
-    @State private var isDatePickerVisible = false
-    
-    // 選択された年と月
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
-    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
-    
-    // 表示する年の範囲
-    private let minYear: Int = 2000
-    private let maxYear: Int = 2024
-    
-    @State private var selectedTabId: UUID? = tabs[0].id
-    //    @Namespace private var tabNamespace
-    
-    @State private var amounts: [Amounts] = [
-        .init(name: "食費", count: 1, color: .blue),
-        .init(name: "固定費", count: 1, color: .gray),
-        .init(name: "娯楽", count: 1, color: .red),
-        .init(name: "日用雑貨", count: 1, color: .orange)
-    ]
-    
-    var body: some View {
-        ZStack {
-            VStack {
-                VStack {
-                    Divider()
-                    // スペースを追加
-                    Spacer().frame(height: 20)
-                    
-                    ZStack {
-                        Chart(amounts, id: \.name) { amount in
-                            SectorMark(
-                                angle: .value("count", amount.count),innerRadius: .inset(30)
-                            )
-                            .foregroundStyle(amount.color)
-                        }.frame(height: 300)
-                        
-                        VStack {
-                            
-                            // 円グラフの中心に表示するテキスト
-                            Text("●").foregroundColor(.blue).font(.caption) +
-                            Text("食費：60000円").font(.subheadline).foregroundColor(.black)
-                            Text("●").foregroundColor(.gray).font(.caption) +
-                            Text("固定費：60000円").font(.subheadline).foregroundColor(.black)
-                            Text("●").foregroundColor(.red).font(.caption) +
-                            Text("娯楽：60000円").font(.subheadline).foregroundColor(.black)
-                            Text("●").foregroundColor(.orange).font(.caption) +
-                            Text("日用雑貨：60000円").font(.subheadline).foregroundColor(.black)
-                            
-                        }
-                        //                        .offset(y: -50) // テキストを上に20ポイント移動
-                    }
-                    .frame(width: 300, height: 300)
-                    
-                    Spacer().frame(height: 30)
-                    
-                    Text("カテゴリ内容").font(.headline).frame(maxWidth: 350, alignment: .leading)/*.offset(y: -20)*/
-                    Divider()
-                    
-                    //                    ZStack {
-                    
-                    // リスト表示
-                    List {
-                        HStack {
-                            Text("食費")
-                            Spacer()
-                            Text("¥60000")
-                        }
-                        HStack {
-                            Text("固定費")
-                            Spacer()
-                            Text("¥60000")
-                        }
-                        HStack {
-                            Text("娯楽")
-                            Spacer()
-                            Text("¥60000")
-                        }
-                        HStack {
-                            Text("日用雑貨")
-                            Spacer()
-                            Text("¥60000")
-                        }
-                    }
-                    .listStyle(.plain)
-                }
-                .padding(.bottom, 20) // 下部に余白を追加
-                .sheet(isPresented: $isDatePickerVisible) {
-                    // 年月のピッカーを表示するためのシート
-                    VStack {
-                        // DatePickerを閉じるボタン
-                        Button(action: {
-                            self.isDatePickerVisible = false
-                            // 選択された年月からDateを生成
-                            self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                        }) {
-                            Text("閉じる")
-                                .foregroundColor(.blue)
-                                .padding()
-                        }
-                        
-                        HStack {
-                            // 年のピッカー
-                            Picker(selection: $selectedYear, label: Text("")) {
-                                ForEach(minYear...maxYear, id: \.self) { year in
-                                    Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                                }
-                            }
-                            .pickerStyle(WheelPickerStyle())
-                            .labelsHidden()
-                            .frame(maxWidth: .infinity)
-                            
-                            // 月のピッカー
-                            Picker("Month", selection: $selectedMonth) {
-                                ForEach(1...12, id: \.self) { month in
-                                    Text("\(month)月")
-                                }
-                            }
-                            .pickerStyle(WheelPickerStyle())
-                            .frame(maxWidth: .infinity)
-                            
-                        }.toolbar {
-                            
-                        }
-                    }.presentationDetents([.height(280)]) // シートの高さ
-                }
-            }
-        }
-        //横幅めいいっぱい?
-        .containerRelativeFrame(.horizontal)
-        //}
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: TransactionData.self)
 }
