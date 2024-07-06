@@ -24,14 +24,7 @@ struct CalendarView: View {
     @State private var isListVisible = false // リストの表示状態
     @State private var isEditViewPresented = false // 編集画面の表示状態
     @State private var selectedTransaction: TransactionData? // 選択された取引データ
-    
-    init() {
-        formatter.dateFormat = "yyyy年 MM月"
-        formatter2.locale = Locale(identifier: "ja_JP")
-        formatter2.dateFormat = "yyyy年M月dd日(EE)"
-    }
-    
-    @State private var isDatePickerVisible = false
+    @State private var isDatePickerVisible = false // DatePickerの表示状態
     
     // 選択された年と月
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
@@ -41,170 +34,129 @@ struct CalendarView: View {
     private let minYear: Int = 2000
     private let maxYear: Int = 2024
     
+    init() {
+        formatter.dateFormat = "yyyy年 MM月"
+        formatter2.locale = Locale(identifier: "ja_JP")
+        formatter2.dateFormat = "yyyy年M月dd日(EE)"
+    }
+    
     var body: some View {
         VStack {
-            VStack {
-                // 月の切り替えボタン
-                HStack {
-                    Button(action: {
-                        self.selectedDate = self.calendar.date(byAdding: .month, value: -1, to: self.selectedDate)!
-                    }) {
-                        Image(systemName: "chevron.left")
-                    }
-                    
-                    Spacer()
-                    
-                    // 選択された月の表示
-                    Button(action: {
-                        // 月の表示部分がタップされたらDatePickerを表示する
-                        self.isDatePickerVisible.toggle()
-                    }) {
-                        Text(formatter.string(from: selectedDate))
-                            .font(.title)
-                            .padding()
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        self.selectedDate = self.calendar.date(byAdding: .month, value: 1, to: self.selectedDate)!
-                    }) {
-                        Image(systemName: "chevron.right")
-                    }
-                }
-                .padding(.horizontal)
-                
-                Divider()
-                
-                // 曜日の表示
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
-                    ForEach(weekDays, id: \.self) { day in
-                        Text(day)
-                            .frame(maxWidth: .infinity)
-                            .padding(4)
-                            .foregroundColor(self.textColor(for: day))
-                    }
-                }
-                .padding(.horizontal)
-                
-                Divider()
-                
-                // カレンダーの日付を表示
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
-                    ForEach(getCalendarMatrix(), id: \.self) { week in
-                        ForEach(week, id: \.self) { date in
-                            Button(action: {
-                                if let date = date {
-                                    self.selectedDateString = formatter2.string(from: date)
-                                    self.selectedDay = date
-                                    self.isListVisible = true // 日付が選択されたらリストを表示
-                                } else {
-                                    self.selectedDateString = ""
-                                    self.selectedDay = nil
-                                    self.isListVisible = false // 日付が選択解除されたらリストを非表示
-                                }
-                                if let selectedDay = self.selectedDay {
-                                    selectedDate = selectedDay
-                                }
-                            }) {
-                                if date != nil {
-                                    Text(self.getDayText(date: date!))
-                                        .frame(maxWidth: .infinity)
-                                        .padding(8)
-                                        .foregroundColor(self.textColor(for: date!))
-                                        .background(self.selectedDay == date ? Color.green.opacity(0.5) : Color.white) // 背景色を選択状態に応じて変更
-                                        .bold(self.selectedDay == date)
-                                } else {
-                                    // 前月の日付は空白
-                                    Text("")
-                                        .frame(maxWidth: .infinity)
-                                        .padding(8)
-                                        .background(Color.white)
-                                }
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                //                .padding(.bottom, 20) // 下部に余白を追加
-                
-                Divider() // カレンダーと下部の区切り線
-                
-                // 選択された日付を表示するテキスト
-                if selectedDateString.elementsEqual("") {
-                    Text("\(formatter2.string(from: selectedDate))")
-                        .frame(maxWidth: 350, alignment: .leading)
-                        .font(.headline)
-                        .padding()
-                } else {
-                    Text("\(selectedDateString)")
-                        .frame(maxWidth: 350, alignment: .leading)
-                        .font(.headline)
-                        .padding()
-                }
-                
-                // 費用項目のリストを表示
-                List(dateFiltered, id: \.self) { item in // フィルタリングされたリストを表示
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text(item.transactionName)
-                            Spacer()
-                            Text("\(item.amount)円")
-                        }
-                        .contentShape(Rectangle()) // HStack全体をタップ可能にする
-                        .onTapGesture {
-                            selectedTransaction = item
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                isEditViewPresented.toggle()
-                            }
-                        }
-                    }
-                }
-                .listStyle(.plain)
-                .sheet(item: $selectedTransaction) { transaction in
-                    DataEditView(transaction: $selectedTransaction)
-                }
-                
-            }
-            .sheet(isPresented: $isDatePickerVisible) {
-                // 年月のピッカーを表示するためのシート
-                VStack {
-                    // DatePickerを閉じるボタン
-                    Button(action: {
-                        self.isDatePickerVisible = false
-                        // 選択された年月からDateを生成
-                        self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                    }) {
-                        Text("閉じる")
-                            .foregroundColor(.blue)
-                            .padding()
-                    }
-                    
-                    HStack {
-                        // 年のピッカー
-                        Picker(selection: $selectedYear, label: Text("")) {
-                            ForEach(minYear...maxYear, id: \.self) { year in
-                                Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .labelsHidden()
-                        .frame(maxWidth: .infinity)
-                        
-                        // 月のピッカー
-                        Picker("Month", selection: $selectedMonth) {
-                            ForEach(1...12, id: \.self) { month in
-                                Text("\(month)月")
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(maxWidth: .infinity)
-                        
-                    }
-                }.presentationDetents([.height(280)]) // シートの高さ
-            }
-            Spacer()
+            HeaderView(
+                formatter: formatter,
+                selectedDate: $selectedDate,
+                calendar: calendar,
+                isDatePickerVisible: $isDatePickerVisible,
+                onChangeMonth: changeMonth
+            )
+            Divider()
+            weekDaysView
+            Divider()
+            calendarDaysView
+            
+            Divider() // カレンダーと下部の区切り線
+            selectedDateView
+            transactionListView
+            
         }
+        .sheet(isPresented: $isDatePickerVisible) {
+            DatePickerView(
+                isDatePickerVisible: $isDatePickerVisible,
+                selectedYear: $selectedYear,
+                selectedMonth: $selectedMonth,
+                minYear: minYear,
+                maxYear: maxYear,
+                onDateSelected: {
+                    self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                }
+            )
+        }
+    }
+    
+    private var weekDaysView: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
+            ForEach(weekDays, id: \.self) { day in
+                Text(day)
+                    .frame(maxWidth: .infinity)
+                    .padding(4)
+                    .foregroundColor(self.textColor(for: day))
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var calendarDaysView: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
+            ForEach(getCalendarMatrix(), id: \.self) { week in
+                ForEach(week, id: \.self) { date in
+                    Button(action: {
+                        if let date = date {
+                            self.selectedDateString = formatter2.string(from: date)
+                            self.selectedDay = date
+                            self.isListVisible = true // 日付が選択されたらリストを表示
+                        } else {
+                            self.selectedDateString = ""
+                            self.selectedDay = nil
+                            self.isListVisible = false // 日付が選択解除されたらリストを非表示
+                        }
+                        if let selectedDay = self.selectedDay {
+                            selectedDate = selectedDay
+                        }
+                    }) {
+                        if date != nil {
+                            Text(self.getDayText(date: date!))
+                                .frame(maxWidth: .infinity)
+                                .padding(8)
+                                .foregroundColor(self.textColor(for: date!))
+                                .background(self.selectedDay == date ? Color.green.opacity(0.5) : Color.white) // 背景色を選択状態に応じて変更
+                                .bold(self.selectedDay == date)
+                        } else {
+                            // 前月の日付は空白
+                            Text("")
+                                .frame(maxWidth: .infinity)
+                                .padding(8)
+                                .background(Color.white)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var selectedDateView: some View {
+        Text(selectedDateString.isEmpty ? formatter2.string(from: selectedDate) : selectedDateString)
+            .frame(maxWidth: 350, alignment: .leading)
+            .font(.headline)
+            .padding()
+    }
+    
+    private var transactionListView: some View {
+        List(dateFiltered, id: \.self) { item in // フィルタリングされたリストを表示
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(item.transactionName)
+                    Spacer()
+                    Text("\(item.amount)円")
+                }
+                .contentShape(Rectangle()) // HStack全体をタップ可能にする
+                .onTapGesture {
+                    selectedTransaction = item
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isEditViewPresented.toggle()
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .sheet(item: $selectedTransaction) { transaction in
+            DataEditView(transaction: $selectedTransaction)
+        }
+    }
+    
+    // 月の変更
+    private func changeMonth(by value: Int) {
+        selectedDate = calendar.date(byAdding: .month, value: value, to: selectedDate)!
     }
     
     // カレンダーの日付選択時のフィルタリング
@@ -217,15 +169,6 @@ struct CalendarView: View {
         }.sorted { // フィルター結果を昇順で表示
             $0.selectedDate < $1.selectedDate
         }
-    }
-    
-    // 日付から曜日を取得する関数
-    func getDayOfWeek(_ date: Date?) -> String {
-        guard let date = date else { return "" }
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ja_JP") // 日本語のロケールを設定
-        dateFormatter.dateFormat = "(EEE)" // 曜日を省略形式で表示
-        return dateFormatter.string(from: date)
     }
     
     // 日付または曜日のテキストの色を設定する
@@ -256,7 +199,7 @@ struct CalendarView: View {
     func getDayText(date: Date?) -> String {
         guard let date = date else { return "" }
         let day = self.calendar.component(.day, from: date)
-        return (day == 1 ? "1" : "\(day)")
+        return "\(day)"
     }
     
     // カレンダーの日付を2次元配列に変換する
@@ -293,5 +236,5 @@ struct CalendarView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: TransactionData.self)
 }
