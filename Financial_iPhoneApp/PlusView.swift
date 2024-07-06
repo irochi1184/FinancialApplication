@@ -13,9 +13,10 @@ struct PlusView: View {
     
     // CRUD処理下準備
     @Environment(\.modelContext) private var context
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var dataStore: TransactionDataStore // データの変更を監視
     @Query private var datas: [TransactionData]
     
-    @Environment(\.presentationMode) var presentationMode
     
     @State private var isDatePickerVisible = false
     
@@ -25,7 +26,7 @@ struct PlusView: View {
     @State private var amount = String()          // 金額
     @State private var category = String()        // カテゴリー
     @State private var memo = String()            // メモ
-    @State var menuExpanded: Bool = false      // 詳細を隠す
+    @State var menuExpanded: Bool = false         // 詳細を隠す
     @State private var selectedImage: UIImage?
     
     // エラーメッセージ表示用
@@ -262,90 +263,21 @@ struct PlusView: View {
                 .navigationBarHidden(true)
             }
             .sheet(isPresented: $isDatePickerVisible) {
-                // 年月のピッカーを表示するためのシート
-                VStack {
-                    // DatePickerを閉じるボタン
-                    Button(action: {
-                        self.isDatePickerVisible = false
-                        // 選択された年月からDateを生成
+                DayPickerView(
+                    isDatePickerVisible: $isDatePickerVisible,
+                    selectedYear: $selectedYear,
+                    selectedMonth: $selectedMonth,
+                    selectedDay: $selectedDay,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    onDateSelected: {
                         self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)) ?? Date()
-                    }) {
-                        Text("閉じる")
-                            .foregroundColor(.blue)
-                            .padding()
                     }
-                    
-                    HStack {
-                        // 年のピッカー
-                        Picker(selection: $selectedYear, label: Text("")) {
-                            ForEach(minYear...maxYear, id: \.self) { year in
-                                Text("\(String(year))年").tag(year) // Stringに変換しないとカンマが入ってしまう
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(maxWidth: .infinity)
-                        
-                        // 月のピッカー
-                        Picker("Month", selection: $selectedMonth) {
-                            ForEach(1...12, id: \.self) { month in
-                                Text("\(month)月")
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(maxWidth: .infinity)
-                        
-                        // 日のピッカー
-                        Picker("Day", selection: $selectedDay) {
-                            ForEach(1...numberOfDays(in: selectedMonth), id: \.self) { day in
-                                Text("\(day)日")
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(maxWidth: .infinity)
-                    }
-                }.presentationDetents([.height(280)]) // シートの高さ
+                )
             }
         }
     }
     
-    struct CategorySelectionView: View {
-        @Binding var selectedCategory: String
-        @Environment(\.dismiss) var dismiss
-        let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
-        
-        var body: some View {
-            List {
-                ForEach(categories, id: \.self) { category in
-                    Button(action: {
-                        selectedCategory = category
-                        dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
-                    }) {
-                        HStack {
-                            Text(category)
-                            if selectedCategory == category {
-                                Spacer()
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                    }
-                }
-                Spacer()
-                Text("新規追加")
-            }
-        }
-    }
-    
-    func numberOfDays(in month: Int) -> Int {
-        let dateComponents = DateComponents(year: selectedYear, month: month)
-        if let date = calendar.date(from: dateComponents),
-           let range = calendar.range(of: .day, in: .month, for: date) {
-            return range.count
-        }
-        return 31 // デフォルトでは31日を返す
-    }
-    
-    // カメラ起動
     func openCamera() {
         let picker = UIImagePickerController()
         let coordinator = Coordinator(parent: self) // Coordinatorクラスのインスタンスを生成
@@ -360,13 +292,11 @@ struct PlusView: View {
         }
     }
     
-    // データの追加
     private func add(ex: Bool, tn: String, sd: Date, am: String, ca: String, me: String) {
         let data = TransactionData(isExpense: ex, transactionName: tn, selectedDate: sd, amount: am, category: ca, memo: me)
         context.insert(data)
-        print("insert成功した！！！！")
+        dataStore.datas.append(data) // データストアを更新
     }
-    
 }
 
 extension PlusView {
