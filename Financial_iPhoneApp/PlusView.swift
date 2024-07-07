@@ -45,13 +45,6 @@ struct PlusView: View {
     let formatter = DateFormatter()
     
     init() {
-        // 背景色
-        UISegmentedControl.appearance().backgroundColor = UIColor(Color.gray.opacity(0.1))
-        // 選択項目の背景色
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.green)
-        // 選択項目の文字色
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-        
         formatter.dateFormat = "yyyy年 MM月 dd日"
     }
     
@@ -280,23 +273,32 @@ struct PlusView: View {
     
     func openCamera() {
         let picker = UIImagePickerController()
-        let coordinator = Coordinator(parent: self) // Coordinatorクラスのインスタンスを生成
-        picker.delegate = coordinator // CoordinatorをUIImagePickerControllerのdelegateに設定
+        let coordinator = Coordinator(parent: self)
+        picker.delegate = coordinator
         picker.sourceType = .camera
         picker.allowsEditing = false
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             if let rootViewController = windowScene.windows.first?.rootViewController {
-                rootViewController.present(picker, animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    rootViewController.present(picker, animated: true, completion: nil)
+                }
             }
         }
     }
     
     private func add(ex: Bool, tn: String, sd: Date, am: String, ca: String, me: String) {
         let data = TransactionData(isExpense: ex, transactionName: tn, selectedDate: sd, amount: am, category: ca, memo: me)
-        context.insert(data)
-        dataStore.datas.append(data) // データストアを更新
+        
+        DispatchQueue.global(qos: .background).async {
+            context.insert(data)
+            
+            DispatchQueue.main.async {
+                dataStore.datas.append(data) // データストアを更新
+            }
+        }
     }
+
 }
 
 extension PlusView {
@@ -308,15 +310,22 @@ extension PlusView {
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let pickedImage = info[.originalImage] as? UIImage {
-                // ここで取得した画像を使って何か処理を行います
-                parent.selectedImage = pickedImage // 選択された画像をセットします
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let pickedImage = info[.originalImage] as? UIImage {
+                    DispatchQueue.main.async {
+                        self.parent.selectedImage = pickedImage
+                    }
+                }
+                DispatchQueue.main.async {
+                    picker.dismiss(animated: true, completion: nil)
+                }
             }
-            picker.dismiss(animated: true, completion: nil)
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            picker.dismiss(animated: true, completion: nil)
+            DispatchQueue.main.async {
+                picker.dismiss(animated: true, completion: nil)
+            }
         }
     }
 }
