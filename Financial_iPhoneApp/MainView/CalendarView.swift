@@ -71,6 +71,14 @@ struct CalendarView: View {
                 }
             )
         }
+        .onAppear {
+            // ビューが表示されたときに初期値を設定
+            let today = Date()
+            self.selectedDate = today
+            self.selectedDay = today
+            self.selectedDateString = formatter2.string(from: today)
+            self.isListVisible = true
+        }
     }
     
     private var weekDaysView: some View {
@@ -88,35 +96,29 @@ struct CalendarView: View {
     private var calendarDaysView: some View {
         LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
             ForEach(getCalendarMatrix(), id: \.self) { week in
-                ForEach(week, id: \.self) { date in
-                    Button(action: {
-                        if let date = date {
+                ForEach(week.indices, id: \.self) { index in
+                    if let date = week[index] {
+                        Button(action: {
                             self.selectedDateString = formatter2.string(from: date)
                             self.selectedDay = date
-                            self.isListVisible = true // 日付が選択されたらリストを表示
-                        } else {
-                            self.selectedDateString = ""
-                            self.selectedDay = nil
-                            self.isListVisible = false // 日付が選択解除されたらリストを非表示
-                        }
-                        if let selectedDay = self.selectedDay {
-                            selectedDate = selectedDay
-                        }
-                    }) {
-                        if date != nil {
-                            Text(self.getDayText(date: date!))
+                            self.selectedDate = date
+                        }) {
+                            Text(self.getDayText(date: date))
                                 .frame(maxWidth: .infinity)
                                 .padding(8)
-                                .foregroundColor(self.textColor(for: date!))
-                                .background(self.selectedDay == date ? Color.green.opacity(0.5) : Color.white) // 背景色を選択状態に応じて変更
+                                .foregroundColor(self.textColor(for: date))
+                                .background(
+                                    calendar.isDateInToday(date) ? Color.gray.opacity(0.2) :
+                                        (self.selectedDay == date ? Color.cyan.opacity(0.2) : Color.white)
+                                ) // 背景色を選択状態に応じて変更
                                 .bold(self.selectedDay == date)
-                        } else {
-                            // 前月の日付は空白
-                            Text("")
-                                .frame(maxWidth: .infinity)
-                                .padding(8)
-                                .background(Color.white)
                         }
+                    } else {
+                        // 前月の日付は空白
+                        Text("")
+                            .frame(maxWidth: .infinity)
+                            .padding(8)
+                            .background(Color.white)
                     }
                 }
             }
