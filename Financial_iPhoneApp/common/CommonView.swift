@@ -11,12 +11,11 @@ import SwiftData
 struct CategorySelectionView: View {
     @Binding var selectedCategory: String
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) private var context
     @Query private var categories: [CategoryData]
     
     var body: some View {
         List {
-            ForEach(categories) { category in
+            ForEach(categories, id: \.self) { category in
                 Button(action: {
                     selectedCategory = category.categoryName
                     dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
@@ -34,7 +33,6 @@ struct CategorySelectionView: View {
         }
     }
 }
-
 
 struct DayPickerView: View {
     @Binding var isDatePickerVisible: Bool
