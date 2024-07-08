@@ -13,13 +13,12 @@ struct SettingView: View {
     @AppStorage("showPreview") private var showPreview = true
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
-    // 別にフォントサイズが変わるわけではない
     
     var body: some View {
         
-        NavigationView{
-            List{
-                Section(header: Text("遷移")){
+        NavigationView {
+            List {
+                Section(header: Text("遷移")) {
                     NavigationLink {
                         TestA()
                     } label: {
@@ -30,19 +29,24 @@ struct SettingView: View {
                     } label: {
                         Text("設定B")
                     }
+                    NavigationLink {
+                        CategorySettingsView()
+                    } label: {
+                        Text("カテゴリー設定")
+                    }
                 }
-                Section(header: Text("いろいろ")){
+                Section(header: Text("いろいろ")) {
                     Text("りんご")
                     Toggle("Show Previews", isOn: $showPreview)
                     // スライドバー
-                    HStack{
+                    HStack {
                         Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
                         Slider(value: $fontSize, in: 9...96) {
                             Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
                         }
                     }
                     // カウントステッパー
-                    Stepper(value: $fontSize, in : 9...96) {
+                    Stepper(value: $fontSize, in: 9...96) {
                         Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
                     }
                     
@@ -50,22 +54,24 @@ struct SettingView: View {
                     TextField("ユーザID", text: $userId)
                 }
             }
+            .navigationTitle("設定")
         }
     }
 }
 
-struct TestA: View{
+struct TestA: View {
     var body: some View {
         Text("きた")
     }
 }
 
-struct TestB: View{
+struct TestB: View {
     var body: some View {
         Text("これ")
     }
 }
 
 #Preview {
-    SettingView()
+    ContentView()
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

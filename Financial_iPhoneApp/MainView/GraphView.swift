@@ -147,5 +147,6 @@ struct GraphView: View {
 }
 
 #Preview {
-    GraphView()
+    ContentView()
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

@@ -15,8 +15,7 @@ struct PlusView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var dataStore: TransactionDataStore // データの変更を監視
-    @Query private var datas: [TransactionData]
-    
+    @Query private var categories: [CategoryData]
     
     @State private var isDatePickerVisible = false
     
@@ -51,8 +50,6 @@ struct PlusView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.white
-                    .ignoresSafeArea()
                 
                 VStack (spacing : 0){
                     HStack {
@@ -141,8 +138,9 @@ struct PlusView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                                 .padding(.bottom, 10)
-                                .onChange(of: amount) { newValue, old in
-                                    var filteredValue = newValue.filter { "0123456789".contains($0) }
+                                .onChange(of: amount) {
+                                    // 入力値をフィルタリング
+                                    var filteredValue = amount.filter { "0123456789".contains($0) }
                                     if filteredValue.starts(with: "0") {
                                         filteredValue = String(filteredValue.dropFirst())
                                     }
@@ -254,6 +252,11 @@ struct PlusView: View {
                     }
                 }
                 .navigationBarHidden(true)
+                .onAppear {
+                    if category.isEmpty, let firstCategory = categories.first?.categoryName {
+                        category = firstCategory
+                    }
+                }
             }
             .sheet(isPresented: $isDatePickerVisible) {
                 DayPickerView(
@@ -298,7 +301,6 @@ struct PlusView: View {
             }
         }
     }
-
 }
 
 extension PlusView {
@@ -332,5 +334,5 @@ extension PlusView {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

@@ -14,6 +14,7 @@ struct DataEditView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isDatePickerVisible = false
+    @State private var isCategorySelectionVisible = false
     @State var menuExpanded: Bool = false      // 詳細を隠す
     
     // エラーメッセージ表示用
@@ -115,7 +116,9 @@ struct DataEditView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 15)
                     HStack {
-                        NavigationLink(destination: CategorySelectionView(selectedCategory: $tempCategory)) {
+                        Button(action: {
+                            self.isCategorySelectionVisible.toggle()
+                        }) {
                             Text(tempCategory.isEmpty ? "カテゴリー選択" : tempCategory)
                                 .foregroundColor(.gray.opacity(0.6))
                             Spacer()
@@ -211,6 +214,9 @@ struct DataEditView: View {
                     tempCategory = transaction.category
                     tempMemo = transaction.memo
                 }
+                .sheet(isPresented: $isCategorySelectionVisible) {
+                    CategorySelectionView(selectedCategory: $tempCategory)
+                }
             }
             .sheet(isPresented: $isDatePickerVisible) {
                 DayPickerView(
@@ -248,5 +254,5 @@ struct DataEditView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

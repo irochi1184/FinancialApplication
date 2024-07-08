@@ -236,5 +236,5 @@ struct CalendarView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self)
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }
