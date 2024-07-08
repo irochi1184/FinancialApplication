@@ -12,9 +12,11 @@ import SwiftData
 final class CategoryData: Identifiable {
     var id: UUID
     var categoryName: String
+    var order: Int // 並べ替えの順序を表すプロパティを追加
     
-    init(categoryName: String) {
+    init(categoryName: String, order: Int = 0) {
         self.id = UUID()
         self.categoryName = categoryName
+        self.order = order
     }
 }

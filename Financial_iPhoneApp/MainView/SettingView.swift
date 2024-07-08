@@ -55,6 +55,7 @@ struct SettingView: View {
                 }
             }
             .navigationTitle("設定")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

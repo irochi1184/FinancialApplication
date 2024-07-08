@@ -253,7 +253,7 @@ struct PlusView: View {
                 }
                 .navigationBarHidden(true)
                 .onAppear {
-                    if category.isEmpty, let firstCategory = categories.first?.categoryName {
+                    if category.isEmpty, let firstCategory = categories.sorted(by: { $0.order < $1.order }).first?.categoryName {
                         category = firstCategory
                     }
                 }
