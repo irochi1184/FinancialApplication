@@ -31,14 +31,13 @@ struct Amounts {
 
 // カテゴリの設定: カテゴリごとの初期データを定義
 private var category: [Amounts] = [
-    .init(name: "食費", count: 1, color: .blue),
-    .init(name: "固定費", count: 1, color: .gray),
-    .init(name: "娯楽", count: 1, color: .red),
-    .init(name: "日用雑貨", count: 1, color: .orange)
+    .init(name: "none", count: 1, color: .gray.opacity(0.8))
 ]
 
 struct HomeView: View {
     @EnvironmentObject var dataStore: TransactionDataStore // データの変更を監視
+    
+    @State private var category: [Amounts] = []
     
     let calendar = Calendar.current  // カレンダー
     let formatter = DateFormatter()  // 日付フォーマッター1: "yyyy年 MM月"
@@ -59,7 +58,7 @@ struct HomeView: View {
     init() {
         // UISegmentedControlの外観をカスタマイズ
         UISegmentedControl.appearance().backgroundColor = UIColor(Color.gray.opacity(0.1))
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.blue)
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.cyan)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         // 日付フォーマットを設定
         formatter.dateFormat = "yyyy年 MM月"
@@ -76,10 +75,12 @@ struct HomeView: View {
             }
             FloatingButton()     // フローティングボタンの表示
         }
-        .onAppear { updateAmounts() } // 画面が表示されたときに使用金額を更新
+        .onAppear {
+            updateAmounts() // 画面が表示されたときに使用金額を更新
+            updateCategories()        }
         .onChange(of: dataStore.datas) {
             updateAmounts() // データが変更されたときに金額を更新
-        }
+            updateCategories()        }
     }
     
     // ピッカービュー
@@ -129,7 +130,7 @@ struct HomeView: View {
                 
                 // 円グラフの中心に表示するテキスト
                 VStack {
-                    Text("● ").foregroundColor(.gray).font(.caption) +
+                    Text("● ").foregroundColor(.gray.opacity(0.8)).font(.caption) +
                     Text("月の限度額：\(monthlyLimitAmount)円").font(.subheadline).foregroundColor(.black)
                     Text("● ").foregroundColor(.blue).font(.caption) +
                     Text("使用金額：\(calculateTotalUsageAmount())円").font(.subheadline).foregroundColor(.black)
@@ -152,6 +153,7 @@ struct HomeView: View {
                 onDateSelected: {
                     self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
                     updateAmounts() // 日付が選択されたときに金額を更新
+                    updateCategories()
                 }
             )
         }
@@ -160,7 +162,6 @@ struct HomeView: View {
     // カテゴリー別のビュー
     private var home2View: some View {
         VStack {
-            Divider() // 区切り線
             Spacer().frame(height: 20)
             ZStack {
                 Chart(category, id: \.name) { amount in // 円グラフの表示
@@ -174,10 +175,15 @@ struct HomeView: View {
                 
                 // 円グラフの中心に表示するテキスト
                 VStack {
-                    Text("●").foregroundColor(.blue).font(.caption) + Text("食費：60000円").font(.subheadline).foregroundColor(.black)
-                    Text("●").foregroundColor(.gray).font(.caption) + Text("固定費：60000円").font(.subheadline).foregroundColor(.black)
-                    Text("●").foregroundColor(.red).font(.caption) + Text("娯楽：60000円").font(.subheadline).foregroundColor(.black)
-                    Text("●").foregroundColor(.orange).font(.caption) + Text("日用雑貨：60000円").font(.subheadline).foregroundColor(.black)
+                    ForEach(category, id: \.name) { amount in // カテゴリデータをリスト表示
+                        HStack {
+                            Spacer()
+                            Text("●").foregroundColor(amount.color).font(.caption) +
+                            Text(" \(amount.name)：") + // カテゴリ名の表示
+                            Text("\(amount.count)円") // 合計金額の表示
+                            Spacer()
+                        }
+                    }
                 }
             }
             .frame(width: 300, height: 300)
@@ -197,6 +203,7 @@ struct HomeView: View {
                 onDateSelected: {
                     self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
                     updateAmounts() // 日付が選択されたときに金額を更新
+                    updateCategories()
                 }
             )
         }
@@ -266,6 +273,7 @@ struct HomeView: View {
     private func changeMonth(by value: Int) {
         selectedDate = calendar.date(byAdding: .month, value: value, to: selectedDate)!
         updateAmounts() // 月が変更されたときに金額を更新
+        updateCategories()
     }
     
     // 使用金額の更新
@@ -274,7 +282,7 @@ struct HomeView: View {
         if monthlyLimitAmount >= totalUsageAmount { // 使用金額が月の限度額以下の場合
             amounts = [
                 .init(name: "月の限度額", count: monthlyLimitAmount - (monthlyLimitAmount - totalUsageAmount), color: .blue),
-                .init(name: "使用金額", count: monthlyLimitAmount - totalUsageAmount, color: .gray)
+                .init(name: "使用金額", count: monthlyLimitAmount - totalUsageAmount, color: .gray.opacity(0.8))
             ]
         } else if monthlyLimitAmount * 2 < totalUsageAmount { // 使用金額が月の限度額の倍以上の場合
             amounts = [
@@ -286,6 +294,18 @@ struct HomeView: View {
                 .init(name: "月の限度額", count: monthlyLimitAmount - (totalUsageAmount - monthlyLimitAmount), color: .blue),
                 .init(name: "使用金額", count: monthlyLimitAmount - totalUsageAmount, color: .red.opacity(0.8))
             ]
+        }
+    }
+    
+    
+    // カテゴリーの更新
+    private func updateCategories() {
+        let colors: [Color] = [.red, .green, .blue, .orange, .purple, .pink, .yellow, .teal, .indigo, .cyan]
+        var colorIndex = 0
+        category = TotalCategoryData.keys.map { categoryName in
+            let color = colors[colorIndex % colors.count]
+            colorIndex += 1
+            return Amounts(name: categoryName, count: TotalCategoryData[categoryName] ?? 0, color: color)
         }
     }
     
