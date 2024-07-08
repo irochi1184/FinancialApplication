@@ -151,6 +151,6 @@ struct AddHistoryView: View {
 }
 
 #Preview {
-    AddHistoryView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+    ContentView()
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

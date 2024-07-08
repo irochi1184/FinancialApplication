@@ -332,5 +332,5 @@ extension PlusView {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

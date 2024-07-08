@@ -6,22 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategorySelectionView: View {
     @Binding var selectedCategory: String
     @Environment(\.dismiss) var dismiss
-    let categories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"] // Example categories
+    @Environment(\.modelContext) private var context
+    @Query private var categories: [CategoryData]
     
     var body: some View {
         List {
-            ForEach(categories, id: \.self) { category in
+            ForEach(categories) { category in
                 Button(action: {
-                    selectedCategory = category
+                    selectedCategory = category.categoryName
                     dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
                 }) {
                     HStack {
-                        Text(category)
-                        if selectedCategory == category {
+                        Text(category.categoryName)
+                        if selectedCategory == category.categoryName {
                             Spacer()
                             Image(systemName: "checkmark")
                                 .foregroundColor(.blue)
@@ -29,11 +31,10 @@ struct CategorySelectionView: View {
                     }
                 }
             }
-            Spacer()
-            Text("新規追加")
         }
     }
 }
+
 
 struct DayPickerView: View {
     @Binding var isDatePickerVisible: Bool
