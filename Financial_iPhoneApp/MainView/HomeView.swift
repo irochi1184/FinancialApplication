@@ -134,6 +134,10 @@ struct HomeView: View {
                     Text("月の限度額：\(monthlyLimitAmount)円").font(.subheadline).foregroundColor(.black)
                     Text("● ").foregroundColor(.blue).font(.caption) +
                     Text("使用金額：\(calculateTotalUsageAmount())円").font(.subheadline).foregroundColor(.black)
+                    if calculateTotalUsageAmount() > monthlyLimitAmount {
+                        Text("● ").foregroundColor(.red).font(.caption) +
+                        Text("超過金額：\(calculateTotalUsageAmount() - monthlyLimitAmount)円").font(.subheadline).foregroundColor(.black)
+                    }
                 }
             }
             .frame(width: 300, height: 300)
@@ -300,7 +304,7 @@ struct HomeView: View {
     
     // カテゴリーの更新
     private func updateCategories() {
-        let colors: [Color] = [.red, .green, .blue, .orange, .purple, .pink, .yellow, .teal, .indigo, .cyan]
+        let colors: [Color] = [.cyan, .green, .yellow, .purple, .pink, .orange, .blue, .teal, .indigo, .red ]
         var colorIndex = 0
         category = TotalCategoryData.keys.map { categoryName in
             let color = colors[colorIndex % colors.count]
