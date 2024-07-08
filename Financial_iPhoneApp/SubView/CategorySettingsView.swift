@@ -11,12 +11,12 @@ import SwiftUI
 
 struct CategorySettingsView: View {
     @Environment(\.modelContext) private var context
-    @Query private var categories: [CategoryData]
+    @Query private var fetchedCategories: [CategoryData]
+    @State private var categories: [CategoryData] = []
     @State private var newCategory: String = ""
     
     var body: some View {
         VStack {
-            EditButton()
             List {
                 ForEach(categories) { category in
                     HStack {
@@ -24,7 +24,8 @@ struct CategorySettingsView: View {
                         Spacer()
                     }
                 }
-                .onDelete(perform: deleteCategory(at:))
+                .onDelete(perform: deleteCategory)
+                .onMove(perform: moveCategory)
                 
                 HStack {
                     TextField("新しいカテゴリー", text: $newCategory)
@@ -35,15 +36,29 @@ struct CategorySettingsView: View {
                 .padding()
             }
         }
-        .navigationTitle("カテゴリー設定")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("カテゴリー設定")
+                    .foregroundColor(.black)
+                    .font(.system(size: 20))
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()
+            }
+        }
+        .onAppear {
+            categories = fetchedCategories.sorted { $0.order < $1.order }
+        }
     }
     
     private func addCategory() {
         if !newCategory.isEmpty {
-            let newCategoryData = CategoryData(categoryName: newCategory)
+            let newCategoryData = CategoryData(categoryName: newCategory, order: categories.count)
             context.insert(newCategoryData)
+            categories.append(newCategoryData)
             newCategory = ""
+            saveCategoryOrder()
         }
     }
     
@@ -51,6 +66,24 @@ struct CategorySettingsView: View {
         for index in offsets {
             let category = categories[index]
             context.delete(category)
+            categories.remove(atOffsets: offsets)
+        }
+        saveCategoryOrder()
+    }
+    
+    private func moveCategory(from source: IndexSet, to destination: Int) {
+        categories.move(fromOffsets: source, toOffset: destination)
+        saveCategoryOrder()
+    }
+    
+    private func saveCategoryOrder() {
+        for (index, category) in categories.enumerated() {
+            category.order = index
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save category order: \(error)")
         }
     }
 }
