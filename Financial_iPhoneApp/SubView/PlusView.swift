@@ -27,6 +27,7 @@ struct PlusView: View {
     @State private var memo = String()            // メモ
     @State var menuExpanded: Bool = false         // 詳細を隠す
     @State private var selectedImage: UIImage?
+    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
     
     // エラーメッセージ表示用
     @State private var errorMessage: String?
@@ -138,6 +139,15 @@ struct PlusView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                                 .padding(.bottom, 10)
+                                .focused($isNumberPadActive)
+                                .toolbar {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()         // 右寄せにする
+                                        Button("閉じる") {
+                                            isNumberPadActive = false  //  フォーカスを外す
+                                        }
+                                    }
+                                }
                                 .onChange(of: amount) {
                                     // 入力値をフィルタリング
                                     var filteredValue = amount.filter { "0123456789".contains($0) }

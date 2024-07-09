@@ -14,7 +14,9 @@ struct SettingView: View {
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
     @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000 // 月の限度額
-
+    
+    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
+    
     
     var body: some View {
         
@@ -61,6 +63,15 @@ struct SettingView: View {
                         TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(TextAlignment.trailing)
+                            .focused($isNumberPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()         // 右寄せにする
+                                    Button("閉じる") {
+                                        isNumberPadActive = false  //  フォーカスを外す
+                                    }
+                                }
+                            }
                     }
                 }
             }
