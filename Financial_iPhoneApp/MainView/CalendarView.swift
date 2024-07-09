@@ -95,9 +95,9 @@ struct CalendarView: View {
     
     private var calendarDaysView: some View {
         LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
-            ForEach(getCalendarMatrix(), id: \.self) { week in
-                ForEach(week.indices, id: \.self) { index in
-                    if let date = week[index] {
+            ForEach(getCalendarMatrix().indices, id: \.self) { weekIndex in
+                ForEach(getCalendarMatrix()[weekIndex].indices, id: \.self) { dayIndex in
+                    if let date = getCalendarMatrix()[weekIndex][dayIndex] {
                         Button(action: {
                             self.selectedDateString = formatter2.string(from: date)
                             self.selectedDay = date
