@@ -150,6 +150,7 @@ struct CalendarView: View {
                 }
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .sheet(item: $selectedTransaction) { transaction in
             DataEditView(transaction: $selectedTransaction)

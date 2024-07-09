@@ -112,6 +112,7 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             } else {
                 List {
@@ -144,6 +145,7 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             }
         }.navigationBarHidden(true)

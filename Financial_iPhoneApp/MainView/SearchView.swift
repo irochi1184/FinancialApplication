@@ -133,6 +133,7 @@ struct SearchView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
                 .sheet(item: $selectedTransaction, onDismiss: {
                     isEditViewPresented = false

@@ -227,6 +227,7 @@ struct HomeView: View {
                 }
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置
@@ -241,6 +242,7 @@ struct HomeView: View {
                 Text("\(TotalCategoryData[category] ?? 0)円") // 合計金額の表示
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置

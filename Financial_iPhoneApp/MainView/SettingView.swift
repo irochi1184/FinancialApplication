@@ -22,6 +22,23 @@ struct SettingView: View {
         
         NavigationView {
             List {
+                Section(header: Text("金額設定")) {
+                    HStack {
+                        Text("月の限度額")
+                        TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(TextAlignment.trailing) // 右寄せ
+                            .focused($isNumberPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()         // 右寄せにする
+                                    Button("閉じる") {
+                                        isNumberPadActive = false  //  フォーカスを外す
+                                    }
+                                }
+                            }
+                    }
+                }
                 Section(header: Text("遷移")) {
                     NavigationLink {
                         TestA()
@@ -57,26 +74,10 @@ struct SettingView: View {
                     // テキスト入力エリア
                     TextField("ユーザID", text: $userId)
                 }
-                Section(header: Text("金額設定")) {
-                    HStack {
-                        Text("月の限度額")
-                        TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(TextAlignment.trailing)
-                            .focused($isNumberPadActive)
-                            .toolbar {
-                                ToolbarItemGroup(placement: .keyboard) {
-                                    Spacer()         // 右寄せにする
-                                    Button("閉じる") {
-                                        isNumberPadActive = false  //  フォーカスを外す
-                                    }
-                                }
-                            }
-                    }
-                }
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
+            .id(UUID())
         }
     }
 }
