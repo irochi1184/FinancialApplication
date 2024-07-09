@@ -77,10 +77,12 @@ struct HomeView: View {
         }
         .onAppear {
             updateAmounts() // 画面が表示されたときに使用金額を更新
-            updateCategories()        }
+            updateCategories()
+        }
         .onChange(of: dataStore.datas) {
             updateAmounts() // データが変更されたときに金額を更新
-            updateCategories()        }
+            updateCategories()
+        }
     }
     
     // ピッカービュー
@@ -327,7 +329,7 @@ struct HomeView: View {
                             .foregroundColor(.white)
                             .font(.system(size: 24))
                     })
-                    .fullScreenCover(isPresented: $isPresented) {
+                    .sheet(isPresented: $isPresented) {
                         PlusView() // 画面遷移先のビュー
                     }
                     .frame(width: 60, height: 60)
