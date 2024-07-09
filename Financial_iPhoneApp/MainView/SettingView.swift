@@ -13,6 +13,8 @@ struct SettingView: View {
     @AppStorage("showPreview") private var showPreview = true
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
+    @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000 // 月の限度額
+
     
     var body: some View {
         
@@ -52,6 +54,14 @@ struct SettingView: View {
                     
                     // テキスト入力エリア
                     TextField("ユーザID", text: $userId)
+                }
+                Section(header: Text("金額設定")) {
+                    HStack {
+                        Text("月の限度額")
+                        TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(TextAlignment.trailing)
+                    }
                 }
             }
             .navigationTitle("設定")
