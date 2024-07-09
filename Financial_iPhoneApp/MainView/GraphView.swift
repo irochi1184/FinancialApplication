@@ -128,7 +128,7 @@ struct GraphView: View {
                     Toggle(isOn: $isOn2) {
                         Text("カテゴリ2")
                     }
-                }
+                }.id(UUID())
             }
         }
         .onAppear {

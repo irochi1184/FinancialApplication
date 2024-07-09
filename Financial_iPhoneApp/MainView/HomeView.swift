@@ -47,7 +47,7 @@ struct HomeView: View {
     
     @State private var selectedDate: Date = Date()                                           // 選択された日付(初期値は今日日付)
     @State private var totalUsageAmount: Int = 0                                             // 使用金額の合計
-    @State private var monthlyLimitAmount: Int = 100000                                      // 月の限度額
+    @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount: Int = 100000           // 月の限度額
     @State private var amounts: [Amounts] = []                                               // 金額の配列
     @State private var isDatePickerVisible = false                                           // DatePickerの表示状態
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())   // 選択された年
@@ -227,6 +227,7 @@ struct HomeView: View {
                 }
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置
@@ -241,6 +242,7 @@ struct HomeView: View {
                 Text("\(TotalCategoryData[category] ?? 0)円") // 合計金額の表示
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置

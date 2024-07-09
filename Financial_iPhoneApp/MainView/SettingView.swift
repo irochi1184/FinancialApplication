@@ -13,11 +13,32 @@ struct SettingView: View {
     @AppStorage("showPreview") private var showPreview = true
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
+    @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000 // 月の限度額
+    
+    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
+    
     
     var body: some View {
         
         NavigationView {
             List {
+                Section(header: Text("金額設定")) {
+                    HStack {
+                        Text("月の限度額")
+                        TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(TextAlignment.trailing) // 右寄せ
+                            .focused($isNumberPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()         // 右寄せにする
+                                    Button("閉じる") {
+                                        isNumberPadActive = false  //  フォーカスを外す
+                                    }
+                                }
+                            }
+                    }
+                }
                 Section(header: Text("遷移")) {
                     NavigationLink {
                         TestA()
@@ -56,6 +77,7 @@ struct SettingView: View {
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
+            .id(UUID())
         }
     }
 }
