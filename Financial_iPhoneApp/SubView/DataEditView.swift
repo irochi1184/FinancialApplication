@@ -14,6 +14,7 @@ struct DataEditView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isDatePickerVisible = false
+    @State private var isCategorySelectionVisible = false
     @State var menuExpanded: Bool = false      // 詳細を隠す
     
     // エラーメッセージ表示用
@@ -42,6 +43,7 @@ struct DataEditView: View {
     @State private var tempAmount: String = ""
     @State private var tempCategory: String = ""
     @State private var tempMemo: String = ""
+    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
     
     var body: some View {
         if let transaction = transaction {
@@ -107,6 +109,15 @@ struct DataEditView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                         .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                         .padding(.bottom, 10)
+                        .focused($isNumberPadActive)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()         // 右寄せにする
+                                Button("閉じる") {
+                                    isNumberPadActive = false  //  フォーカスを外す
+                                }
+                            }
+                        }
                     
                     // --------------- カテゴリー選択 --------------- //
                     Text("カテゴリー選択")
@@ -116,7 +127,7 @@ struct DataEditView: View {
                         .padding(.leading, 15)
                     HStack {
                         NavigationLink(destination: CategorySelectionView(selectedCategory: $tempCategory)) {
-                            Text(tempCategory.isEmpty ? "カテゴリー選択" : tempCategory)
+                            Text(tempCategory.isEmpty ? "選択" : tempCategory)
                                 .foregroundColor(.gray.opacity(0.6))
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -211,6 +222,9 @@ struct DataEditView: View {
                     tempCategory = transaction.category
                     tempMemo = transaction.memo
                 }
+                .sheet(isPresented: $isCategorySelectionVisible) {
+                    CategorySelectionView(selectedCategory: $tempCategory)
+                }
             }
             .sheet(isPresented: $isDatePickerVisible) {
                 DayPickerView(
@@ -248,5 +262,5 @@ struct DataEditView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

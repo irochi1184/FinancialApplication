@@ -112,6 +112,7 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             } else {
                 List {
@@ -144,6 +145,7 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             }
         }.navigationBarHidden(true)
@@ -151,6 +153,6 @@ struct AddHistoryView: View {
 }
 
 #Preview {
-    AddHistoryView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+    ContentView()
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

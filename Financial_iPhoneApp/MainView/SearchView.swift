@@ -125,9 +125,6 @@ struct SearchView: View {
                         .contentShape(Rectangle()) // HStack全体をタップ可能にする
                         .onTapGesture {
                             selectedTransaction = item
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                isEditViewPresented.toggle()
-                            }
                         }
                     }
                     .onDelete(perform: { indexSet in
@@ -135,20 +132,23 @@ struct SearchView: View {
                             delete(data: datas[index])
                         }
                     })
-                    .sheet(item: $selectedTransaction) { transaction in
-                        DataEditView(transaction: $selectedTransaction)
-                            .onDisappear {
-                                if context.hasChanges {
-                                    do {
-                                        try context.save()
-                                    } catch {
-                                        print("Failed to save context: \(error.localizedDescription)")
-                                    }
+                }
+                .id(UUID())
+                .listStyle(.plain)
+                .sheet(item: $selectedTransaction, onDismiss: {
+                    isEditViewPresented = false
+                }) { transaction in
+                    DataEditView(transaction: $selectedTransaction)
+                        .onDisappear {
+                            if context.hasChanges {
+                                do {
+                                    try context.save()
+                                } catch {
+                                    print("Failed to save context: \(error.localizedDescription)")
                                 }
                             }
-                    }
+                        }
                 }
-                .listStyle(.plain)
             }
         }
     }
@@ -162,7 +162,8 @@ struct SearchView: View {
     }
 }
 
+
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

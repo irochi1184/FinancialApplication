@@ -25,6 +25,7 @@ struct CalendarView: View {
     @State private var isEditViewPresented = false // 編集画面の表示状態
     @State private var selectedTransaction: TransactionData? // 選択された取引データ
     @State private var isDatePickerVisible = false // DatePickerの表示状態
+    @State private var viewID = UUID()
     
     // 選択された年と月
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
@@ -55,9 +56,8 @@ struct CalendarView: View {
             calendarDaysView
             
             Divider() // カレンダーと下部の区切り線
-            selectedDateView
+            dateViewWithSwipeGesture
             transactionListView
-            
         }
         .sheet(isPresented: $isDatePickerVisible) {
             DatePickerView(
@@ -68,8 +68,17 @@ struct CalendarView: View {
                 maxYear: maxYear,
                 onDateSelected: {
                     self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
+                    updateSelectedDay()
                 }
             )
+        }
+        .onAppear {
+            // ビューが表示されたときに初期値を設定
+            let today = Date()
+            self.selectedDate = today
+            self.selectedDay = today
+            self.selectedDateString = formatter2.string(from: today)
+            self.isListVisible = true
         }
     }
     
@@ -87,36 +96,31 @@ struct CalendarView: View {
     
     private var calendarDaysView: some View {
         LazyVGrid(columns: Array(repeating: GridItem(), count: 7), spacing: 0) {
-            ForEach(getCalendarMatrix(), id: \.self) { week in
-                ForEach(week, id: \.self) { date in
-                    Button(action: {
-                        if let date = date {
+            ForEach(getCalendarMatrix().indices, id: \.self) { weekIndex in
+                ForEach(getCalendarMatrix()[weekIndex].indices, id: \.self) { dayIndex in
+                    if let date = getCalendarMatrix()[weekIndex][dayIndex] {
+                        Button(action: {
                             self.selectedDateString = formatter2.string(from: date)
                             self.selectedDay = date
-                            self.isListVisible = true // 日付が選択されたらリストを表示
-                        } else {
-                            self.selectedDateString = ""
-                            self.selectedDay = nil
-                            self.isListVisible = false // 日付が選択解除されたらリストを非表示
-                        }
-                        if let selectedDay = self.selectedDay {
-                            selectedDate = selectedDay
-                        }
-                    }) {
-                        if date != nil {
-                            Text(self.getDayText(date: date!))
+                            self.selectedDate = date
+                        }) {
+                            Text(self.getDayText(date: date))
                                 .frame(maxWidth: .infinity)
                                 .padding(8)
-                                .foregroundColor(self.textColor(for: date!))
-                                .background(self.selectedDay == date ? Color.green.opacity(0.5) : Color.white) // 背景色を選択状態に応じて変更
+                                .foregroundColor(self.textColor(for: date))
+                                .background(
+                                    self.selectedDay == date ? Color.cyan.opacity(0.2) :
+                                        (calendar.isDateInToday(date) ? Color.gray.opacity(0.2) :
+                                            Color.white)
+                                ) // 背景色を選択状態に応じて変更
                                 .bold(self.selectedDay == date)
-                        } else {
-                            // 前月の日付は空白
-                            Text("")
-                                .frame(maxWidth: .infinity)
-                                .padding(8)
-                                .background(Color.white)
                         }
+                    } else {
+                        // 前月の日付は空白
+                        Text("")
+                            .frame(maxWidth: .infinity)
+                            .padding(8)
+                            .background(Color.white)
                     }
                 }
             }
@@ -124,11 +128,20 @@ struct CalendarView: View {
         .padding(.horizontal)
     }
     
-    private var selectedDateView: some View {
-        Text(selectedDateString.isEmpty ? formatter2.string(from: selectedDate) : selectedDateString)
-            .frame(maxWidth: 350, alignment: .leading)
-            .font(.headline)
-            .padding()
+    private var dateViewWithSwipeGesture: some View {
+        HStack {
+            Text(selectedDateString.isEmpty ? formatter2.string(from: selectedDate) : selectedDateString)
+                .frame(maxWidth: 350, alignment: .leading)
+                .font(.headline)
+                .padding()
+        }
+        .contentShape(Rectangle()) // HStack全体をタップ可能にする
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    handleSwipeGesture(value: value)
+                }
+        )
     }
     
     private var transactionListView: some View {
@@ -148,15 +161,40 @@ struct CalendarView: View {
                 }
             }
         }
+        .id(UUID())
         .listStyle(.plain)
         .sheet(item: $selectedTransaction) { transaction in
             DataEditView(transaction: $selectedTransaction)
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    handleSwipeGesture(value: value)
+                }
+        )
+    }
+    
+    // スワイプジェスチャの処理
+    private func handleSwipeGesture(value: DragGesture.Value) {
+        let adjustment = value.translation.width < 0 ? 1 : -1
+        if let newDate = calendar.date(byAdding: .day, value: adjustment, to: self.selectedDate) {
+            self.selectedDate = newDate
+            self.selectedDay = newDate
+            self.selectedDateString = formatter2.string(from: newDate)
+            self.viewID = UUID()  // 強制再描画
+        }
+    }
+
+    
+    private func updateSelectedDay() {
+        self.selectedDay = self.selectedDate
+        self.selectedDateString = formatter2.string(from: self.selectedDate)
     }
     
     // 月の変更
     private func changeMonth(by value: Int) {
         selectedDate = calendar.date(byAdding: .month, value: value, to: selectedDate)!
+        updateSelectedDay()
     }
     
     // カレンダーの日付選択時のフィルタリング
@@ -236,5 +274,5 @@ struct CalendarView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: TransactionData.self)
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

@@ -19,6 +19,8 @@
 		73663B4E2C39821300AFE072 /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73663B4D2C39821300AFE072 /* DatePickerView.swift */; };
 		73663B502C39825600AFE072 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73663B4F2C39825600AFE072 /* HeaderView.swift */; };
 		73663B522C398E9D00AFE072 /* CommonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73663B512C398E9D00AFE072 /* CommonView.swift */; };
+		73663B572C3B4BF100AFE072 /* CategoryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73663B562C3B4BF100AFE072 /* CategoryData.swift */; };
+		73663B592C3B4E1700AFE072 /* CategorySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */; };
 		737080332B90A4DA003F85D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080322B90A4DA003F85D5 /* HomeView.swift */; };
 		737080352B90A534003F85D5 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080342B90A534003F85D5 /* CalendarView.swift */; };
 		737080372B90A57C003F85D5 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080362B90A57C003F85D5 /* GraphView.swift */; };
@@ -61,6 +63,8 @@
 		73663B4D2C39821300AFE072 /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		73663B4F2C39825600AFE072 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		73663B512C398E9D00AFE072 /* CommonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonView.swift; sourceTree = "<group>"; };
+		73663B562C3B4BF100AFE072 /* CategoryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryData.swift; sourceTree = "<group>"; };
+		73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySettingsView.swift; sourceTree = "<group>"; };
 		737080322B90A4DA003F85D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		737080342B90A534003F85D5 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		737080362B90A57C003F85D5 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
@@ -157,9 +161,9 @@
 		73663B4C2C3981F300AFE072 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				73663B512C398E9D00AFE072 /* CommonView.swift */,
 				73663B4D2C39821300AFE072 /* DatePickerView.swift */,
 				73663B4F2C39825600AFE072 /* HeaderView.swift */,
-				73663B512C398E9D00AFE072 /* CommonView.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -168,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				734BA2542C1ACD23009F62F0 /* TransactionData.swift */,
+				73663B562C3B4BF100AFE072 /* CategoryData.swift */,
 			);
 			path = DataBase;
 			sourceTree = "<group>";
@@ -188,9 +193,10 @@
 		73663B552C3B135200AFE072 /* SubView */ = {
 			isa = PBXGroup;
 			children = (
-				731728F92BD30F18000D7CF9 /* PlusView.swift */,
 				738359752C1B771200049BC1 /* AddHistoryView.swift */,
+				73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */,
 				73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */,
+				731728F92BD30F18000D7CF9 /* PlusView.swift */,
 			);
 			path = SubView;
 			sourceTree = "<group>";
@@ -326,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				731728FA2BD30F18000D7CF9 /* PlusView.swift in Sources */,
+				73663B572C3B4BF100AFE072 /* CategoryData.swift in Sources */,
 				738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */,
 				737080372B90A57C003F85D5 /* GraphView.swift in Sources */,
 				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
@@ -339,6 +346,7 @@
 				734BA2552C1ACD23009F62F0 /* TransactionData.swift in Sources */,
 				7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */,
 				73663B502C39825600AFE072 /* HeaderView.swift in Sources */,
+				73663B592C3B4E1700AFE072 /* CategorySettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
