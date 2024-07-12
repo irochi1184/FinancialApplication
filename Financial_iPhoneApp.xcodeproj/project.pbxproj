@@ -27,6 +27,7 @@
 		737080392B90A5B5003F85D5 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737080382B90A5B5003F85D5 /* SearchView.swift */; };
 		7370803B2B90A5D1003F85D5 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7370803A2B90A5D1003F85D5 /* SettingView.swift */; };
 		738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738359752C1B771200049BC1 /* AddHistoryView.swift */; };
+		73A44BA32C417E8A00791164 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BA22C417E8A00791164 /* LockView.swift */; };
 		73FD6F3F2C2388BA0092AB9E /* DataEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,8 @@
 		737080382B90A5B5003F85D5 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		7370803A2B90A5D1003F85D5 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		738359752C1B771200049BC1 /* AddHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHistoryView.swift; sourceTree = "<group>"; };
+		73A44BA22C417E8A00791164 /* LockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
+		73A44BA42C4180EC00791164 /* Financial-iPhoneApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Financial-iPhoneApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 		73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +125,7 @@
 		7357CD462B8CC92800CCBA97 /* Financial_iPhoneApp */ = {
 			isa = PBXGroup;
 			children = (
+				73A44BA42C4180EC00791164 /* Financial-iPhoneApp-Info.plist */,
 				73663B552C3B135200AFE072 /* SubView */,
 				73663B542C3B133B00AFE072 /* MainView */,
 				73663B532C3B12FE00AFE072 /* DataBase */,
@@ -197,6 +201,7 @@
 				73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */,
 				73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */,
 				731728F92BD30F18000D7CF9 /* PlusView.swift */,
+				73A44BA22C417E8A00791164 /* LockView.swift */,
 			);
 			path = SubView;
 			sourceTree = "<group>";
@@ -336,6 +341,7 @@
 				738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */,
 				737080372B90A57C003F85D5 /* GraphView.swift in Sources */,
 				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
+				73A44BA32C417E8A00791164 /* LockView.swift in Sources */,
 				73FD6F3F2C2388BA0092AB9E /* DataEditView.swift in Sources */,
 				737080332B90A4DA003F85D5 /* HomeView.swift in Sources */,
 				73663B4E2C39821300AFE072 /* DatePickerView.swift in Sources */,
@@ -513,8 +519,10 @@
 				DEVELOPMENT_TEAM = XX3ULK22EF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Financial-iPhoneApp-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Kakebo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "このアプリは、データの保護のためにFace IDを使用します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -545,8 +553,10 @@
 				DEVELOPMENT_TEAM = XX3ULK22EF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Financial-iPhoneApp-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Kakebo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "このアプリは、データの保護のためにFace IDを使用します。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

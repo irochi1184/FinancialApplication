@@ -1,4 +1,3 @@
-//
 //  Financial_iPhoneAppApp.swift
 //  Financial_iPhoneApp
 //
@@ -15,7 +14,7 @@ struct Financial_iPhoneAppApp: App {
     var body: some Scene {
         WindowGroup {
             if model.isReady {
-                ContentView()
+                LockView(model: model)
                     .environment(\.modelContext, model.container!.mainContext) // データ保存用
             } else {
                 ProgressView("Loading...") // ロード中の表示
