@@ -43,7 +43,7 @@ struct DataEditView: View {
     @State private var tempAmount: String = ""
     @State private var tempCategory: String = ""
     @State private var tempMemo: String = ""
-    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
+    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
     
     var body: some View {
         if let transaction = transaction {
@@ -73,6 +73,7 @@ struct DataEditView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                         .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                         .padding(.bottom, 10)
+                        .focused($iskeyPadActive)
                     
                     // --------------- 日付 --------------- //
                     Text("日付")
@@ -109,12 +110,12 @@ struct DataEditView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                         .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                         .padding(.bottom, 10)
-                        .focused($isNumberPadActive)
+                        .focused($iskeyPadActive)
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
                                 Spacer()         // 右寄せにする
                                 Button("閉じる") {
-                                    isNumberPadActive = false  //  フォーカスを外す
+                                    iskeyPadActive = false  //  フォーカスを外す
                                 }
                             }
                         }
@@ -162,6 +163,7 @@ struct DataEditView: View {
                             TextField("入力", text: $tempMemo, axis: .vertical)
                                 .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                                 .padding(.bottom, 15)
+                                .focused($iskeyPadActive)
                         }
                         .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                     }
