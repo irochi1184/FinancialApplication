@@ -18,6 +18,7 @@ struct PlusView: View {
     @Query private var categories: [CategoryData]
     
     @State private var isDatePickerVisible = false
+    @State private var isCategorySelectionVisible = false
     
     @State private var isExpense = true           // 項目（true = 支出、false = 収入）
     @State private var transactionName = String() // 取引名
@@ -165,7 +166,9 @@ struct PlusView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 15)
                             HStack {
-                                NavigationLink(destination: CategorySelectionView(selectedCategory: $category)) {
+                                Button(action: {
+                                    isCategorySelectionVisible.toggle()
+                                }) {
                                     Text(category.isEmpty ? "選択" : category)
                                         .foregroundColor(.gray.opacity(0.6))
                                     Spacer()
@@ -268,6 +271,9 @@ struct PlusView: View {
                     if category.isEmpty, let firstCategory = categories.sorted(by: { $0.order < $1.order }).first?.categoryName {
                         category = firstCategory
                     }
+                }
+                .sheet(isPresented: $isCategorySelectionVisible) {
+                    CategorySelectionView(selectedCategory: $category)
                 }
             }
             .sheet(isPresented: $isDatePickerVisible) {

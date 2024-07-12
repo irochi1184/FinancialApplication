@@ -40,40 +40,40 @@ struct SettingView: View {
                     }
                 }
                 Section(header: Text("遷移")) {
-                    NavigationLink {
-                        TestA()
-                    } label: {
-                        Text("設定A")
-                    }
-                    NavigationLink {
-                        TestB()
-                    } label: {
-                        Text("設定B")
-                    }
+//                    NavigationLink {
+//                        TestA()
+//                    } label: {
+//                        Text("設定A")
+//                    }
+//                    NavigationLink {
+//                        TestB()
+//                    } label: {
+//                        Text("設定B")
+//                    }
                     NavigationLink {
                         CategorySettingsView()
                     } label: {
                         Text("カテゴリー設定")
                     }
                 }
-                Section(header: Text("いろいろ")) {
-                    Text("りんご")
-                    Toggle("Show Previews", isOn: $showPreview)
-                    // スライドバー
-                    HStack {
-                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
-                        Slider(value: $fontSize, in: 9...96) {
-                            Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
-                        }
-                    }
-                    // カウントステッパー
-                    Stepper(value: $fontSize, in: 9...96) {
-                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
-                    }
-                    
-                    // テキスト入力エリア
-                    TextField("ユーザID", text: $userId)
-                }
+//                Section(header: Text("いろいろ")) {
+//                    Text("りんご")
+//                    Toggle("Show Previews", isOn: $showPreview)
+//                    // スライドバー
+//                    HStack {
+//                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+//                        Slider(value: $fontSize, in: 9...96) {
+//                            Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+//                        }
+//                    }
+//                    // カウントステッパー
+//                    Stepper(value: $fontSize, in: 9...96) {
+//                        Text("Font Size (\(fontSize, specifier: "%.0f") pt)")
+//                    }
+//                    
+//                    // テキスト入力エリア
+//                    TextField("ユーザID", text: $userId)
+//                }
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
@@ -82,17 +82,17 @@ struct SettingView: View {
     }
 }
 
-struct TestA: View {
-    var body: some View {
-        Text("きた")
-    }
-}
-
-struct TestB: View {
-    var body: some View {
-        Text("これ")
-    }
-}
+//struct TestA: View {
+//    var body: some View {
+//        Text("きた")
+//    }
+//}
+//
+//struct TestB: View {
+//    var body: some View {
+//        Text("これ")
+//    }
+//}
 
 #Preview {
     ContentView()

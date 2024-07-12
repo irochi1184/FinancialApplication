@@ -45,7 +45,6 @@ struct CategorySettingsView: View {
                 }
                 .padding()
             }
-            .id(UUID())
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

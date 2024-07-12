@@ -127,7 +127,9 @@ struct DataEditView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 15)
                     HStack {
-                        NavigationLink(destination: CategorySelectionView(selectedCategory: $tempCategory)) {
+                        Button(action: {
+                            isCategorySelectionVisible.toggle()
+                        }) {
                             Text(tempCategory.isEmpty ? "選択" : tempCategory)
                                 .foregroundColor(.gray.opacity(0.6))
                             Spacer()
