@@ -11,15 +11,16 @@ import SwiftData
 struct ContentView: View {
     @StateObject private var dataStore = TransactionDataStore()
     @ObservedObject var model: AppModel
-    @State private var selectedTab: Tab = .home
+    @State private var selectedTab: Tab = .home // 初期画面
+    @State private var hex: UInt = 0xe5eef0     // 背景色のためのhex値
+    // 元のhex値：0xfaf0e6
     
     init(model: AppModel) {
         self.model = model
-        UITabBar.appearance().backgroundColor = UIColor(Color(0xfaf0e6, alpha: 1.0))
-        
+        UITabBar.appearance().backgroundColor = UIColor(Color(hex, alpha: 1.0)) // タブバー背景色
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color(0xfaf0e6, alpha: 1.0))
+        appearance.backgroundColor = UIColor(Color(hex, alpha: 1.0))
         appearance.titleTextAttributes = [.foregroundColor: UIColor.black, .font: UIFont.systemFont(ofSize: 30)]
         appearance.titlePositionAdjustment.vertical = 5
         appearance.accessibilityFrame = CGRect(x: 20, y: 20, width: 20, height: 100)

@@ -64,3 +64,8 @@ struct SettingView: View {
         }
     }
 }
+
+#Preview {
+    ContentView(model: AppModel())
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+}

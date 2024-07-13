@@ -345,7 +345,7 @@ struct HomeView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-//}
+#Preview {
+    ContentView(model: AppModel())
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+}
