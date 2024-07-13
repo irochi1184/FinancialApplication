@@ -48,7 +48,7 @@ struct DatePickerView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: TransactionData.self)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: TransactionData.self)
+//}
