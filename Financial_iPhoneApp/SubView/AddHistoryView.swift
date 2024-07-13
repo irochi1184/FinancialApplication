@@ -112,6 +112,7 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             } else {
                 List {
@@ -144,13 +145,14 @@ struct AddHistoryView: View {
                         }
                     })
                 }
+                .id(UUID())
                 .listStyle(.plain)
             }
         }.navigationBarHidden(true)
     }
 }
-
-#Preview {
-    AddHistoryView()
-        .modelContainer(for: TransactionData.self) // データ保存用
-}
+//
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}

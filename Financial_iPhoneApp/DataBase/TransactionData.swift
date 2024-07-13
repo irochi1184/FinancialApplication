@@ -15,13 +15,14 @@ final class TransactionData {
     var selectedDate: Date
     var amount: String
     var category: String
+    var memo: String
     
-    init(isExpense: Bool, transactionName: String, selectedDate: Date, amount: String, category: String) {
-        print("Initializing Data with values: \(isExpense), \(transactionName), \(selectedDate), \(amount), \(category)")
+    init(isExpense: Bool, transactionName: String, selectedDate: Date, amount: String, category: String, memo: String) {
         self.isExpense = isExpense
         self.transactionName = transactionName
         self.selectedDate = selectedDate
         self.amount = amount
         self.category = category
+        self.memo = memo
     }
 }

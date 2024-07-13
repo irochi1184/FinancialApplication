@@ -16,13 +16,10 @@ struct SearchView: View {
     
     @State private var isEditViewPresented = false // 編集画面の表示状態
     @State private var selectedTransaction: TransactionData? // 選択された取引データ
-    
-    // データの削除
-    private func delete(data: TransactionData) {
-        context.delete(data)
-    }
+    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
     
     @State private var searchText = "" // 検索テキストを保持する変数
+    @State private var showDeleteAllAlert = false // 全件削除確認アラートの表示状態
     
     let formatter = DateFormatter()
     
@@ -33,6 +30,21 @@ struct SearchView: View {
     var body: some View {
         VStack {
             HStack {
+                Button("全件削除") {
+                    showDeleteAllAlert = true
+                }
+                .font(.title3)
+                .foregroundStyle(.red)
+                .padding(.leading, 20)
+                .alert(isPresented: $showDeleteAllAlert) {
+                    Alert(
+                        title: Text("全てのデータを削除します。\nよろしいですか？"),
+                        primaryButton: .destructive(Text("OK")) {
+                            deleteAll()
+                        },
+                        secondaryButton: .cancel(Text("キャンセル"))
+                    )
+                }
                 Spacer()
                 NavigationStack {
                     NavigationLink("追加履歴", destination: AddHistoryView())
@@ -62,9 +74,18 @@ struct SearchView: View {
                         
                         // テキストフィールド
                         TextField("Search", text: $searchText)
+                            .focused($iskeyPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()  // 右寄せにする
+                                    Button("閉じる") {
+                                        iskeyPadActive = false  // フォーカスを外す
+                                    }
+                                }
+                            }
                         
                         // 検索文字が空ではない場合は、クリアボタンを表示
-                        if !searchText.isEmpty {
+                        if (!searchText.isEmpty) {
                             Button {
                                 searchText.removeAll()
                             } label: {
@@ -97,9 +118,6 @@ struct SearchView: View {
                         .contentShape(Rectangle()) // HStack全体をタップ可能にする
                         .onTapGesture {
                             selectedTransaction = item
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                isEditViewPresented.toggle()
-                            }
                         }
                     }
                     .onDelete(perform: { indexSet in
@@ -107,11 +125,23 @@ struct SearchView: View {
                             delete(data: datas[index])
                         }
                     })
-                    .sheet(item: $selectedTransaction) { transaction in
-                        DataEditView(transaction: $selectedTransaction)
-                    }
                 }
+                .id(UUID())
                 .listStyle(.plain)
+                .sheet(item: $selectedTransaction, onDismiss: {
+                    isEditViewPresented = false
+                }) { transaction in
+                    DataEditView(transaction: $selectedTransaction)
+                        .onDisappear {
+                            if context.hasChanges {
+                                do {
+                                    try context.save()
+                                } catch {
+                                    print("Failed to save context: \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                }
             }
         }
     }
@@ -123,9 +153,27 @@ struct SearchView: View {
             $0.category.localizedCaseInsensitiveContains(searchText)
         }
     }
+    
+    // データの削除
+    private func delete(data: TransactionData) {
+        context.delete(data)
+    }
+    
+    // データの全件削除
+    private func deleteAll() {
+        for data in datas {
+            context.delete(data)
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save context after deleting all items: \(error.localizedDescription)")
+        }
+    }
 }
 
+
 #Preview {
-    ContentView()
-        .modelContainer(for: TransactionData.self) // データ保存用
+    ContentView(model: AppModel())
+        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }
