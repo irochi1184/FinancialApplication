@@ -34,57 +34,44 @@ struct ContentView: View {
     }
     
     var body: some View {
-        Group {
-            if model.isLock && !model.isUnlocked && model.showLockView {
-                LockView(model: model)
-            } else {
-                NavigationStack {
-                    TabView(selection: $selectedTab) {
-                        HomeView()
-                            .environmentObject(dataStore)
-                            .tag(Tab.home)
-                            .tabItem {
-                                Image(systemName: "house")
-                                Text("ホーム")
-                            }
-                        
-                        CalendarView()
-                            .tag(Tab.calendar)
-                            .tabItem {
-                                Image(systemName: "calendar")
-                                Text("カレンダー")
-                            }
-                        
-                        GraphView()
-                            .tag(Tab.report)
-                            .tabItem {
-                                Image(systemName: "chart.line.uptrend.xyaxis")
-                                Text("レポート")
-                            }
-                        
-                        SearchView()
-                            .tag(Tab.search)
-                            .tabItem {
-                                Image(systemName: "magnifyingglass")
-                                Text("検索")
-                            }
-                        
-                        SettingView()
-                            .environmentObject(model)
-                            .tag(Tab.settings)
-                            .tabItem {
-                                Image(systemName: "gearshape")
-                                Text("設定")
-                            }
+        NavigationStack {
+            TabView(selection: $selectedTab) {
+                HomeView()
+                    .environmentObject(dataStore)
+                    .tag(Tab.home)
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("ホーム")
                     }
-                }
-            }
-        }
-        .onAppear {
-            // This ensures that the lock view is shown when the app becomes active
-            if model.isLock {
-                model.isUnlocked = false
-                model.showLockView = false // 初回の画面遷移を防止するためにfalseに設定
+                
+                CalendarView()
+                    .tag(Tab.calendar)
+                    .tabItem {
+                        Image(systemName: "calendar")
+                        Text("カレンダー")
+                    }
+                
+                GraphView()
+                    .tag(Tab.report)
+                    .tabItem {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                        Text("レポート")
+                    }
+                
+                SearchView()
+                    .tag(Tab.search)
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                        Text("検索")
+                    }
+                
+                SettingView()
+                    .environmentObject(model)
+                    .tag(Tab.settings)
+                    .tabItem {
+                        Image(systemName: "gearshape")
+                        Text("設定")
+                    }
             }
         }
     }

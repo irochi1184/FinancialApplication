@@ -29,6 +29,10 @@
 		738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738359752C1B771200049BC1 /* AddHistoryView.swift */; };
 		73A44BA32C417E8A00791164 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BA22C417E8A00791164 /* LockView.swift */; };
 		73A44BAC2C427B3900791164 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BAB2C427B3900791164 /* AppModel.swift */; };
+		73A44BAE2C42845300791164 /* PasscodeSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BAD2C42845300791164 /* PasscodeSetupView.swift */; };
+		73A44BB02C4289CD00791164 /* FaceAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BAF2C4289CD00791164 /* FaceAuth.swift */; };
+		73A44BB32C428AE000791164 /* passCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BB22C428AE000791164 /* passCheck.swift */; };
+		73A44BB52C428C4300791164 /* PasscodeSetupConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BB42C428C4300791164 /* PasscodeSetupConfirmView.swift */; };
 		73FD6F3F2C2388BA0092AB9E /* DataEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +79,10 @@
 		738359752C1B771200049BC1 /* AddHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHistoryView.swift; sourceTree = "<group>"; };
 		73A44BA22C417E8A00791164 /* LockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
 		73A44BAB2C427B3900791164 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		73A44BAD2C42845300791164 /* PasscodeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSetupView.swift; sourceTree = "<group>"; };
+		73A44BAF2C4289CD00791164 /* FaceAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceAuth.swift; sourceTree = "<group>"; };
+		73A44BB22C428AE000791164 /* passCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = passCheck.swift; sourceTree = "<group>"; };
+		73A44BB42C428C4300791164 /* PasscodeSetupConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeSetupConfirmView.swift; sourceTree = "<group>"; };
 		73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,6 +134,7 @@
 		7357CD462B8CC92800CCBA97 /* Financial_iPhoneApp */ = {
 			isa = PBXGroup;
 			children = (
+				73A44BB12C428A4100791164 /* authenticate */,
 				73663B552C3B135200AFE072 /* SubView */,
 				73663B542C3B133B00AFE072 /* MainView */,
 				73663B532C3B12FE00AFE072 /* DataBase */,
@@ -202,9 +211,20 @@
 				73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */,
 				73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */,
 				731728F92BD30F18000D7CF9 /* PlusView.swift */,
-				73A44BA22C417E8A00791164 /* LockView.swift */,
 			);
 			path = SubView;
+			sourceTree = "<group>";
+		};
+		73A44BB12C428A4100791164 /* authenticate */ = {
+			isa = PBXGroup;
+			children = (
+				73A44BAF2C4289CD00791164 /* FaceAuth.swift */,
+				73A44BA22C417E8A00791164 /* LockView.swift */,
+				73A44BAD2C42845300791164 /* PasscodeSetupView.swift */,
+				73A44BB22C428AE000791164 /* passCheck.swift */,
+				73A44BB42C428C4300791164 /* PasscodeSetupConfirmView.swift */,
+			);
+			path = authenticate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,8 +358,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				731728FA2BD30F18000D7CF9 /* PlusView.swift in Sources */,
+				73A44BB52C428C4300791164 /* PasscodeSetupConfirmView.swift in Sources */,
+				73A44BB32C428AE000791164 /* passCheck.swift in Sources */,
 				73663B572C3B4BF100AFE072 /* CategoryData.swift in Sources */,
+				73A44BB02C4289CD00791164 /* FaceAuth.swift in Sources */,
 				738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */,
+				73A44BAE2C42845300791164 /* PasscodeSetupView.swift in Sources */,
 				737080372B90A57C003F85D5 /* GraphView.swift in Sources */,
 				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
 				73A44BA32C417E8A00791164 /* LockView.swift in Sources */,

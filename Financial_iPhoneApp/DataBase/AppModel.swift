@@ -10,10 +10,9 @@ import SwiftData
 
 class AppModel: ObservableObject {
     @Published var isReady = false
-    @Published var isUnlocked = false
-    @Published var showLockView = false
-    @AppStorage("isLock") var isLock = false
+    @Published var passcodeManager = passCheck()
     var container: ModelContainer?
+    
     private let defaultCategories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"]
     private let defaultsKey = "isAppAlreadyLaunchedOnce"
     

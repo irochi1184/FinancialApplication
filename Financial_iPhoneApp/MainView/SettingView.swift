@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct SettingView: View {
-    
-    // プロパティ(UserDefaultsに保持)
     @AppStorage("isLock") private var isLock = false
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
-    @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000 // 月の限度額
+    @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000
     @EnvironmentObject var model: AppModel
     
-    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
+    @FocusState private var isNumberPadActive: Bool
+    
+    @State private var isSettingPasscode = false
+    @State private var toggle = UserDefaults.standard.bool(forKey: "SetPass")
     
     var body: some View {
         NavigationView {
@@ -26,7 +27,7 @@ struct SettingView: View {
                         Text("月の限度額")
                         TextField("限度額を入力", value: $monthlyLimitAmount, formatter: NumberFormatter())
                             .keyboardType(.numberPad)
-                            .multilineTextAlignment(TextAlignment.trailing)
+                            .multilineTextAlignment(.trailing)
                             .focused($isNumberPadActive)
                             .toolbar {
                                 ToolbarItemGroup(placement: .keyboard) {
@@ -45,17 +46,21 @@ struct SettingView: View {
                         Text("カテゴリー設定")
                     }
                 }
-                
-                Toggle("画面ロック", isOn: $isLock)
-                    .onChange(of: isLock) {
-                        if isLock {
-                            model.showLockView = false // トグルを変更した直後にロック画面に遷移しない
+                Toggle("パスコード設定", isOn: $toggle)
+                    .onChange(of: toggle) {
+                        if toggle {
+                            isSettingPasscode = true
+                        } else {
+                            UserDefaults.standard.set(false, forKey: "SetPass")
+                            UserDefaults.standard.set(false, forKey: "UseFaceID")
                         }
                     }
             }
-            .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
-            .id(UUID())
+            .fullScreenCover(isPresented: $isSettingPasscode) {
+                PasscodeSetupView(isSettingPasscode: $isSettingPasscode)
+                    .environmentObject(model.passcodeManager)
+            }
         }
     }
 }

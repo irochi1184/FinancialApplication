@@ -14,11 +14,21 @@ struct Financial_iPhoneAppApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
     
+    let SetPass = UserDefaults.standard.bool(forKey: "SetPass")
+    
     var body: some Scene {
         WindowGroup {
             if model.isReady {
-                ContentView(model: model)
-                    .environment(\.modelContext, model.container!.mainContext)
+                if SetPass {
+                    // パスコードあり
+                    LockView()
+                        .environmentObject(model)
+                        .environment(\.modelContext, model.container!.mainContext)
+                } else {
+                    ContentView(model: model)
+                        .environmentObject(model)
+                        .environment(\.modelContext, model.container!.mainContext)
+                }
             } else {
                 ProgressView("Loading...")
                     .onAppear {
@@ -26,18 +36,6 @@ struct Financial_iPhoneAppApp: App {
                             await model.load()
                         }
                     }
-            }
-        }
-        .onChange(of: scenePhase) {
-            if model.isLock {
-                if scenePhase == .background {
-                    model.isUnlocked = false
-                } else if scenePhase == .active {
-                    // When the app becomes active again, show LockView if it is not unlocked
-                    if !model.isUnlocked {
-                        model.showLockView = true
-                    }
-                }
             }
         }
     }
