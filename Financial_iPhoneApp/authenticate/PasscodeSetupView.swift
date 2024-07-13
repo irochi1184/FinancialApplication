@@ -1,18 +1,16 @@
-//
-//  PasscodeSetupView.swift
-//  Financial_iPhoneApp
-//
-//  Created by 有田健一郎 on 2024/07/13.
-//
-
 import SwiftUI
 
 struct PasscodeSetupView: View {
     @Binding var isSettingPasscode: Bool
+    @Binding var toggle: Bool
     
     @EnvironmentObject var passcheck: passCheck
     @State var count = 0
     @State private var isConfirmingPasscode = false
+    
+    // カラー設定
+    @State private var buttonText = Color.mint
+    @State private var buttonBack = Color.white
     
     var body: some View {
         VStack {
@@ -23,6 +21,7 @@ struct PasscodeSetupView: View {
                 Button {
                     passcheck.firstCheck = [nil, nil, nil, nil]
                     passcheck.passText = "パスワードを忘れると復元できません\n忘れないようご注意ください"
+                    toggle = false // トグルをオフにする
                     isSettingPasscode = false
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.fill")
@@ -55,79 +54,50 @@ struct PasscodeSetupView: View {
                 .foregroundColor(Color.pink)
             Spacer()
             
-            //入力ボタン
-            HStack {
-                ForEach(1..<4) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
+            // 入力ボタン
+            VStack(spacing: 10) {
+                ForEach(buttonRows, id: \.self) { row in
+                    HStack(spacing: 10) {
+                        ForEach(row, id: \.self) { number in
+                            createButton(number: number)
+                        }
+                    }
+                }
+                HStack(spacing: 10) {
+                    createButton(number: 0)
                 }
             }
-            HStack {
-                ForEach(4..<7) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
-                }
-            }
-            HStack {
-                ForEach(7..<10) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
-                }
-            }
-            Button {
-                inputText(number: "0")
-            } label: {
-                Text("0")
-                    .font(.title)
-                    .frame(width: 70, height: 70)
-                    .foregroundColor(.mint)
-                    .cornerRadius(30)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 50)
-                            .stroke((.mint), lineWidth: 1.0)
-                    )
-            }.padding()
-            //入力ボタン
             Spacer()
         }
         .fullScreenCover(isPresented: $isConfirmingPasscode) {
             PasscodeSetupConfirmView(isSettingPasscode: $isSettingPasscode, isConfirmingPasscode: $isConfirmingPasscode)
                 .environmentObject(passcheck)
         }
-        
+    }
+    
+    private let buttonRows: [[Int]] = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    
+    private func createButton(number: Int) -> some View {
+        Button {
+            inputText(number: String(number))
+        } label: {
+            Text("\(number)")
+                .font(.title)
+                .frame(width: 70, height: 70)
+                .foregroundColor(buttonText)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 50)
+                        .stroke(buttonText, lineWidth: 1.0)
+                )
+        }
+        .background(buttonBack)
+        .cornerRadius(50)
+        .shadow(color: .gray, radius: 3, x: 1, y: 1)
+        .padding()
     }
     
     private func inputText(number: String) {

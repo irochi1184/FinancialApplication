@@ -16,6 +16,10 @@ struct PasscodeSetupConfirmView: View {
     @State var isShowAlert = false
     @State var passCode = ""
     
+    // カラー設定
+    @State private var buttonText = Color.mint
+    @State private var buttonBack = Color.white
+    
     var body: some View {
         VStack {
             // スペースを追加して、ナビゲーションバーとキャンセルボタンの間に余白を作成
@@ -58,72 +62,19 @@ struct PasscodeSetupConfirmView: View {
                 .foregroundColor(Color.clear)
             Spacer()
             
-            //入力ボタン
-            HStack {
-                ForEach(1..<4) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
+            // 入力ボタン
+            VStack(spacing: 10) {
+                ForEach(buttonRows, id: \.self) { row in
+                    HStack(spacing: 10) {
+                        ForEach(row, id: \.self) { number in
+                            createButton(number: number)
+                        }
+                    }
+                }
+                HStack(spacing: 10) {
+                    createButton(number: 0)
                 }
             }
-            HStack {
-                ForEach(4..<7) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
-                }
-            }
-            HStack {
-                ForEach(7..<10) { i in
-                    Button {
-                        inputText(number: String(i))
-                    } label: {
-                        Text("\(i)")
-                            .font(.title)
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.mint)
-                            .cornerRadius(30)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke((.mint), lineWidth: 1.0)
-                            )
-                    }.padding()
-                }
-            }
-            Button {
-                inputText(number: "0")
-            } label: {
-                Text("0")
-                    .font(.title)
-                    .frame(width: 70, height: 70)
-                    .foregroundColor(.mint)
-                    .cornerRadius(30)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 50)
-                            .stroke((.mint), lineWidth: 1.0)
-                    )
-            }.padding()
-            //入力ボタン
             Spacer()
         }
         .alert("FaceIDを使用しますか？", isPresented: $isShowAlert) {
@@ -142,6 +93,31 @@ struct PasscodeSetupConfirmView: View {
         }
     }
     
+    private let buttonRows: [[Int]] = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    
+    private func createButton(number: Int) -> some View {
+        Button {
+            inputText(number: String(number))
+        } label: {
+            Text("\(number)")
+                .font(.title)
+                .frame(width: 70, height: 70)
+                .foregroundColor(buttonText)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 50)
+                        .stroke(buttonText, lineWidth: 1.0)
+                )
+        }
+        .background(buttonBack)
+        .cornerRadius(50)
+        .shadow(color: .gray, radius: 3, x: 1, y: 1)
+        .padding()
+    }
+    
     private func inputText(number: String) {
         for (index, getText) in passcheck.secondCheck.enumerated() {
             if getText == nil {
@@ -149,7 +125,7 @@ struct PasscodeSetupConfirmView: View {
                 if index == 3 {
                     if passcheck.firstCheck == passcheck.secondCheck {
                         for i in 0...3 {
-                            passCode = passCode + (passcheck.firstCheck[i] ?? "")
+                            passCode += (passcheck.firstCheck[i] ?? "")
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             UserDefaults.standard.set(true, forKey: "SetPass")

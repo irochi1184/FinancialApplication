@@ -27,9 +27,16 @@ struct LockView: View {
     // パスワード間違いメッセージ表示用
     @State private var showError = false
     
+    // カラー設定
+    @State private var buttonText = Color.mint
+    @State private var buttonBack = Color.white
+    
     var body: some View {
         ZStack {
             VStack {
+                // スペースを追加して、ナビゲーションバーとキャンセルボタンの間に余白を作成
+                Spacer().frame(height: 100)
+                
                 Spacer()
                 Text("パスコードの入力")
                     .font(.title3)
@@ -47,7 +54,6 @@ struct LockView: View {
                         }
                     }
                 }
-                Spacer()
                 
                 if showError {
                     Text("パスワードが間違っています")
@@ -58,73 +64,19 @@ struct LockView: View {
                 
                 Spacer()
                 
-                //入力ボタン
-                HStack {
-                    ForEach(1..<4) { i in
-                        Button {
-                            inputText(number: String(i))
-                        } label: {
-                            Text("\(i)")
-                                .font(.title)
-                                .frame(width: 70, height: 70)
-                                .foregroundColor(.mint)
-                                .cornerRadius(30)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 50)
-                                        .stroke((.mint), lineWidth: 1.0)
-                                )
-                        }.padding()
+                // 入力ボタン
+                VStack(spacing: 10) {
+                    ForEach(buttonRows, id: \.self) { row in
+                        HStack(spacing: 10) {
+                            ForEach(row, id: \.self) { number in
+                                createButton(number: number)
+                            }
+                        }
+                    }
+                    HStack(spacing: 10) {
+                        createButton(number: 0)
                     }
                 }
-                HStack {
-                    ForEach(4..<7) { i in
-                        Button {
-                            inputText(number: String(i))
-                        } label: {
-                            Text("\(i)")
-                                .font(.title)
-                                .frame(width: 70, height: 70)
-                                .foregroundColor(.mint)
-                                .cornerRadius(30)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 50)
-                                        .stroke((.mint), lineWidth: 1.0)
-                                )
-                        }.padding()
-                    }
-                }
-                HStack {
-                    ForEach(7..<10) { i in
-                        Button {
-                            inputText(number: String(i))
-                        } label: {
-                            Text("\(i)")
-                                .font(.title)
-                                .frame(width: 70, height: 70)
-                                .foregroundColor(.mint)
-                                .cornerRadius(30)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 50)
-                                        .stroke((.mint), lineWidth: 1.0)
-                                )
-                        }.padding()
-                    }
-                }
-                Button {
-                    inputText(number: "0")
-                } label: {
-                    Text("0")
-                        .font(.title)
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(.mint)
-                        .cornerRadius(30)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 50)
-                                .stroke((.mint), lineWidth: 1.0)
-                        )
-                }.padding()
-                //入力ボタン
-                Spacer()
                 Spacer()
                     .onAppear {
                         // faceidをするかどうか
@@ -142,6 +94,32 @@ struct LockView: View {
             }
         }
     }
+    
+    private let buttonRows: [[Int]] = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    
+    private func createButton(number: Int) -> some View {
+        Button {
+            inputText(number: String(number))
+        } label: {
+            Text("\(number)")
+                .font(.title)
+                .frame(width: 70, height: 70)
+                .foregroundColor(buttonText)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 50)
+                        .stroke(buttonText, lineWidth: 1.0)
+                )
+        }
+        .background(buttonBack)
+        .cornerRadius(50)
+        .shadow(color: .gray, radius: 3, x: 1, y: 1)
+        .padding()
+    }
+    
     // 入力関数
     private func inputText(number: String) {
         var checkAnswer = ""
@@ -153,7 +131,7 @@ struct LockView: View {
                 passCheck[index] = number
                 if index == 3 {
                     for i in 0...3 {
-                        checkAnswer = checkAnswer + (passCheck[i] ?? "")
+                        checkAnswer += (passCheck[i] ?? "")
                     }
                     if checkAnswer == answer {
                         // 一致
@@ -172,6 +150,7 @@ struct LockView: View {
             }
         }
     }
+    
     // 顔認証の関数
     func exec() {
         face.auth { result in

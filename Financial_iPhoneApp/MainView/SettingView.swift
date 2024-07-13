@@ -58,7 +58,7 @@ struct SettingView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $isSettingPasscode) {
-                PasscodeSetupView(isSettingPasscode: $isSettingPasscode)
+                PasscodeSetupView(isSettingPasscode: $isSettingPasscode, toggle: $toggle)
                     .environmentObject(model.passcodeManager)
             }
         }
