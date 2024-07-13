@@ -9,13 +9,13 @@ import SwiftUI
 
 struct LockView: View {
     
-    @EnvironmentObject var model: AppModel
+    @EnvironmentObject var model: AppModel // アプリモデルの環境オブジェクト
     
-    @State var passCheck: [String?] = [nil, nil, nil, nil]
-    @EnvironmentObject var passcheck: passCheck
+    @State var passCheck: [String?] = [nil, nil, nil, nil] // パスコードチェック用の状態変数
+    @EnvironmentObject var passcheck: passCheck // パスワードチェック用の環境オブジェクト
     
     // -> trueでcontentViewを表示
-    @State var isShow = false
+    @State var isShow = false // コンテンツビューの表示状態
     
     // 設定したパスワード
     let answer = UserDefaults.standard.string(forKey: "password")
@@ -28,8 +28,8 @@ struct LockView: View {
     @State private var showError = false
     
     // カラー設定
-    @State private var buttonText = Color.mint
-    @State private var buttonBack = Color.white
+    @State private var buttonText = Color.mint // ボタンテキストの色
+    @State private var buttonBack = Color.white // ボタン背景の色
     
     var body: some View {
         ZStack {
@@ -42,8 +42,8 @@ struct LockView: View {
                     .font(.title3)
                     .fontWeight(.bold)
                 
+                // パスコード入力の視覚的表示
                 HStack {
-                    // 黒丸
                     ForEach(0..<4) { index in
                         if passCheck[index] == nil {
                             Image(systemName: "circle")
@@ -56,6 +56,7 @@ struct LockView: View {
                 }
                 
                 if showError {
+                    // パスワード間違いメッセージの表示
                     Text("パスワードが間違っています")
                         .font(.footnote)
                         .multilineTextAlignment(.center)
@@ -66,6 +67,7 @@ struct LockView: View {
                 
                 // 入力ボタン
                 VStack(spacing: 10) {
+                    // 1-9までのボタンを行ごとに表示
                     ForEach(buttonRows, id: \.self) { row in
                         HStack(spacing: 10) {
                             ForEach(row, id: \.self) { number in
@@ -73,13 +75,17 @@ struct LockView: View {
                             }
                         }
                     }
+                    // 0と削除ボタンを表示
                     HStack(spacing: 10) {
+                        Spacer().frame(width: 100, alignment: .leading)
                         createButton(number: 0)
+                        createButton(number: -1) // 削除ボタン
                     }
                 }
+                
                 Spacer()
                     .onAppear {
-                        // faceidをするかどうか
+                        // FaceIDを使用するかどうかのチェック
                         if useFaceID {
                             exec()
                         }
@@ -87,6 +93,7 @@ struct LockView: View {
             }
             
             if isShow {
+                // コンテンツビューの表示
                 ContentView(model: model)
                     .environment(\.modelContext, model.container!.mainContext)
                     .environmentObject(model.passcodeManager)
@@ -95,17 +102,20 @@ struct LockView: View {
         }
     }
     
+    // ボタンの行を定義
     private let buttonRows: [[Int]] = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
     ]
     
+    // ボタンを作成する関数
     private func createButton(number: Int) -> some View {
         Button {
-            inputText(number: String(number))
+            // 入力された数字または削除の処理を呼び出す
+            inputText(number: number == -1 ? "del" : String(number))
         } label: {
-            Text("\(number)")
+            Text(number == -1 ? "⌫" : "\(number)")
                 .font(.title)
                 .frame(width: 70, height: 70)
                 .foregroundColor(buttonText)
@@ -120,33 +130,42 @@ struct LockView: View {
         .padding()
     }
     
-    // 入力関数
+    // 数字または削除の入力処理
     private func inputText(number: String) {
-        var checkAnswer = ""
-        
-        for (index, getText) in passCheck.enumerated() {
-            // nilかチェック -> 入力済みならスキップ
-            // 入力したらfor文を抜け出す
-            if getText == nil {
-                passCheck[index] = number
-                if index == 3 {
-                    for i in 0...3 {
-                        checkAnswer += (passCheck[i] ?? "")
-                    }
-                    if checkAnswer == answer {
-                        // 一致
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            withAnimation {
-                                isShow.toggle()
-                            }
-                        }
-                    } else {
-                        // 初期化
-                        passCheck = [nil, nil, nil, nil]
-                        showError = true
-                    }
+        if number == "del" {
+            // 削除処理
+            for (index, getText) in passCheck.enumerated().reversed() {
+                if getText != nil {
+                    passCheck[index] = nil
+                    break
                 }
-                break
+            }
+        } else {
+            // 数字入力処理
+            var checkAnswer = ""
+            
+            for (index, getText) in passCheck.enumerated() {
+                if getText == nil {
+                    passCheck[index] = number
+                    if index == 3 {
+                        // 4桁入力完了でパスコードをチェック
+                        for i in 0...3 {
+                            checkAnswer += (passCheck[i] ?? "")
+                        }
+                        if checkAnswer == answer {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                withAnimation {
+                                    isShow.toggle()
+                                }
+                            }
+                        } else {
+                            // パスコードが一致しない場合の処理
+                            passCheck = [nil, nil, nil, nil]
+                            showError = true
+                        }
+                    }
+                    break
+                }
             }
         }
     }
@@ -154,7 +173,7 @@ struct LockView: View {
     // 顔認証の関数
     func exec() {
         face.auth { result in
-            // 認証が成功した時の記述
+            // 認証が成功した時の処理
             if result == true {
                 passCheck = ["a", "a", "a", "a"]
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

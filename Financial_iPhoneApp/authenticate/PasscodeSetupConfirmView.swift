@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct PasscodeSetupConfirmView: View {
-    @Binding var isSettingPasscode: Bool
-    @Binding var isConfirmingPasscode: Bool
-    
-    @EnvironmentObject var passcheck: passCheck
-    
-    @State var isShowAlert = false
-    @State var passCode = ""
+    @Binding var isSettingPasscode: Bool // パスコード設定状態のバインディング
+    @Binding var isConfirmingPasscode: Bool // 確認画面の表示状態のバインディング
+    @EnvironmentObject var passcheck: passCheck // パスワードチェック用の環境オブジェクト
+    @State var isShowAlert = false // アラート表示状態
+    @State var passCode = "" // 設定するパスコード
     
     // カラー設定
-    @State private var buttonText = Color.mint
-    @State private var buttonBack = Color.white
+    @State private var buttonText = Color.mint // ボタンテキストの色
+    @State private var buttonBack = Color.white // ボタン背景の色
     
     var body: some View {
         VStack {
@@ -27,6 +25,7 @@ struct PasscodeSetupConfirmView: View {
             
             HStack {
                 Button {
+                    // パスコード入力をリセットして確認画面を閉じる
                     passcheck.firstCheck = [nil, nil, nil, nil]
                     passcheck.secondCheck = [nil, nil, nil, nil]
                     passcheck.passText = "パスワードを忘れると復元できません\n忘れないようご注意ください"
@@ -44,6 +43,7 @@ struct PasscodeSetupConfirmView: View {
                 .font(.title3)
                 .fontWeight(.bold)
             
+            // パスコード入力の視覚的表示
             HStack {
                 ForEach(0..<4) { index in
                     if passcheck.secondCheck[index] == nil {
@@ -56,6 +56,7 @@ struct PasscodeSetupConfirmView: View {
                 }
             }
             
+            // 注意事項の表示
             Text("\(passcheck.passText)")
                 .font(.footnote)
                 .multilineTextAlignment(.center)
@@ -64,6 +65,7 @@ struct PasscodeSetupConfirmView: View {
             
             // 入力ボタン
             VStack(spacing: 10) {
+                // 1-9までのボタンを行ごとに表示
                 ForEach(buttonRows, id: \.self) { row in
                     HStack(spacing: 10) {
                         ForEach(row, id: \.self) { number in
@@ -71,13 +73,17 @@ struct PasscodeSetupConfirmView: View {
                         }
                     }
                 }
+                // 0と削除ボタンを表示
                 HStack(spacing: 10) {
+                    Spacer().frame(width: 100, alignment: .leading)
                     createButton(number: 0)
+                    createButton(number: -1) // 削除ボタン
                 }
             }
             Spacer()
         }
         .alert("FaceIDを使用しますか？", isPresented: $isShowAlert) {
+            // FaceID使用確認のアラート
             Button("はい") {
                 UserDefaults.standard.set(true, forKey: "UseFaceID")
                 isSettingPasscode = false
@@ -93,17 +99,20 @@ struct PasscodeSetupConfirmView: View {
         }
     }
     
+    // ボタンの行を定義
     private let buttonRows: [[Int]] = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
     ]
     
+    // ボタンを作成する関数
     private func createButton(number: Int) -> some View {
         Button {
-            inputText(number: String(number))
+            // 入力された数字または削除の処理を呼び出す
+            inputText(number: number == -1 ? "del" : String(number))
         } label: {
-            Text("\(number)")
+            Text(number == -1 ? "⌫" : "\(number)")
                 .font(.title)
                 .frame(width: 70, height: 70)
                 .foregroundColor(buttonText)
@@ -118,30 +127,44 @@ struct PasscodeSetupConfirmView: View {
         .padding()
     }
     
+    // 数字または削除の入力処理
     private func inputText(number: String) {
-        for (index, getText) in passcheck.secondCheck.enumerated() {
-            if getText == nil {
-                passcheck.secondCheck[index] = number
-                if index == 3 {
-                    if passcheck.firstCheck == passcheck.secondCheck {
-                        for i in 0...3 {
-                            passCode += (passcheck.firstCheck[i] ?? "")
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            UserDefaults.standard.set(true, forKey: "SetPass")
-                            UserDefaults.standard.set(passCode, forKey: "password")
-                            isShowAlert = true
-                        }
-                    } else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            passcheck.passText = "パスワードが間違っています\nもう一度やり直してください"
-                            passcheck.firstCheck = [nil, nil, nil, nil]
-                            passcheck.secondCheck = [nil, nil, nil, nil]
-                            isConfirmingPasscode = false
+        if number == "del" {
+            // 削除処理
+            for (index, getText) in passcheck.secondCheck.enumerated().reversed() {
+                if getText != nil {
+                    passcheck.secondCheck[index] = nil
+                    break
+                }
+            }
+        } else {
+            // 数字入力処理
+            for (index, getText) in passcheck.secondCheck.enumerated() {
+                if getText == nil {
+                    passcheck.secondCheck[index] = number
+                    if index == 3 {
+                        // 4桁入力完了でパスコードをチェック
+                        if passcheck.firstCheck == passcheck.secondCheck {
+                            for i in 0...3 {
+                                passCode += (passcheck.firstCheck[i] ?? "")
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                UserDefaults.standard.set(true, forKey: "SetPass")
+                                UserDefaults.standard.set(passCode, forKey: "password")
+                                isShowAlert = true
+                            }
+                        } else {
+                            // パスコードが一致しない場合の処理
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                passcheck.passText = "パスワードが間違っています\nもう一度やり直してください"
+                                passcheck.firstCheck = [nil, nil, nil, nil]
+                                passcheck.secondCheck = [nil, nil, nil, nil]
+                                isConfirmingPasscode = false
+                            }
                         }
                     }
+                    break
                 }
-                break
             }
         }
     }
