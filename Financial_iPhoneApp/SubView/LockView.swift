@@ -15,7 +15,7 @@ struct LockView: View {
     var body: some View {
         VStack {
             Text("Locked")
-            Button("Authenticate") {
+            Button("FaceIDでロック解除する") {
                 authenticate()
             }
         }

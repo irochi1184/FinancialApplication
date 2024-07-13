@@ -28,6 +28,7 @@
 		7370803B2B90A5D1003F85D5 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7370803A2B90A5D1003F85D5 /* SettingView.swift */; };
 		738359762C1B771200049BC1 /* AddHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738359752C1B771200049BC1 /* AddHistoryView.swift */; };
 		73A44BA32C417E8A00791164 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BA22C417E8A00791164 /* LockView.swift */; };
+		73A44BAC2C427B3900791164 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A44BAB2C427B3900791164 /* AppModel.swift */; };
 		73FD6F3F2C2388BA0092AB9E /* DataEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		7370803A2B90A5D1003F85D5 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		738359752C1B771200049BC1 /* AddHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHistoryView.swift; sourceTree = "<group>"; };
 		73A44BA22C417E8A00791164 /* LockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
+		73A44BAB2C427B3900791164 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,6 +177,7 @@
 			children = (
 				734BA2542C1ACD23009F62F0 /* TransactionData.swift */,
 				73663B562C3B4BF100AFE072 /* CategoryData.swift */,
+				73A44BAB2C427B3900791164 /* AppModel.swift */,
 			);
 			path = DataBase;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				737080352B90A534003F85D5 /* CalendarView.swift in Sources */,
 				73663B522C398E9D00AFE072 /* CommonView.swift in Sources */,
 				737080392B90A5B5003F85D5 /* SearchView.swift in Sources */,
+				73A44BAC2C427B3900791164 /* AppModel.swift in Sources */,
 				734BA2552C1ACD23009F62F0 /* TransactionData.swift in Sources */,
 				7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */,
 				73663B502C39825600AFE072 /* HeaderView.swift in Sources */,
