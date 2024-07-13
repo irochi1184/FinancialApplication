@@ -10,9 +10,11 @@ import SwiftData
 
 struct ContentView: View { //アプリ起動時の共有画面
     @StateObject private var dataStore = TransactionDataStore() // データストアを作成
+    @ObservedObject var model: AppModel
     @State private var selectedTab: Tab = .home // 初期値をホームに設定
     
-    init() {
+    init(model: AppModel) {
+        self.model = model
         UITabBar.appearance().backgroundColor = UIColor(Color(0xfaf0e6, alpha: 1.0))
         // TabViewの背景色(薄茶色)
         
@@ -33,46 +35,56 @@ struct ContentView: View { //アプリ起動時の共有画面
     }
     
     var body: some View {
-        // プラスボタン実装
-        NavigationStack {
-            TabView(selection: $selectedTab) {
-                HomeView()
-                    .environmentObject(dataStore) // 環境オブジェクトとして提供
-                    .tag(Tab.home) // タグを設定
-                    .tabItem {
-                        Image(systemName: "house")
-                        Text("ホーム")
+        Group {
+            if model.isLock && !model.isUnlocked {
+                LockView(model: model)
+            } else {
+                NavigationStack {
+                    TabView(selection: $selectedTab) {
+                        HomeView()
+                            .environmentObject(dataStore) // 環境オブジェクトとして提供
+                            .tag(Tab.home) // タグを設定
+                            .tabItem {
+                                Image(systemName: "house")
+                                Text("ホーム")
+                            }
+                        
+                        CalendarView() // タブ2番目
+                            .tag(Tab.calendar) // タグを設定
+                            .tabItem {
+                                Image(systemName: "calendar")
+                                Text("カレンダー")
+                            }
+                        
+                        GraphView() // タブ3番目
+                            .tag(Tab.report) // タグを設定
+                            .tabItem {
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                Text("レポート")
+                            }
+                        
+                        SearchView() // タブ4番目
+                            .tag(Tab.search) // タグを設定
+                            .tabItem {
+                                Image(systemName: "magnifyingglass")
+                                Text("検索")
+                            }
+                        
+                        SettingView() // タブ5番目
+                            .tag(Tab.settings) // タグを設定
+                            .tabItem {
+                                Image(systemName: "gearshape")
+                                Text("設定")
+                            }
                     }
-                
-                CalendarView() // タブ2番目
-                    .tag(Tab.calendar) // タグを設定
-                    .tabItem {
-                        Image(systemName: "calendar")
-                        Text("カレンダー")
-                    }
-                
-                GraphView() // タブ3番目
-                    .tag(Tab.report) // タグを設定
-                    .tabItem {
-                        Image(systemName: "chart.line.uptrend.xyaxis")
-                        Text("レポート")
-                    }
-                
-                SearchView() // タブ4番目
-                    .tag(Tab.search) // タグを設定
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
-                        Text("検索")
-                    }
-                
-                SettingView() // タブ5番目
-                    .tag(Tab.settings) // タグを設定
-                    .tabItem {
-                        Image(systemName: "gearshape")
-                        Text("設定")
-                    }
+                    //.accentColor(.green) //ここでタブのアクセント色の指定
+                }
             }
-            //.accentColor(.green) //ここでタブのアクセント色の指定
+        }
+        .onAppear {
+            if model.isLock {
+                model.isUnlocked = false
+            }
         }
     }
 }
@@ -90,6 +102,6 @@ extension Color { // Colorオブジェクトの拡張(Hex値を使用するた�
 }
 
 #Preview {
-    ContentView()
+    ContentView(model: AppModel())
         .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

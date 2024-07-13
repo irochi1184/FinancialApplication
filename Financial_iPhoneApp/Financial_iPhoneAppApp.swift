@@ -1,3 +1,4 @@
+//
 //  Financial_iPhoneAppApp.swift
 //  Financial_iPhoneApp
 //
@@ -11,10 +12,12 @@ import SwiftData
 struct Financial_iPhoneAppApp: App {
     @StateObject private var model = AppModel()
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     var body: some Scene {
         WindowGroup {
             if model.isReady {
-                LockView(model: model)
+                ContentView(model: model)
                     .environment(\.modelContext, model.container!.mainContext) // データ保存用
             } else {
                 ProgressView("Loading...") // ロード中の表示
@@ -25,11 +28,26 @@ struct Financial_iPhoneAppApp: App {
                     }
             }
         }
+        .onChange(of: scenePhase) {
+            if model.isLock {
+                if scenePhase == .background || scenePhase == .inactive {
+                    model.isUnlocked = false
+                } else if scenePhase == .active {
+                    if !model.isUnlocked {
+                        model.showLockView = true
+                    }
+                }
+            }
+        }
     }
 }
 
+
 class AppModel: ObservableObject {
     @Published var isReady = false
+    @Published var isUnlocked = false
+    @Published var showLockView = false
+    @AppStorage("isLock") var isLock = false
     var container: ModelContainer?
     private let defaultCategories = ["食費", "雑費", "家賃", "娯楽費", "電気代", "水道代", "交通費", "書籍代"]
     private let defaultsKey = "isAppAlreadyLaunchedOnce"

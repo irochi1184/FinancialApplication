@@ -11,18 +11,12 @@ import SwiftUI
 
 struct LockView: View {
     @ObservedObject var model: AppModel
-    @State private var isUnlocked = false
     
     var body: some View {
         VStack {
-            if isUnlocked {
-                ContentView()
-                    .environment(\.modelContext, model.container!.mainContext) // データ保存用
-            } else {
-                Text("Locked")
-                Button("Authenticate") {
-                    authenticate()
-                }
+            Text("Locked")
+            Button("Authenticate") {
+                authenticate()
             }
         }
     }
@@ -43,14 +37,11 @@ struct LockView: View {
             }
             
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                // authentication has now completed
                 if success {
-                    // authenticated successfully
                     DispatchQueue.main.async {
-                        isUnlocked = true
+                        model.isUnlocked = true
                     }
                 } else {
-                    // there was a problem
                     // Handle the error here if needed
                 }
             }

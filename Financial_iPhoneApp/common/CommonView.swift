@@ -45,10 +45,10 @@ struct CategorySelectionView: View {
 }
 
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}
 
 struct DayPickerView: View {
     @Binding var isDatePickerVisible: Bool

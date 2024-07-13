@@ -264,7 +264,7 @@ struct DataEditView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}

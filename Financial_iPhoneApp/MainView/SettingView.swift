@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingView: View {
     
     // プロパティ(UserDefaultsに保持)
-    @AppStorage("showPreview") private var showPreview = true
+    @AppStorage("isLock") private var isLock = false
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
     @AppStorage("monthlyLimitAmount") private var monthlyLimitAmount = 100000 // 月の限度額
@@ -56,6 +56,8 @@ struct SettingView: View {
                         Text("カテゴリー設定")
                     }
                 }
+                
+                Toggle("画面ロック", isOn: $isLock)
 //                Section(header: Text("いろいろ")) {
 //                    Text("りんご")
 //                    Toggle("Show Previews", isOn: $showPreview)
@@ -94,7 +96,7 @@ struct SettingView: View {
 //    }
 //}
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}
