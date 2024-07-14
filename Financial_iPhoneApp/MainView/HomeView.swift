@@ -23,7 +23,8 @@ struct Tab: Identifiable {
 }
 
 // 金額構造体: 各金額の情報を保持
-struct Amounts {
+struct Amounts: Identifiable {
+    var id = UUID()
     let name: String       // 金額の名前（カテゴリ）
     let count: Int         // 金額の数値
     var color: Color       // 表示する色
@@ -38,6 +39,9 @@ struct HomeView: View {
     @EnvironmentObject var dataStore: TransactionDataStore // データの変更を監視
     
     @State private var category: [Amounts] = []
+    @State private var cachedCategory: [Amounts] = []
+    @State private var cachedAmounts: [Amounts] = []
+    @State private var isDataChanged = false
     
     let calendar = Calendar.current  // カレンダー
     let formatter = DateFormatter()  // 日付フォーマッター1: "yyyy年 MM月"
@@ -76,12 +80,13 @@ struct HomeView: View {
             FloatingButton()     // フローティングボタンの表示
         }
         .onAppear {
-            updateAmounts() // 画面が表示されたときに使用金額を更新
-            updateCategories()
+            updateData() // 画面が表示されたときにデータを更新
         }
         .onChange(of: dataStore.datas) {
-            updateAmounts() // データが変更されたときに金額を更新
-            updateCategories()
+            updateData() // データが変更されたときにデータを更新
+        }
+        .onChange(of: selectedDate) {
+            updateData() // 日付が変更されたときにデータを更新
         }
     }
     
@@ -121,14 +126,18 @@ struct HomeView: View {
         VStack {
             Spacer().frame(height: 20)
             ZStack {
-                Chart(amounts, id: \.name) { amount in // 円グラフの表示
-                    SectorMark(
-                        angle: .value("count", amount.count),
-                        innerRadius: .inset(30)
-                    )
-                    .foregroundStyle(amount.color)
+                if !cachedAmounts.isEmpty {
+                    Chart(cachedAmounts, id: \.id) { amount in // 円グラフの表示
+                        SectorMark(
+                            angle: .value("count", amount.count),
+                            innerRadius: .inset(30)
+                        )
+                        .foregroundStyle(amount.color)
+                    }
+                    .frame(height: 300)
+                } else {
+                    Text("データがありません").foregroundColor(.gray).frame(height: 300)
                 }
-                .frame(height: 300)
                 
                 // 円グラフの中心に表示するテキスト
                 VStack {
@@ -158,8 +167,7 @@ struct HomeView: View {
                 maxYear: 2024,
                 onDateSelected: {
                     self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                    updateAmounts() // 日付が選択されたときに金額を更新
-                    updateCategories()
+                    updateData() // 日付が選択されたときにデータを更新
                 }
             )
         }
@@ -170,18 +178,22 @@ struct HomeView: View {
         VStack {
             Spacer().frame(height: 20)
             ZStack {
-                Chart(category, id: \.name) { amount in // 円グラフの表示
-                    SectorMark(
-                        angle: .value("count", amount.count),
-                        innerRadius: .inset(30)
-                    )
-                    .foregroundStyle(amount.color)
+                if !cachedCategory.isEmpty {
+                    Chart(cachedCategory.sorted(by: { $0.count > $1.count }), id: \.id) { amount in // 円グラフの表示
+                        SectorMark(
+                            angle: .value("count", amount.count),
+                            innerRadius: .inset(30)
+                        )
+                        .foregroundStyle(amount.color)
+                    }
+                    .frame(height: 300)
+                } else {
+                    Text("データがありません").foregroundColor(.gray).frame(height: 300)
                 }
-                .frame(height: 300)
                 
                 // 円グラフの中心に表示するテキスト
                 VStack {
-                    ForEach(category, id: \.name) { amount in // カテゴリデータをリスト表示
+                    ForEach(cachedCategory.sorted(by: { $0.count > $1.count }), id: \.id) { amount in // カテゴリデータをリスト表示
                         HStack {
                             Spacer()
                             Text("●").foregroundColor(amount.color).font(.caption) +
@@ -208,8 +220,7 @@ struct HomeView: View {
                 maxYear: 2024,
                 onDateSelected: {
                     self.selectedDate = self.calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth)) ?? Date()
-                    updateAmounts() // 日付が選択されたときに金額を更新
-                    updateCategories()
+                    updateData() // 日付が選択されたときにデータを更新
                 }
             )
         }
@@ -230,12 +241,12 @@ struct HomeView: View {
         .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置
+        .frame(height: CGFloat(dateFiltered.count) * 50) // 1項目あたりの高さを50と仮定して計算
     }
     
     // カテゴリリストビュー
     private var categoryListView: some View {
-        List(TotalCategoryData.keys.sorted(), id: \.self) { category in // カテゴリデータをリスト表示
+        List(TotalCategoryData.keys.sorted(by: { TotalCategoryData[$0]! > TotalCategoryData[$1]! }), id: \.self) { category in // カテゴリデータをリスト表示
             HStack {
                 Text(category) // カテゴリ名の表示
                 Spacer()
@@ -245,7 +256,7 @@ struct HomeView: View {
         .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // リスト表示が隠れないように設置
+        .frame(height: CGFloat(TotalCategoryData.keys.count) * 50) // 1項目あたりの高さを50と仮定して計算
     }
     
     // 金額計算
@@ -280,8 +291,13 @@ struct HomeView: View {
     // 月の変更
     private func changeMonth(by value: Int) {
         selectedDate = calendar.date(byAdding: .month, value: value, to: selectedDate)!
-        updateAmounts() // 月が変更されたときに金額を更新
-        updateCategories()
+        updateData() // 月が変更されたときにデータを更新
+    }
+    
+    // データの更新
+    private func updateData() {
+        updateAmounts() // 使用金額の更新
+        updateCategories() // カテゴリの更新
     }
     
     // 使用金額の更新
@@ -303,18 +319,19 @@ struct HomeView: View {
                 .init(name: "使用金額", count: monthlyLimitAmount - totalUsageAmount, color: .red.opacity(0.8))
             ]
         }
+        cachedAmounts = amounts
     }
-    
     
     // カテゴリーの更新
     private func updateCategories() {
         let colors: [Color] = [.cyan, .green, .yellow, .purple, .pink, .orange, .blue, .teal, .indigo, .red ]
         var colorIndex = 0
-        category = TotalCategoryData.keys.map { categoryName in
+        category = TotalCategoryData.keys.sorted(by: { TotalCategoryData[$0]! > TotalCategoryData[$1]! }).map { categoryName in
             let color = colors[colorIndex % colors.count]
             colorIndex += 1
             return Amounts(name: categoryName, count: TotalCategoryData[categoryName] ?? 0, color: color)
         }
+        cachedCategory = category
     }
     
     // フローティングボタン
@@ -346,6 +363,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(model: AppModel())
         .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

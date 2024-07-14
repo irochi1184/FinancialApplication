@@ -14,31 +14,41 @@ struct CategorySelectionView: View {
     @Query private var categories: [CategoryData]
     
     var body: some View {
-        List {
-            ForEach(categories.sorted { $0.order < $1.order }, id: \.self) { category in
-                Button(action: {
-                    selectedCategory = category.categoryName
-                    dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
-                }) {
-                    HStack {
-                        Text(category.categoryName)
-                        if selectedCategory == category.categoryName {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
+        NavigationView {
+            List {
+                ForEach(categories.sorted { $0.order < $1.order }, id: \.self) { category in
+                    Button(action: {
+                        selectedCategory = category.categoryName
+                        dismiss() // カテゴリーをチェックしたら自動的に前のViewに戻る
+                    }) {
+                        HStack {
+                            Text(category.categoryName)
+                            if selectedCategory == category.categoryName {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
                         }
                     }
                 }
             }
+            .navigationBarItems(leading: Button(action: {
+                dismiss() // 戻るボタンのアクション
+            }) {
+                HStack {
+                    Image(systemName: "chevron.left")
+                    Text("戻る").font(.subheadline)
+                }
+            })
         }
-        .id(UUID())
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}
 
 struct DayPickerView: View {
     @Binding var isDatePickerVisible: Bool

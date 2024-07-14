@@ -18,6 +18,7 @@ struct PlusView: View {
     @Query private var categories: [CategoryData]
     
     @State private var isDatePickerVisible = false
+    @State private var isCategorySelectionVisible = false
     
     @State private var isExpense = true           // 項目（true = 支出、false = 収入）
     @State private var transactionName = String() // 取引名
@@ -27,7 +28,7 @@ struct PlusView: View {
     @State private var memo = String()            // メモ
     @State var menuExpanded: Bool = false         // 詳細を隠す
     @State private var selectedImage: UIImage?
-    @FocusState  var isNumberPadActive:Bool // numberPad閉じる用
+    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
     
     // エラーメッセージ表示用
     @State private var errorMessage: String?
@@ -103,6 +104,7 @@ struct PlusView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                                 .padding(.bottom, 10)
+                                .focused($iskeyPadActive)
                             
                             // --------------- 日付 --------------- //
                             Text("日付")
@@ -139,12 +141,12 @@ struct PlusView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
                                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                                 .padding(.bottom, 10)
-                                .focused($isNumberPadActive)
+                                .focused($iskeyPadActive)
                                 .toolbar {
                                     ToolbarItemGroup(placement: .keyboard) {
                                         Spacer()         // 右寄せにする
                                         Button("閉じる") {
-                                            isNumberPadActive = false  //  フォーカスを外す
+                                            iskeyPadActive = false  //  フォーカスを外す
                                         }
                                     }
                                 }
@@ -164,7 +166,9 @@ struct PlusView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 15)
                             HStack {
-                                NavigationLink(destination: CategorySelectionView(selectedCategory: $category)) {
+                                Button(action: {
+                                    isCategorySelectionVisible.toggle()
+                                }) {
                                     Text(category.isEmpty ? "選択" : category)
                                         .foregroundColor(.gray.opacity(0.6))
                                     Spacer()
@@ -200,6 +204,7 @@ struct PlusView: View {
                                     TextField("メモ", text: $memo, axis: .vertical)
                                         .textFieldStyle(.roundedBorder)
                                         .padding([.top], 15)
+                                        .focused($iskeyPadActive)
                                 }
                                 .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
                             }
@@ -266,6 +271,9 @@ struct PlusView: View {
                     if category.isEmpty, let firstCategory = categories.sorted(by: { $0.order < $1.order }).first?.categoryName {
                         category = firstCategory
                     }
+                }
+                .sheet(isPresented: $isCategorySelectionVisible) {
+                    CategorySelectionView(selectedCategory: $category)
                 }
             }
             .sheet(isPresented: $isDatePickerVisible) {
@@ -342,7 +350,7 @@ extension PlusView {
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}

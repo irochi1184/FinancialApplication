@@ -14,6 +14,7 @@ struct CategorySettingsView: View {
     @Query private var fetchedCategories: [CategoryData]
     @State private var categories: [CategoryData] = []
     @State private var newCategory: String = ""
+    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
     
     var body: some View {
         VStack {
@@ -29,13 +30,21 @@ struct CategorySettingsView: View {
                 
                 HStack {
                     TextField("新しいカテゴリー", text: $newCategory)
+                        .focused($iskeyPadActive)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()  // 右寄せにする
+                                Button("閉じる") {
+                                    iskeyPadActive = false  // フォーカスを外す
+                                }
+                            }
+                        }
                     Button(action: addCategory) {
                         Text("追加")
                     }.buttonStyle(.borderedProminent)
                 }
                 .padding()
             }
-            .id(UUID())
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -89,7 +98,7 @@ struct CategorySettingsView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-}
+//#Preview {
+//    ContentView()
+//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
+//}

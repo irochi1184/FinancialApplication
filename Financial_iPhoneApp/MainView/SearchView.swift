@@ -16,23 +16,7 @@ struct SearchView: View {
     
     @State private var isEditViewPresented = false // 編集画面の表示状態
     @State private var selectedTransaction: TransactionData? // 選択された取引データ
-    
-    // データの削除
-    private func delete(data: TransactionData) {
-        context.delete(data)
-    }
-    
-    // データの全件削除
-    private func deleteAll() {
-        for data in datas {
-            context.delete(data)
-        }
-        do {
-            try context.save()
-        } catch {
-            print("Failed to save context after deleting all items: \(error.localizedDescription)")
-        }
-    }
+    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
     
     @State private var searchText = "" // 検索テキストを保持する変数
     @State private var showDeleteAllAlert = false // 全件削除確認アラートの表示状態
@@ -90,6 +74,15 @@ struct SearchView: View {
                         
                         // テキストフィールド
                         TextField("Search", text: $searchText)
+                            .focused($iskeyPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()  // 右寄せにする
+                                    Button("閉じる") {
+                                        iskeyPadActive = false  // フォーカスを外す
+                                    }
+                                }
+                            }
                         
                         // 検索文字が空ではない場合は、クリアボタンを表示
                         if (!searchText.isEmpty) {
@@ -160,10 +153,27 @@ struct SearchView: View {
             $0.category.localizedCaseInsensitiveContains(searchText)
         }
     }
+    
+    // データの削除
+    private func delete(data: TransactionData) {
+        context.delete(data)
+    }
+    
+    // データの全件削除
+    private func deleteAll() {
+        for data in datas {
+            context.delete(data)
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save context after deleting all items: \(error.localizedDescription)")
+        }
+    }
 }
 
 
 #Preview {
-    ContentView()
+    ContentView(model: AppModel())
         .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }

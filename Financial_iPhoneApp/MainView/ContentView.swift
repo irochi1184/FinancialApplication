@@ -8,17 +8,19 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View { //アプリ起動時の共有画面
-    @StateObject private var dataStore = TransactionDataStore() // データストアを作成
-    @State private var selectedTab: Tab = .home // 初期値をホームに設定
+struct ContentView: View {
+    @StateObject private var dataStore = TransactionDataStore()
+    @ObservedObject var model: AppModel
+    @State private var selectedTab: Tab = .home // 初期画面
+    @State private var hex: UInt = 0xe5eef0     // 背景色のためのhex値
+    // 元のhex値：0xfaf0e6
     
-    init() {
-        UITabBar.appearance().backgroundColor = UIColor(Color(0xfaf0e6, alpha: 1.0))
-        // TabViewの背景色(薄茶色)
-        
+    init(model: AppModel) {
+        self.model = model
+        UITabBar.appearance().backgroundColor = UIColor(Color(hex, alpha: 1.0)) // タブバー背景色
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color(0xfaf0e6, alpha: 1.0))
+        appearance.backgroundColor = UIColor(Color(hex, alpha: 1.0))
         appearance.titleTextAttributes = [.foregroundColor: UIColor.black, .font: UIFont.systemFont(ofSize: 30)]
         appearance.titlePositionAdjustment.vertical = 5
         appearance.accessibilityFrame = CGRect(x: 20, y: 20, width: 20, height: 100)
@@ -33,51 +35,50 @@ struct ContentView: View { //アプリ起動時の共有画面
     }
     
     var body: some View {
-        // プラスボタン実装
         NavigationStack {
             TabView(selection: $selectedTab) {
                 HomeView()
-                    .environmentObject(dataStore) // 環境オブジェクトとして提供
-                    .tag(Tab.home) // タグを設定
+                    .environmentObject(dataStore)
+                    .tag(Tab.home)
                     .tabItem {
                         Image(systemName: "house")
                         Text("ホーム")
                     }
                 
-                CalendarView() // タブ2番目
-                    .tag(Tab.calendar) // タグを設定
+                CalendarView()
+                    .tag(Tab.calendar)
                     .tabItem {
                         Image(systemName: "calendar")
                         Text("カレンダー")
                     }
                 
-                GraphView() // タブ3番目
-                    .tag(Tab.report) // タグを設定
+                GraphView()
+                    .tag(Tab.report)
                     .tabItem {
                         Image(systemName: "chart.line.uptrend.xyaxis")
                         Text("レポート")
                     }
                 
-                SearchView() // タブ4番目
-                    .tag(Tab.search) // タグを設定
+                SearchView()
+                    .tag(Tab.search)
                     .tabItem {
                         Image(systemName: "magnifyingglass")
                         Text("検索")
                     }
                 
-                SettingView() // タブ5番目
-                    .tag(Tab.settings) // タグを設定
+                SettingView()
+                    .environmentObject(model)
+                    .tag(Tab.settings)
                     .tabItem {
                         Image(systemName: "gearshape")
                         Text("設定")
                     }
             }
-            //.accentColor(.green) //ここでタブのアクセント色の指定
         }
     }
 }
 
-extension Color { // Colorオブジェクトの拡張(Hex値を使用するため)
+extension Color {
     init(_ hex: UInt, alpha: Double = 1) {
         self.init(
             .sRGB,
@@ -90,6 +91,6 @@ extension Color { // Colorオブジェクトの拡張(Hex値を使用するた�
 }
 
 #Preview {
-    ContentView()
+    ContentView(model: AppModel())
         .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
 }
