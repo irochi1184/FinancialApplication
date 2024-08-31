@@ -13,10 +13,12 @@ final class CategoryData: Identifiable {
     var id: UUID
     var categoryName: String
     var order: Int // 並べ替えの順序を表すプロパティを追加
+    var toggle: Bool
     
-    init(categoryName: String, order: Int = 0) {
+    init(categoryName: String, order: Int = 0, toggle: Bool = true) {
         self.id = UUID()
         self.categoryName = categoryName
         self.order = order
+        self.toggle = toggle
     }
 }
