@@ -56,7 +56,7 @@ struct CalendarView: View {
             calendarDaysView
             
             Divider() // カレンダーと下部の区切り線
-            dateViewWithSwipeGesture
+            dateView
             transactionListView
         }
         .sheet(isPresented: $isDatePickerVisible) {
@@ -128,63 +128,54 @@ struct CalendarView: View {
         .padding(.horizontal)
     }
     
-    private var dateViewWithSwipeGesture: some View {
+    private var dateView: some View {
         HStack {
             Text(selectedDateString.isEmpty ? formatter2.string(from: selectedDate) : selectedDateString)
                 .frame(maxWidth: 350, alignment: .leading)
                 .font(.headline)
                 .padding()
         }
-        .contentShape(Rectangle()) // HStack全体をタップ可能にする
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    handleSwipeGesture(value: value)
-                }
-        )
     }
     
     private var transactionListView: some View {
-        List(dateFiltered, id: \.self) { item in // フィルタリングされたリストを表示
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(item.transactionName)
-                    Spacer()
-                    Text("\(item.amount)円")
+        List {
+            ForEach(dateFiltered, id: \.self) { item in
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(item.transactionName)
+                        Spacer()
+                        Text("\(item.amount)円")
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedTransaction = item
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            isEditViewPresented.toggle()
+                        }
+                    }
                 }
-                .contentShape(Rectangle()) // HStack全体をタップ可能にする
-                .onTapGesture {
-                    selectedTransaction = item
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        isEditViewPresented.toggle()
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        deleteItem(item)
+                    } label: {
+                        Label("削除", systemImage: "trash")
                     }
                 }
             }
         }
-        .id(UUID())
+        .id(viewID)
         .listStyle(.plain)
         .sheet(item: $selectedTransaction) { transaction in
             DataEditView(transaction: $selectedTransaction)
         }
-        .gesture(
-            DragGesture()
-                .onEnded { value in
-                    handleSwipeGesture(value: value)
-                }
-        )
     }
     
-    // スワイプジェスチャの処理
-    private func handleSwipeGesture(value: DragGesture.Value) {
-        let adjustment = value.translation.width < 0 ? 1 : -1
-        if let newDate = calendar.date(byAdding: .day, value: adjustment, to: self.selectedDate) {
-            self.selectedDate = newDate
-            self.selectedDay = newDate
-            self.selectedDateString = formatter2.string(from: newDate)
-            self.viewID = UUID()  // 強制再描画
+    // アイテム削除処理
+    private func deleteItem(_ item: TransactionData) {
+        if let index = dateFiltered.firstIndex(of: item) {
+            context.delete(dateFiltered[index])
         }
     }
-
     
     private func updateSelectedDay() {
         self.selectedDay = self.selectedDate
