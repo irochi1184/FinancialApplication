@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		731728FA2BD30F18000D7CF9 /* PlusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731728F92BD30F18000D7CF9 /* PlusView.swift */; };
+		732C75262C83B6ED0043D7E1 /* TagManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732C75252C83B6ED0043D7E1 /* TagManagementView.swift */; };
 		734BA2552C1ACD23009F62F0 /* TransactionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734BA2542C1ACD23009F62F0 /* TransactionData.swift */; };
 		7357CD482B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */; };
 		7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7357CD492B8CC92800CCBA97 /* ContentView.swift */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		731728F92BD30F18000D7CF9 /* PlusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlusView.swift; sourceTree = "<group>"; };
+		732C75252C83B6ED0043D7E1 /* TagManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementView.swift; sourceTree = "<group>"; };
 		734BA2542C1ACD23009F62F0 /* TransactionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionData.swift; sourceTree = "<group>"; };
 		7357CD442B8CC92800CCBA97 /* Financial_iPhoneApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Financial_iPhoneApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7357CD472B8CC92800CCBA97 /* Financial_iPhoneAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Financial_iPhoneAppApp.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				73663B582C3B4E1700AFE072 /* CategorySettingsView.swift */,
 				73FD6F3E2C2388BA0092AB9E /* DataEditView.swift */,
 				731728F92BD30F18000D7CF9 /* PlusView.swift */,
+				732C75252C83B6ED0043D7E1 /* TagManagementView.swift */,
 			);
 			path = SubView;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				7357CD4A2B8CC92800CCBA97 /* ContentView.swift in Sources */,
 				73A44BA32C417E8A00791164 /* LockView.swift in Sources */,
 				73FD6F3F2C2388BA0092AB9E /* DataEditView.swift in Sources */,
+				732C75262C83B6ED0043D7E1 /* TagManagementView.swift in Sources */,
 				737080332B90A4DA003F85D5 /* HomeView.swift in Sources */,
 				73663B4E2C39821300AFE072 /* DatePickerView.swift in Sources */,
 				7370803B2B90A5D1003F85D5 /* SettingView.swift in Sources */,

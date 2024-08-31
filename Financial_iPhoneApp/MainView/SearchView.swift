@@ -22,10 +22,10 @@ struct SearchView: View {
     @State private var showDeleteAllAlert = false // 全件削除確認アラートの表示状態
     @State private var selectedSort = Sort.add // 並べ替えの選択状態
     
-    let formatter = DateFormatter()
+    @AppStorage("searchTags") private var searchTagsString: String = "" // タグリストを保存するための文字列
+    @State private var searchTags: [String] = []
     
-    // 検索タグのリスト
-    let searchTags = ["食費", "交通費", "エンタメ", "日用品", "家賃", "光熱費", "その他"]
+    let formatter = DateFormatter()
     
     init() {
         formatter.dateFormat = "yyyy年 MM月 dd日"
@@ -191,6 +191,7 @@ struct SearchView: View {
                 }
             }
         }
+        .onAppear(perform: loadTags) // 画面が表示されたときにタグを読み込む
     }
     
     private var searchFiltered: [TransactionData] {
@@ -226,6 +227,14 @@ struct SearchView: View {
             try context.save()
         } catch {
             print("Failed to save context after deleting all items: \(error.localizedDescription)")
+        }
+    }
+    
+    // タグを読み込む関数
+    private func loadTags() {
+        if let data = searchTagsString.data(using: .utf8),
+           let decodedTags = try? JSONDecoder().decode([String].self, from: data) {
+            searchTags = decodedTags
         }
     }
 }
