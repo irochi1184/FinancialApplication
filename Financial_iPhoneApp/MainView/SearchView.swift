@@ -24,6 +24,9 @@ struct SearchView: View {
     
     let formatter = DateFormatter()
     
+    // 検索タグのリスト
+    let searchTags = ["食費", "交通費", "エンタメ", "日用品", "家賃", "光熱費", "その他"]
+    
     init() {
         formatter.dateFormat = "yyyy年 MM月 dd日"
     }
@@ -117,7 +120,30 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
             }
-            Spacer().frame(height: 20)
+            Spacer().frame(height: 10)
+            
+            // 検索タグボタンの表示
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(searchTags, id: \.self) { tag in
+                        Button(action: {
+                            searchText = tag
+                        }) {
+                            Text(tag)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(Color.teal)  // 背景色を青緑色に設定
+                                .foregroundColor(.white) // 文字色を白色に設定
+                                .cornerRadius(7)         // 角丸を設定
+                        }
+                        .padding(.horizontal, 4)
+                    }
+                }
+                .padding(.horizontal)
+            }
+            
+            Spacer().frame(height: 10)
+            
             // 検索結果をリスト形式で表示
             NavigationStack {
                 List {
