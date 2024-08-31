@@ -16,15 +16,27 @@ struct SearchView: View {
     
     @State private var isEditViewPresented = false // 編集画面の表示状態
     @State private var selectedTransaction: TransactionData? // 選択された取引データ
-    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
+    @FocusState var iskeyPadActive: Bool // keyPad閉じる用
     
     @State private var searchText = "" // 検索テキストを保持する変数
     @State private var showDeleteAllAlert = false // 全件削除確認アラートの表示状態
+    @State private var selectedSort = Sort.add // 並べ替えの選択状態
     
     let formatter = DateFormatter()
     
     init() {
         formatter.dateFormat = "yyyy年 MM月 dd日"
+    }
+    
+    enum Sort: String, CaseIterable, Identifiable {
+        case date = "日付順"
+        case add = "追加順"
+        
+        var id: String { rawValue }
+        
+        var displayTitle: String {
+            return "\(rawValue)"
+        }
     }
     
     var body: some View {
@@ -46,11 +58,18 @@ struct SearchView: View {
                     )
                 }
                 Spacer()
-                NavigationStack {
-                    NavigationLink("追加履歴", destination: AddHistoryView())
-                        .font(.title3)
-                        .padding(.trailing, 20)
+                // 「並べ替え」ボタンの追加
+                Menu("並べ替え") {
+                    ForEach(Sort.allCases) { sort in
+                        Button {
+                            selectedSort = sort
+                        } label: {
+                            Text(sort.displayTitle)
+                        }
+                    }
                 }
+                .font(.title3)
+                .padding(.trailing, 20)
             }
             // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
             Spacer().frame(height: 20)
@@ -119,12 +138,14 @@ struct SearchView: View {
                         .onTapGesture {
                             selectedTransaction = item
                         }
-                    }
-                    .onDelete(perform: { indexSet in
-                        for index in indexSet {
-                            delete(data: datas[index])
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                delete(data: item)
+                            } label: {
+                                Label("削除", systemImage: "trash")
+                            }
                         }
-                    })
+                    }
                 }
                 .id(UUID())
                 .listStyle(.plain)
@@ -147,16 +168,27 @@ struct SearchView: View {
     }
     
     private var searchFiltered: [TransactionData] {
-        // MARK: 大文字小文字を区別する
-        return searchText.isEmpty ? datas : datas.filter {
+        let filtered = searchText.isEmpty ? datas : datas.filter {
             $0.transactionName.localizedCaseInsensitiveContains(searchText) ||
             $0.category.localizedCaseInsensitiveContains(searchText)
+        }
+        
+        switch selectedSort {
+        case .add:
+            return filtered.reversed()
+        case .date:
+            return filtered.sorted { $0.selectedDate < $1.selectedDate }
         }
     }
     
     // データの削除
     private func delete(data: TransactionData) {
         context.delete(data)
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save context: \(error.localizedDescription)")
+        }
     }
     
     // データの全件削除
@@ -171,7 +203,6 @@ struct SearchView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView(model: AppModel())
