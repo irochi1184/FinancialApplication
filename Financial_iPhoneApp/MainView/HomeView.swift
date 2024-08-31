@@ -58,6 +58,9 @@ struct HomeView: View {
     @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date()) // 選択された月
     @State private var isExpense: Bool = true                                                // タブの状態（利用詳細/カテゴリー別）
     
+    @State private var isEditViewPresented = false // 取引編集画面の表示状態
+    @State private var selectedTransaction: TransactionData? // 選択されたトランザクションデータ
+    
     // 初期化
     init() {
         // UISegmentedControlの外観をカスタマイズ
@@ -237,11 +240,21 @@ struct HomeView: View {
                     Text("\(item.amount)円") // 金額の表示
                 }
             }
+            .contentShape(Rectangle()) // 全体をタップ可能にする
+            .onTapGesture {
+                selectedTransaction = item
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isEditViewPresented.toggle()
+                }
+            }
         }
         .id(UUID())
         .listStyle(.plain)
         .scrollDisabled(true) // スクロールビューの中でスクロールができないよう設定
         .frame(height: CGFloat(dateFiltered.count) * 50) // 1項目あたりの高さを50と仮定して計算
+        .sheet(item: $selectedTransaction) { transaction in
+            DataEditView(transaction: $selectedTransaction)
+        }
     }
     
     // カテゴリリストビュー
