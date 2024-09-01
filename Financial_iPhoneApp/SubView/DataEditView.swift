@@ -43,179 +43,174 @@ struct DataEditView: View {
     @State private var tempAmount: String = ""
     @State private var tempCategory: String = ""
     @State private var tempMemo: String = ""
-    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
+    @FocusState var iskeyPadActive: Bool // keyPad閉じる用
     
     var body: some View {
         if let transaction = transaction {
             NavigationView {
-                VStack {
-                    // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
-                    Spacer().frame(height: 20)
-                    HStack {
-                        Button("戻る") {
-                            self.presentationMode.wrappedValue.dismiss() // DataEditViewを閉じる
-                        }.padding(.leading, 20)
-                        Spacer()
-                        Text("編集")
-                            .padding(.trailing, 50)
-                            .font(.title3)
-                        Spacer()
-                    }
-                    Spacer()
-                    
-                    // --------------- 取引名 --------------- //
-                    Text("取引名")
-                        .bold()
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 15)
-                    TextField("入力", text: $tempTransactionName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
-                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                        .padding(.bottom, 10)
-                        .focused($iskeyPadActive)
-                    
-                    // --------------- 日付 --------------- //
-                    Text("日付")
-                        .bold()
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 15)
-                    HStack {
-                        Button(action: {
-                            // 日付の表示部分がタップされたらDatePickerを表示する
-                            self.isDatePickerVisible.toggle()
-                        }) {
-                            Text(formatter.string(from: tempSelectedDate))
-                                .foregroundStyle(.blue)
+                ScrollView { // ここを追加
+                    VStack {
+                        // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
+                        Spacer().frame(height: 20)
+                        HStack {
+                            Button("戻る") {
+                                self.presentationMode.wrappedValue.dismiss() // DataEditViewを閉じる
+                            }.padding(.leading, 20)
                             Spacer()
-                            Image(systemName: "calendar")
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(7)
-                    }
-                    .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
-                        .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
-                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                    .padding(.bottom, 10)
-                    
-                    // --------------- 金額 --------------- //
-                    Text("金額")
-                        .bold()
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 15)
-                    TextField("金額 (円)", text: $tempAmount)
-                        .keyboardType(.numberPad)
-                        .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
-                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                        .padding(.bottom, 10)
-                        .focused($iskeyPadActive)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()         // 右寄せにする
-                                Button("閉じる") {
-                                    iskeyPadActive = false  //  フォーカスを外す
-                                }
-                            }
-                        }
-                    
-                    // --------------- カテゴリー選択 --------------- //
-                    Text("カテゴリー選択")
-                        .bold()
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 15)
-                    HStack {
-                        Button(action: {
-                            isCategorySelectionVisible.toggle()
-                        }) {
-                            Text(tempCategory.isEmpty ? "選択" : tempCategory)
-                                .foregroundColor(.gray.opacity(0.6))
+                            Text("編集")
+                                .padding(.trailing, 50)
+                                .font(.title3)
                             Spacer()
-                            Image(systemName: "chevron.right")
                         }
-                        .padding(7)
-                    }
-                    .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
-                        .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
-                    .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                    .padding(.bottom, 30)
-                    
-                    // --------------- 詳細（メモ） --------------- //
-                    HStack {
-                        Text("詳細")
+                        Spacer()
+                        
+                        // --------------- 取引名 --------------- //
+                        Text("取引名")
                             .bold()
                             .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 15)
-                        Image(systemName: menuExpanded ? "chevron.down" : "chevron.right")
+                        TextField("入力", text: $tempTransactionName)
+                            .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                            .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                            .padding(.bottom, 10)
+                            .focused($iskeyPadActive)
+                        
+                        // --------------- 日付 --------------- //
+                        Text("日付")
+                            .bold()
                             .foregroundColor(.gray)
-                            .font(.system(size: 12))
-                        Spacer()
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        withAnimation {
-                            menuExpanded.toggle()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 15)
+                        HStack {
+                            Button(action: {
+                                // 日付の表示部分がタップされたらDatePickerを表示する
+                                self.isDatePickerVisible.toggle()
+                            }) {
+                                Text(formatter.string(from: tempSelectedDate))
+                                    .foregroundStyle(.blue)
+                                Spacer()
+                                Image(systemName: "calendar")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(7)
                         }
-                    }
-                    
-                    if menuExpanded {
-                        VStack {
-                            TextField("入力", text: $tempMemo, axis: .vertical)
-                                .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
-                                .padding(.bottom, 15)
-                                .focused($iskeyPadActive)
-                        }
+                        .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
+                            .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
                         .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
-                    }
-                    
-                    // エラーメッセージ表示
-                    if let errorMessage = errorMessage {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .padding()
-                    }
-                    
-                    Button(action: {
-                        // エラーメッセージをクリア
-                        errorMessage = nil
+                        .padding(.bottom, 10)
                         
-                        // 入力チェック
-                        var errorMessages = [String]()
+                        // --------------- 金額 --------------- //
+                        Text("金額")
+                            .bold()
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 15)
+                        TextField("金額 (円)", text: $tempAmount)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle()) // 枠線
+                            .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                            .padding(.bottom, 10)
+                            .focused($iskeyPadActive)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()         // 右寄せにする
+                                    Button("閉じる") {
+                                        iskeyPadActive = false  //  フォーカスを外す
+                                    }
+                                }
+                            }
                         
-                        if tempTransactionName.isEmpty {
-                            errorMessages.append("取引名が未入力です。")
+                        // --------------- カテゴリー選択 --------------- //
+                        Text("カテゴリー選択")
+                            .bold()
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 15)
+                        HStack {
+                            Button(action: {
+                                isCategorySelectionVisible.toggle()
+                            }) {
+                                Text(tempCategory.isEmpty ? "選択" : tempCategory)
+                                    .foregroundColor(.gray.opacity(0.6))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                            .padding(7)
                         }
-                        if tempAmount.isEmpty {
-                            errorMessages.append("金額が未入力です。")
+                        .overlay(RoundedRectangle(cornerRadius: 4) // 枠線の角丸
+                            .stroke(.gray, lineWidth: 0.18)) // 枠線の色と太さ
+                        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                        .padding(.bottom, 30)
+                        
+                        // --------------- 詳細（メモ） --------------- //
+                        HStack {
+                            Text("詳細")
+                                .bold()
+                                .foregroundColor(.gray)
+                                .padding(.leading, 15)
+                            Image(systemName: menuExpanded ? "chevron.down" : "chevron.right")
+                                .foregroundColor(.gray)
+                                .font(.system(size: 12))
+                            Spacer()
                         }
-                        if tempCategory.isEmpty {
-                            errorMessages.append("カテゴリーが未選択です。")
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation {
+                                menuExpanded.toggle()
+                            }
                         }
                         
-                        if !errorMessages.isEmpty {
-                            // エラーメッセージを結合して表示
-                            errorMessage = errorMessages.joined(separator: "\n")
-                        } else {
-                            // エラーメッセージをクリア
+                        if menuExpanded {
+                            VStack {
+                                TextField("メモ", text: $tempMemo, axis: .vertical)
+                                    .textFieldStyle(.roundedBorder)
+                                    .padding([.top], 15)
+                                    .focused($iskeyPadActive)
+                            }
+                            .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+                        }
+                        
+                        // エラーメッセージ表示
+                        if let errorMessage = errorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.red)
+                                .padding()
+                        }
+                        
+                        Button(action: {
                             errorMessage = nil
-                            // 「保存」ボタンのアクション
-                            saveTransaction()
+                            
+                            var errorMessages = [String]()
+                            
+                            if tempTransactionName.isEmpty {
+                                errorMessages.append("取引名が未入力です。")
+                            }
+                            if tempAmount.isEmpty {
+                                errorMessages.append("金額が未入力です。")
+                            }
+                            if tempCategory.isEmpty {
+                                errorMessages.append("カテゴリーが未選択です。")
+                            }
+                            
+                            if !errorMessages.isEmpty {
+                                errorMessage = errorMessages.joined(separator: "\n")
+                            } else {
+                                errorMessage = nil
+                                saveTransaction()
+                            }
+                        }) {
+                            Text("保存")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.green)
+                                .cornerRadius(8)
                         }
-                    }) {
-                        Text("保存")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .foregroundColor(.white)
-                            .padding(8)
-                            .background(Color.green)
-                            .cornerRadius(8)
+                        .padding(.top, 10)
+                        .padding(10)
+                        
                     }
-                    .padding(.top, 10)
-                    .padding(10)
-                    
-                    Spacer()
-                    
                 }
                 .navigationBarHidden(true)
                 .onAppear {
@@ -243,6 +238,12 @@ struct DataEditView: View {
                     }
                 )
             }
+            .gesture(
+                TapGesture()
+                    .onEnded {
+                        iskeyPadActive = false // キーボードを閉じる
+                    }
+            )
         }
     }
     
@@ -263,8 +264,3 @@ struct DataEditView: View {
         }
     }
 }
-
-//#Preview {
-//    ContentView()
-//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-//}

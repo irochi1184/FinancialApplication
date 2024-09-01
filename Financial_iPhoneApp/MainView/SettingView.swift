@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SettingView: View {
+    @AppStorage("searchTags") private var searchTagsString: String = "" // タグリストを保存するための文字列
+    @State private var searchTags: [String] = ["食費", "交通費", "エンタメ", "日用品", "家賃", "光熱費", "その他"]
+    
     @AppStorage("isLock") private var isLock = false
     @AppStorage("fontSize") private var fontSize = 12.0
     @AppStorage("userId") private var userId = ""
@@ -39,28 +42,43 @@ struct SettingView: View {
                             }
                     }
                 }
-                Section(header: Text("遷移")) {
+                Section(header: Text("各種設定")) {
+                    NavigationLink(destination: TagManagementView(searchTags: $searchTags)) {
+                        Text("検索タグ管理")
+                    }
                     NavigationLink {
                         CategorySettingsView()
                     } label: {
                         Text("カテゴリー設定")
                     }
                 }
-                Toggle("パスコード設定", isOn: $toggle)
-                    .onChange(of: toggle) {
-                        if toggle {
-                            isSettingPasscode = true
-                        } else {
-                            UserDefaults.standard.set(false, forKey: "SetPass")
-                            UserDefaults.standard.set(false, forKey: "UseFaceID")
+                Section(header: Text("セキュリティ")) {
+                    Toggle("パスコード設定", isOn: $toggle)
+                        .onChange(of: toggle) {
+                            if toggle {
+                                isSettingPasscode = true
+                            } else {
+                                UserDefaults.standard.set(false, forKey: "SetPass")
+                                UserDefaults.standard.set(false, forKey: "UseFaceID")
+                            }
                         }
-                    }
+                }
+
             }
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $isSettingPasscode) {
                 PasscodeSetupView(isSettingPasscode: $isSettingPasscode, toggle: $toggle)
                     .environmentObject(model.passcodeManager)
             }
+            .onAppear(perform: loadTags) // 画面が表示されたときにタグを読み込む
+        }
+    }
+    
+    // タグを読み込む関数
+    private func loadTags() {
+        if let data = searchTagsString.data(using: .utf8),
+           let decodedTags = try? JSONDecoder().decode([String].self, from: data) {
+            searchTags = decodedTags
         }
     }
 }

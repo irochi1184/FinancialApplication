@@ -28,7 +28,7 @@ struct PlusView: View {
     @State private var memo = String()            // メモ
     @State var menuExpanded: Bool = false         // 詳細を隠す
     @State private var selectedImage: UIImage?
-    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
+    @FocusState private var iskeyPadActive: Bool  // keyPad閉じる用
     
     // エラーメッセージ表示用
     @State private var errorMessage: String?
@@ -52,7 +52,6 @@ struct PlusView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                
                 VStack (spacing : 0){
                     HStack {
                         Button("戻る") {
@@ -74,25 +73,25 @@ struct PlusView: View {
                     ScrollView {
                         VStack {
                             // --------------- 写真で読み込む --------------- //
-                            Button(action: {
-                                // 「写真を撮る」ボタンのアクション
-                                self.openCamera()
-                            }) {
-                                HStack {
-                                    Image(systemName: "camera")
-                                    Text("写真で読み込む")
-                                }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .foregroundColor(.green)
-                                .padding(8)
-                                .background(Color.white)
-                                .cornerRadius(8)
-                                .overlay(RoundedRectangle(cornerRadius: 8) // 枠線の角丸
-                                    .stroke(.green, lineWidth: 0.5)) // 枠線の色と太さ
-                            }
-                            .padding()
-                            .padding(.bottom, 10)
-                            .padding(.top, 20)
+//                            Button(action: {
+//                                // 「写真を撮る」ボタンのアクション
+//                                self.openCamera()
+//                            }) {
+//                                HStack {
+//                                    Image(systemName: "camera")
+//                                    Text("写真で読み込む")
+//                                }
+//                                .frame(maxWidth: .infinity, alignment: .center)
+//                                .foregroundColor(.green)
+//                                .padding(8)
+//                                .background(Color.white)
+//                                .cornerRadius(8)
+//                                .overlay(RoundedRectangle(cornerRadius: 8) // 枠線の角丸
+//                                    .stroke(.green, lineWidth: 0.5)) // 枠線の色と太さ
+//                            }
+//                            .padding()
+//                            .padding(.bottom, 10)
+//                            .padding(.top, 20)
                             
                             // --------------- 取引名 --------------- //
                             Text("取引名")
@@ -290,6 +289,15 @@ struct PlusView: View {
                 )
             }
         }
+        .gesture(
+            TapGesture()
+                .onEnded {
+                    iskeyPadActive = false // キーボードを閉じる
+                }
+        )
+        .onTapGesture {
+            UIApplication.shared.closeKeyboard()
+        }
     }
     
     func openCamera() {
@@ -350,7 +358,8 @@ extension PlusView {
     }
 }
 
-//#Preview {
-//    ContentView()
-//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-//}
+extension UIApplication {
+    func closeKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
