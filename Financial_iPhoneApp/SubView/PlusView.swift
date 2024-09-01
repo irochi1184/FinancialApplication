@@ -28,7 +28,7 @@ struct PlusView: View {
     @State private var memo = String()            // メモ
     @State var menuExpanded: Bool = false         // 詳細を隠す
     @State private var selectedImage: UIImage?
-    @FocusState var iskeyPadActive:Bool // keyPad閉じる用
+    @FocusState private var iskeyPadActive: Bool  // keyPad閉じる用
     
     // エラーメッセージ表示用
     @State private var errorMessage: String?
@@ -52,7 +52,6 @@ struct PlusView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                
                 VStack (spacing : 0){
                     HStack {
                         Button("戻る") {
@@ -290,6 +289,15 @@ struct PlusView: View {
                 )
             }
         }
+        .gesture(
+            TapGesture()
+                .onEnded {
+                    iskeyPadActive = false // キーボードを閉じる
+                }
+        )
+        .onTapGesture {
+            UIApplication.shared.closeKeyboard()
+        }
     }
     
     func openCamera() {
@@ -350,7 +358,8 @@ extension PlusView {
     }
 }
 
-//#Preview {
-//    ContentView()
-//        .modelContainer(for: [CategoryData.self, TransactionData.self], inMemory: true)
-//}
+extension UIApplication {
+    func closeKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
