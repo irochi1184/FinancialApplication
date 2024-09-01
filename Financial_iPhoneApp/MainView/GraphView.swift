@@ -37,7 +37,7 @@ struct GraphView: View {
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var isDatePickerVisible = false
     
-    @State private var showCategoryGraph = true // カテゴリーごとのグラフを表示するか、総額グラフを表示するかのフラグ
+    @State private var isExpense: Bool = true // カテゴリーごとのグラフを表示するか、総額グラフを表示するかのフラグ
     
     // 表示する年の範囲
     private let minYear: Int = 2000
@@ -50,7 +50,7 @@ struct GraphView: View {
     }
     
     var body: some View {
-        VStack (spacing : 0) {
+        VStack(spacing: 0) {
             // 年選択と切り替えボタン
             VStack {
                 // 年の切り替えボタン
@@ -85,7 +85,7 @@ struct GraphView: View {
                 .padding(.horizontal)
                 
                 // グラフの切り替えボタン
-                Picker("", selection: $showCategoryGraph) {
+                Picker("", selection: $isExpense) {
                     Text("カテゴリー別").tag(true)
                     Text("総額").tag(false)
                 }
@@ -120,60 +120,131 @@ struct GraphView: View {
                 }.presentationDetents([.height(280)]) // シートの高さ
             }
             Divider() // 区切り線
-            ScrollView {
-                VStack {
-                    Spacer().frame(height: 20)
-                    Chart(showCategoryGraph ? calculateMonthlyUsageAmount() : calculateTotalMonthlyUsageAmount()){ dataRow in
-                        LineMark(
-                            x: .value("month", dataRow.month),
-                            y: .value("amount", dataRow.amount)
-                        )
-                        .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
-                        PointMark(
-                            x: .value("month", dataRow.month),
-                            y: .value("amount", dataRow.amount)
-                        )
-                        .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
-                    }
-                    .frame(height: 300)
-                    .chartYAxis{
-                        AxisMarks(position: .leading)
-                    }
-                    
-                    if showCategoryGraph {
-                        VStack {
-                            ForEach(categorys, id: \.self) { category in
-                                Toggle(isOn: Binding(
-                                    get: {
-                                        category.toggle
-                                    },
-                                    set: { value in
-                                        category.toggle = value
-                                    }
-                                )) {
-                                    Text("\(category.categoryName)")
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                    } else {
-                        // 総額をリスト表示
-                        VStack {
-                            ForEach(calculateTotalMonthlyUsageAmount()) { dataRow in
-                                HStack {
-                                    Text("\(dataRow.month)")
-                                    Spacer()
-                                    Text("\(dataRow.amount)円")
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                    }
+            
+            TabView(selection: $isExpense) { // TabViewを使用してページング機能を実装
+                ScrollView {
+                    categoryView
                 }
+                .tag(true)
+                .tabItem { Text("カテゴリー別") }
+                
+                ScrollView {
+                    totalAmountView
+                }
+                .tag(false)
+                .tabItem { Text("総額") }
             }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // ページングスタイルの設定
         }
         .onAppear {
             selectedDateString = formatter.string(from: selectedDate)
+        }
+    }
+    
+    private var categoryView: some View {
+        VStack {
+            Spacer().frame(height: 20)
+            Chart(calculateMonthlyUsageAmount()) { dataRow in
+                LineMark(
+                    x: .value("month", dataRow.month),
+                    y: .value("amount", dataRow.amount)
+                )
+                .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+                PointMark(
+                    x: .value("month", dataRow.month),
+                    y: .value("amount", dataRow.amount)
+                )
+                .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+            }
+            .frame(height: 300)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
+            Divider()
+            Spacer().frame(height: 15)
+            
+            LazyVGrid(columns: Array(repeating: GridItem(.fixed(100), spacing: 10), count: 3), spacing: 10) {
+                ForEach(categorys, id: \.self) { category in
+                    Button(action: {
+                        category.toggle.toggle()
+                    }) {
+                        HStack {
+                            Image(systemName: category.toggle ? "tag.fill" : "tag")
+                                .font(.system(size: 16))
+                                .foregroundColor(category.toggle ? .white : .gray)
+                            
+                            Text("\(category.categoryName)")
+                                .font(.subheadline)
+                                .fontWeight(.light)
+                                .foregroundColor(category.toggle ? .white : .primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5) // テキストの縮小を許可
+                        }
+                        .frame(width: 80, height: 25) // ボタンサイズを固定
+                        .padding(4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(category.toggle ? Color.blue : Color(UIColor.secondarySystemBackground))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle()) // ボタンのデフォルトスタイルを無効化
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 10)
+        }
+    }
+    
+    private var totalAmountView: some View {
+        VStack {
+            Spacer().frame(height: 20)
+            Chart(calculateTotalMonthlyUsageAmount()) { dataRow in
+                LineMark(
+                    x: .value("month", dataRow.month),
+                    y: .value("amount", dataRow.amount)
+                )
+                .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+                PointMark(
+                    x: .value("month", dataRow.month),
+                    y: .value("amount", dataRow.amount)
+                )
+                .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+            }
+            .frame(height: 300)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
+            Divider()
+            Spacer().frame(height: 15)
+            
+            VStack(spacing: 10) {
+                ForEach(calculateTotalMonthlyUsageAmount()) { dataRow in
+                    HStack {
+                        Text("\(dataRow.month)")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        Text("\(dataRow.amount)円")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(width: 300, height: 5)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color(UIColor.secondarySystemBackground)))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+            }
+            .padding(.bottom, 10)
         }
     }
     

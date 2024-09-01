@@ -43,7 +43,7 @@ struct SearchView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Button("全件削除") {
                     showDeleteAllAlert = true
@@ -75,7 +75,7 @@ struct SearchView: View {
                 .padding(.trailing, 20)
             }
             // スペースを追加して、ナビゲーションバーとテキストフィールドの間に余白を作成
-            Spacer().frame(height: 20)
+            Spacer().frame(height: 10)
             // 検索テキストボックスと検索ボタンを横並びに配置
             VStack {
                 ZStack {
@@ -141,8 +141,8 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
             }
-            Divider()
             Spacer().frame(height: 10)
+            Divider()
             
             // 検索結果をリスト形式で表示
             NavigationStack {
