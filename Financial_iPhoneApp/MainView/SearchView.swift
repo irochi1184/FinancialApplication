@@ -141,7 +141,7 @@ struct SearchView: View {
                 }
                 .padding(.horizontal)
             }
-            
+            Divider()
             Spacer().frame(height: 10)
             
             // 検索結果をリスト形式で表示

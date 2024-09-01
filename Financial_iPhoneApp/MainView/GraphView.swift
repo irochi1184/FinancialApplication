@@ -50,7 +50,7 @@ struct GraphView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack (spacing : 0) {
             // 年選択と切り替えボタン
             VStack {
                 // 年の切り替えボタン
@@ -90,9 +90,9 @@ struct GraphView: View {
                     Text("総額").tag(false)
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .padding(10)
+                .padding([.leading, .trailing], 15) // 左、下、右に余白
             }
-            .padding(.bottom, 20)
+            .padding(.bottom, 10)
             .sheet(isPresented: $isDatePickerVisible) { // 年のピッカーを表示するためのシート
                 VStack {
                     // DatePickerを閉じるボタン
@@ -119,47 +119,56 @@ struct GraphView: View {
                     }
                 }.presentationDetents([.height(280)]) // シートの高さ
             }
-            VStack {
-                Chart(showCategoryGraph ? calculateMonthlyUsageAmount() : calculateTotalMonthlyUsageAmount()){ dataRow in
-                    LineMark(
-                        x: .value("month", dataRow.month),
-                        y: .value("amount", dataRow.amount)
-                    )
-                    .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
-                    PointMark(
-                        x: .value("month", dataRow.month),
-                        y: .value("amount", dataRow.amount)
-                    )
-                    .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
-                }
-                .frame(height: 300)
-                .chartYAxis{
-                    AxisMarks(position: .leading)
-                }
-                
-                if showCategoryGraph {
-                    List (categorys){ category in
-                        Toggle(isOn: Binding(
-                            get: {
-                                category.toggle
-                            },
-                            set: { value in
-                                category.toggle = value
+            Divider() // 区切り線
+            ScrollView {
+                VStack {
+                    Spacer().frame(height: 20)
+                    Chart(showCategoryGraph ? calculateMonthlyUsageAmount() : calculateTotalMonthlyUsageAmount()){ dataRow in
+                        LineMark(
+                            x: .value("month", dataRow.month),
+                            y: .value("amount", dataRow.amount)
+                        )
+                        .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+                        PointMark(
+                            x: .value("month", dataRow.month),
+                            y: .value("amount", dataRow.amount)
+                        )
+                        .foregroundStyle(by: .value("Category", dataRow.category ?? "総額"))
+                    }
+                    .frame(height: 300)
+                    .chartYAxis{
+                        AxisMarks(position: .leading)
+                    }
+                    
+                    if showCategoryGraph {
+                        VStack {
+                            ForEach(categorys, id: \.self) { category in
+                                Toggle(isOn: Binding(
+                                    get: {
+                                        category.toggle
+                                    },
+                                    set: { value in
+                                        category.toggle = value
+                                    }
+                                )) {
+                                    Text("\(category.categoryName)")
+                                }
+                                .padding(.horizontal)
                             }
-                        )) {
-                            Text("\(category.categoryName)")
                         }
-                    }.id(UUID())
-                } else {
-                    // 総額をリスト表示
-                    List(calculateTotalMonthlyUsageAmount()) { dataRow in
-                        HStack {
-                            Text("\(dataRow.month)")
-                            Spacer()
-                            Text("\(dataRow.amount)円")
+                    } else {
+                        // 総額をリスト表示
+                        VStack {
+                            ForEach(calculateTotalMonthlyUsageAmount()) { dataRow in
+                                HStack {
+                                    Text("\(dataRow.month)")
+                                    Spacer()
+                                    Text("\(dataRow.amount)円")
+                                }
+                                .padding(.horizontal)
+                            }
                         }
                     }
-                    .id(UUID())
                 }
             }
         }

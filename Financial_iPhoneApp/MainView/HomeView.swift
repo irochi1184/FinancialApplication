@@ -102,7 +102,7 @@ struct HomeView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
         }
-        .padding([.leading, .bottom, .trailing], 15) // 左、下、右に余白
+        .padding([.leading, .trailing], 15) // 左、下、右に余白
         .padding(.bottom, 10)
     }
     

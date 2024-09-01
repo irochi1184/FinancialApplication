@@ -73,25 +73,25 @@ struct PlusView: View {
                     ScrollView {
                         VStack {
                             // --------------- 写真で読み込む --------------- //
-                            Button(action: {
-                                // 「写真を撮る」ボタンのアクション
-                                self.openCamera()
-                            }) {
-                                HStack {
-                                    Image(systemName: "camera")
-                                    Text("写真で読み込む")
-                                }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .foregroundColor(.green)
-                                .padding(8)
-                                .background(Color.white)
-                                .cornerRadius(8)
-                                .overlay(RoundedRectangle(cornerRadius: 8) // 枠線の角丸
-                                    .stroke(.green, lineWidth: 0.5)) // 枠線の色と太さ
-                            }
-                            .padding()
-                            .padding(.bottom, 10)
-                            .padding(.top, 20)
+//                            Button(action: {
+//                                // 「写真を撮る」ボタンのアクション
+//                                self.openCamera()
+//                            }) {
+//                                HStack {
+//                                    Image(systemName: "camera")
+//                                    Text("写真で読み込む")
+//                                }
+//                                .frame(maxWidth: .infinity, alignment: .center)
+//                                .foregroundColor(.green)
+//                                .padding(8)
+//                                .background(Color.white)
+//                                .cornerRadius(8)
+//                                .overlay(RoundedRectangle(cornerRadius: 8) // 枠線の角丸
+//                                    .stroke(.green, lineWidth: 0.5)) // 枠線の色と太さ
+//                            }
+//                            .padding()
+//                            .padding(.bottom, 10)
+//                            .padding(.top, 20)
                             
                             // --------------- 取引名 --------------- //
                             Text("取引名")

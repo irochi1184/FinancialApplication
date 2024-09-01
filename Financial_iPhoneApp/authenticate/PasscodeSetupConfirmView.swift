@@ -82,7 +82,7 @@ struct PasscodeSetupConfirmView: View {
             }
             Spacer()
         }
-        .alert("FaceIDを使用しますか？", isPresented: $isShowAlert) {
+        .alert("生体認証を使用しますか？", isPresented: $isShowAlert) {
             // FaceID使用確認のアラート
             Button("はい") {
                 UserDefaults.standard.set(true, forKey: "UseFaceID")
